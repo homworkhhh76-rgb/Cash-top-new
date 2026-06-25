@@ -482,8 +482,8 @@ body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
 const firebaseConfig = {
   apiKey: "AIzaSyBM-xAF2lf0cspTu1-7HAXxyoORGGZsxA8",
   authDomain: "toppo-14392.firebaseapp.com",
-  databaseURL: (location.origin && location.origin !== "null" ? location.origin : "") + "/api/rtdb",
-  projectId: "cashtop-mongodb",
+  databaseURL: "https://cash-top-api-2026.vercel.app/api/rtdb",
+  projectId: "toppo-14392",
   storageBucket: "toppo-14392.firebasestorage.app",
   messagingSenderId: "124300854330",
   appId: "1:124300854330:web:47e832cd565a0ef5c32103",
@@ -502,7 +502,13 @@ function hideLoader(){$('#loader').classList.remove('show')}
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1300)}
 function cacheRemoteMenuData(){try{const c=encodeURIComponent(company),b=encodeURIComponent(branch);localStorage.setItem(`oscarStoreV2__company__${c}__branch__${b}`,JSON.stringify({products:state.products,categories:state.categories,invoices:state.invoices,settings:[state.settings]}));}catch(e){}}
 function loadLocal(){for(const k of localKeys()){try{const st=JSON.parse(localStorage.getItem(k)||'{}');if((st.products||[]).length){state.products=st.products||[];state.categories=st.categories||[];state.invoices=st.invoices||[];state.settings=(st.settings||[])[0]||{};normalizeCategories();return true}}catch(e){}}return false}
-async function getRemote(path){const clean=String(path||'').split('/').map(x=>safe(x)).join('/');const u=firebaseConfig.databaseURL+'?path='+encodeURIComponent(clean);const r=await fetch(u,{cache:'no-store'});if(!r.ok)throw new Error(r.status);return await r.json()}
+const MONGO_RTDB_API = 'https://cash-top-api-2026.vercel.app/api/rtdb';
+function mongoApiUrl(path){return MONGO_RTDB_API+'?path='+encodeURIComponent(String(path||'').split('/').map(x=>safe(x)).join('/'))}
+async function getRemote(path){
+  const r=await fetch(mongoApiUrl(path),{cache:'no-store',mode:'cors'});
+  if(!r.ok)throw new Error(r.status);
+  return await r.json();
+}
 async function loadRemote(){
   const paths=[
     `companies/${safe(company)}/branchesData/${safe(branch)}/data`,

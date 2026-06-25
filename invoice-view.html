@@ -426,8 +426,8 @@ body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
 const firebaseConfig = {
   apiKey: "AIzaSyBM-xAF2lf0cspTu1-7HAXxyoORGGZsxA8",
   authDomain: "toppo-14392.firebaseapp.com",
-  databaseURL: (location.origin && location.origin !== "null" ? location.origin : "") + "/api/rtdb",
-  projectId: "cashtop-mongodb",
+  databaseURL: "https://cash-top-api-2026.vercel.app/api/rtdb",
+  projectId: "toppo-14392",
   storageBucket: "toppo-14392.firebasestorage.app",
   messagingSenderId: "124300854330",
   appId: "1:124300854330:web:47e832cd565a0ef5c32103",
@@ -439,57 +439,55 @@ function money(v,cur){return `${cur||'₪'} ${Number(v||0).toFixed(2)}`}
 function safe(v){return String(v||'').replace(/[.#$\[\]\/]/g,'_')}
 function rowsFromVal(val){if(!val)return[];return Object.entries(val).filter(([id])=>!String(id).startsWith('__')).map(([id,data])=>({id,...(data||{})}))}
 function decodeInvoicePayload(data){try{return JSON.parse(decodeURIComponent(escape(atob(String(data||'').replace(/-/g,'+').replace(/_/g,'/')))))}catch(e){return null}}
-function candidates(){return [firebaseConfig.databaseURL]}
-function url(base,path,q){const p=String(path).split('/').map(x=>safe(x)).join('/');const qs=q?('&'+Object.entries(q).map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`).join('&')):'';return base.replace(/\/+$/,'')+'?path='+encodeURIComponent(p)+qs}
-async function fetchJson(u,ms=8000){const c=new AbortController();const t=setTimeout(()=>c.abort(),ms);try{const r=await fetch(u,{signal:c.signal,cache:'no-store'});if(!r.ok)throw new Error(r.status);return await r.json()}finally{clearTimeout(t)}}
-function localStoreKeys(company,branch){const enc=encodeURIComponent(String(company||'COMPANY001'));const br=encodeURIComponent(String(branch||'main'));return [`oscarStoreV2__company__${enc}__branch__${br}`,`oscarStoreV2__company__${enc}`,`oscarStoreV2_${company||'COMPANY001'}`]}
-function findLocal(id,company,branch){for(const k of localStoreKeys(company,branch)){try{const st=JSON.parse(localStorage.getItem(k)||'{}');const inv=(st.invoices||[]).find(x=>String(x.number)===String(id)||String(x.id)===String(id));if(inv)return{invoice:inv,payments:st.invoicePaymentSettings||[],storeName:st.settings?.[0]?.storeName||'كاش توب',currency:st.settings?.[0]?.currency||'₪'}}catch(e){}}return null}
-async function findRemote(id,company,branch){
-  const invoicePaths=[
-    `companies/${safe(company)}/branchesData/${safe(branch)}/data/invoices`,
-    `companies/${safe(company)}/branchesData/main/data/invoices`,
-    `companies/COMPANY001/branchesData/${safe(branch)}/data/invoices`,
-    `companies/COMPANY001/branchesData/main/data/invoices`,
-    'data/invoices',
-    'invoices'
-  ];
-  const settingsPaths=[
-    `companies/${safe(company)}/branchesData/${safe(branch)}/data/settings`,
-    `companies/${safe(company)}/branchesData/main/data/settings`,
-    `companies/COMPANY001/branchesData/main/data/settings`,
-    'data/settings',
-    'settings'
-  ];
-  const payPaths=[
-    `companies/${safe(company)}/branchesData/${safe(branch)}/data/invoicePaymentSettings`,
-    `companies/${safe(company)}/branchesData/main/data/invoicePaymentSettings`,
-    `companies/COMPANY001/branchesData/main/data/invoicePaymentSettings`,
-    'data/invoicePaymentSettings',
-    'invoicePaymentSettings'
-  ];
-  for(const base of candidates()){
-    for(const path of invoicePaths){
-      try{
-        let val=await fetchJson(url(base,path,{orderBy:'"number"',equalTo:`"${id}"`}));
-        let rows=rowsFromVal(val);
-        if(!rows.length){
-          val=await fetchJson(url(base,path+'/'+safe(id)));
-          rows=val?[{id,...val}]:[];
-        }
-        if(!rows.length){
-          val=await fetchJson(url(base,path));
-          rows=rowsFromVal(val).filter(x=>String(x.number)===String(id)||String(x.id)===String(id));
-        }
-        if(rows.length){
-          const inv=rows[0];let payments=[];let settings=[];
-          for(const pp of payPaths){try{payments=rowsFromVal(await fetchJson(url(base,pp)));if(payments.length)break}catch(e){}}
-          for(const sp of settingsPaths){try{settings=rowsFromVal(await fetchJson(url(base,sp)));if(settings.length)break}catch(e){}}
-          return{invoice:inv,payments,storeName:settings?.[0]?.storeName||'كاش توب',currency:settings?.[0]?.currency||'₪'}
-        }
-      }catch(e){}
+const MONGO_RTDB_API = 'https://cash-top-api-2026.vercel.app/api/rtdb';
+function candidates(){return [MONGO_RTDB_API]}
+function url(base,path,q){
+  const p=String(path).split('/').map(x=>safe(x)).join('/');
+  const qs=q?('&'+Object.entries(q).map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`).join('&')):'';
+  return MONGO_RTDB_API+'?path='+encodeURIComponent(p)+qs;
+}
+function parseFirebaseQueryValue(v){
+  if(v===undefined||v===null)return v;
+  if(typeof v!=='string')return v;
+  try{return JSON.parse(v)}catch(e){return String(v).replace(/^"+|"+$/g,'')}
+}
+function applyLocalQuery(val,q={}){
+  if(!val||typeof val!=='object')return val;
+  let rows=Array.isArray(val)?val.map((data,id)=>[String(id),data]).filter(([,data])=>data):Object.entries(val).filter(([id])=>!String(id).startsWith('__'));
+  const orderBy=q.orderBy?parseFirebaseQueryValue(q.orderBy):null;
+  if(orderBy){
+    const field=String(orderBy);
+    rows.sort((a,b)=>{
+      const av=field==='$key'?a[0]:(a[1]||{})[field];
+      const bv=field==='$key'?b[0]:(b[1]||{})[field];
+      const an=Number(av),bn=Number(bv);
+      if(Number.isFinite(an)&&Number.isFinite(bn))return an-bn;
+      return String(av??'').localeCompare(String(bv??''),'ar');
+    });
+    if(q.equalTo!==undefined){
+      const eq=parseFirebaseQueryValue(q.equalTo);
+      rows=rows.filter(([id,data])=>{
+        const v=field==='$key'?id:(data||{})[field];
+        return String(v)===String(eq)||v===eq;
+      });
     }
   }
-  return null
+  if(q.limitToLast!==undefined){const n=Number(q.limitToLast)||0;if(n>0)rows=rows.slice(-n)}
+  if(q.limitToFirst!==undefined){const n=Number(q.limitToFirst)||0;if(n>0)rows=rows.slice(0,n)}
+  return Object.fromEntries(rows);
+}
+async function fetchJson(u,ms=8000){
+  const parsed=new URL(u, location.href);
+  const q=Object.fromEntries(parsed.searchParams.entries());
+  const path=q.path||'';
+  delete q.path;
+  const c=new AbortController();const t=setTimeout(()=>c.abort(),ms);
+  try{
+    const r=await fetch(MONGO_RTDB_API+'?path='+encodeURIComponent(path),{signal:c.signal,cache:'no-store',mode:'cors'});
+    if(!r.ok)throw new Error(r.status);
+    const val=await r.json();
+    return applyLocalQuery(val,q);
+  }finally{clearTimeout(t)}
 }
 function lineName(l){return l.name||l.productName||l.displayName||l.itemName||'منتج'}
 function lineTotal(l){return n(l.lineTotal)||n(l.total)||n(l.qty)*n(l.price)}

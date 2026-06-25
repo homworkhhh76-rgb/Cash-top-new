@@ -1,9 +1,9 @@
 {
-  "version": "v157-reports-profit-dates",
-  "date": "2026-06-06",
-  "notes": "Variants, barcode merging, report exports, invoice edit in cashier, finance filter fix",
-  "build": "isolated-company-local-store",
-  "updatedAt": "2026-06-24",
-  "note": "حذف وتعديل محلي فوري مع مزامنة لاحقة وعدم رجوع البيانات القديمة من Firebase",
+  "version": "v159-retention-45d-sync-fix",
+  "date": "2026-06-25",
+  "notes": "تنظيف تلقائي للفواتير المكتملة بعد 45 يوم، حفظ السجلات حتى 300 حركة و45 يوم، منع الفواتير الفارغة، وتثبيت صندوق الكاش مع تحسين مزامنة الحسابات",
+  "build": "mongodb-direct-api-retention-fix",
+  "updatedAt": "2026-06-25",
+  "note": "قاعدة البيانات تعمل عبر MongoDB API بدلاً من Firebase",
   "name": "كاش توب"
 }

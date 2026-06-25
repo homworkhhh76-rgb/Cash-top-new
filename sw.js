@@ -1,7 +1,7 @@
-const CACHE_NAME = 'cashtop-pwa-v157-reports-profit-dates';
-const FONT_CACHE_NAME = 'cashtop-font-cache-v157-reports-profit-dates';
-const PAGE_CACHE_NAME = 'cashtop-local-pages-v157-permanent';
-const ASSET_CACHE_NAME = 'cashtop-local-assets-v157-permanent';
+const CACHE_NAME = 'cashtop-pwa-v159-retention-45d-sync-fix';
+const FONT_CACHE_NAME = 'cashtop-font-cache-v159-retention-45d-sync-fix';
+const PAGE_CACHE_NAME = 'cashtop-local-pages-v159-retention-45d-sync-fix';
+const ASSET_CACHE_NAME = 'cashtop-local-assets-v159-retention-45d-sync-fix';
 const FONT_CSS_URL = 'https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap';
 const PRECACHE = [
   './',

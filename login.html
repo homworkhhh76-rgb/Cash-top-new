@@ -2411,8 +2411,8 @@ body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
 const firebaseConfig = {
   apiKey: "AIzaSyBM-xAF2lf0cspTu1-7HAXxyoORGGZsxA8",
   authDomain: "toppo-14392.firebaseapp.com",
-  databaseURL: (location.origin && location.origin !== "null" ? location.origin : "") + "/api/rtdb",
-  projectId: "cashtop-mongodb",
+  databaseURL: "https://cash-top-api-2026.vercel.app/api/rtdb",
+  projectId: "toppo-14392",
   storageBucket: "toppo-14392.firebasestorage.app",
   messagingSenderId: "124300854330",
   appId: "1:124300854330:web:47e832cd565a0ef5c32103",
@@ -2441,9 +2441,8 @@ async function sha256(message){
   return H.map(x=>x.toString(16).padStart(8,'0')).join('');
 }
 
-function makeDbCandidates(){
-    return [firebaseConfig.databaseURL].filter(Boolean);
-  }
+function makeDbCandidates(){return ['https://cash-top-api-2026.vercel.app/api/rtdb'];}
+
 function safePathPart(v){return String(v||'').trim().replace(/[.#$\[\]/]/g,'_')}
 function localCompanyStoreKey(companyKey){return `oscarStoreV2__company__${encodeURIComponent(String(companyKey||'COMPANY001').trim())}`}
 function legacyCompanyStoreKey(companyKey){return 'oscarStoreV2_'+String(companyKey||'COMPANY001').trim()}
@@ -2455,26 +2454,21 @@ function readLocalCompanyStore(companyKey){
   }
   return null;
 }
-function rawRtdbUrl(base,path){const apiBase=(location.origin && location.origin !== 'null' ? location.origin : '') + '/api/rtdb'; const cleanPath=String(path).split('/').map(x=>safePathPart(x)).join('/'); return apiBase+'?path='+encodeURIComponent(cleanPath)}
-function rtdbUrl(path){return rawRtdbUrl(firebaseConfig.databaseURL,path)}
+function rawRtdbUrl(base,path){return 'https://cash-top-api-2026.vercel.app/api/rtdb'+'?path='+encodeURIComponent(String(path||'').split('/').map(x=>safePathPart(x)).join('/'))}
+function rtdbUrl(path){return rawRtdbUrl('https://cash-top-api-2026.vercel.app/api/rtdb',path)}
 async function fetchTimeout(url, opts={}, ms=8000){const ctrl=new AbortController(); const timer=setTimeout(()=>ctrl.abort(),ms); try{return await fetch(url,{...opts,signal:ctrl.signal,cache:'no-store',mode:'cors'})} finally{clearTimeout(timer)}}
 async function pickDatabaseURL(companyKey){
-  if(!navigator.onLine || !firebaseConfig.projectId) return false;
-  let last='';
-  for(const base of makeDbCandidates()){
-    try{
-      // اختبار الاتصال ممنوع أن يكتب داخل companies/{key} حتى لا ينشئ شركة وهمية.
-      const probePath=`__login_probe__/${safePathPart(companyKey||'manual')}`;
-      const r=await fetchTimeout(rawRtdbUrl(base,probePath),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({ok:true,ts:Date.now(),from:'oscar-login-strict'})},6500);
-      if(r.ok){firebaseConfig.databaseURL=base; localStorage.setItem('oscarDbUrl_'+firebaseConfig.projectId,base); return true;}
-      last=String(r.status)+' '+(await r.text()).slice(0,80);
-    }catch(e){last=e?.name==='AbortError'?'انتهت مهلة الاتصال':(e?.message||String(e));}
-  }
-  console.warn('Realtime Database URL not found/write denied', last);
+  if(!navigator.onLine) return false;
+  try{
+    const probePath=`__login_probe__/${safePathPart(companyKey||'manual')}`;
+    const r=await fetchTimeout(rawRtdbUrl('https://cash-top-api-2026.vercel.app/api/rtdb',probePath),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({ok:true,ts:Date.now(),from:'cash-top-mongodb-login'})},6500);
+    if(r.ok){firebaseConfig.databaseURL='https://cash-top-api-2026.vercel.app/api/rtdb'; return true;}
+  }catch(e){console.warn('MongoDB connection failed',e);}
   return false;
 }
-async function rtdbGet(path, ms=8000){const r=await fetchTimeout(rtdbUrl(path),{},ms); if(!r.ok) throw new Error('RTDB GET '+r.status); return await r.json()}
-async function rtdbPatch(path,data,ms=8000){const r=await fetchTimeout(rtdbUrl(path),{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)},ms); if(!r.ok) throw new Error('RTDB PATCH '+r.status); return await r.json()}
+async function rtdbGet(path, ms=8000){const r=await fetchTimeout(rtdbUrl(path),{},ms); if(!r.ok) throw new Error('MongoDB GET '+r.status+' '+(await r.text()).slice(0,120)); return await r.json()}
+async function rtdbSet(path,data,ms=8000){const r=await fetchTimeout(rtdbUrl(path),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)},ms); if(!r.ok) throw new Error('MongoDB PUT '+r.status+' '+(await r.text()).slice(0,120)); return await r.json()}
+async function rtdbPatch(path,data,ms=8000){const old=await rtdbGet(path,ms).catch(()=>null); const merged=(old&&typeof old==='object'&&!Array.isArray(old))?{...old,...data}:{...data}; return await rtdbSet(path,merged,ms)}
 function normalizeAdmin(admin){
   if(!admin) return null;
   if(admin.main) return admin.main;
@@ -2524,7 +2518,7 @@ async function upgradePlainSecretIfNeeded(companyKey, admin, pass){
   try{ await rtdbPatch(`companies/${safePathPart(companyKey)}`,{admin:{main:upgraded},updatedAt:Date.now()},8000); }catch(e){ console.warn('admin password upgrade skipped',e); }
   return upgraded;
 }
-async function rtdbPatch(path,data,ms=9000){const r=await fetchTimeout(rtdbUrl(path),{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)},ms); if(!r.ok) throw new Error('PATCH '+r.status); return await r.json()}
+async function rtdbPatch(path,data,ms=9000){const old=await rtdbGet(path,ms).catch(()=>null); const merged=(old&&typeof old==='object'&&!Array.isArray(old))?{...old,...data}:{...data}; return await rtdbSet(path,merged,ms)}
 
 const LOGIN_PLAN_DEFS={
   bronze:{id:'bronze',name:'الخطة البرونزية',price:'',daily:{invoices:10,customers:10,expenses:10},fixed:{products:5,suppliers:2,accounts:4,employees:2}},

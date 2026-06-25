@@ -817,8 +817,8 @@ if(!navigator.onLine){location.replace('dashboard.html');return;}
 const firebaseConfig = {
   apiKey: "AIzaSyBM-xAF2lf0cspTu1-7HAXxyoORGGZsxA8",
   authDomain: "toppo-14392.firebaseapp.com",
-  databaseURL: (location.origin && location.origin !== "null" ? location.origin : "") + "/api/rtdb",
-  projectId: "cashtop-mongodb",
+  databaseURL: "https://cash-top-api-2026.vercel.app/api/rtdb",
+  projectId: "toppo-14392",
   storageBucket: "toppo-14392.firebasestorage.app",
   messagingSenderId: "124300854330",
   appId: "1:124300854330:web:47e832cd565a0ef5c32103",
@@ -865,7 +865,7 @@ function finishProgress(msg){
   targetPct=100;
   startSmoothProgress();
 }
-function safe(v){return String(v||'').replace(/[.#$[\]/]/g,'_')}
+function safe(v){return encodeURIComponent(String(v||'').replace(/[.#$[\]/]/g,'_'))}
 function n(v){return Number(v||0)||0}
 function defaultStore(){const now=Date.now();return {products:[],customers:[],suppliers:[],invoices:[],expenses:[],activity:[],inventory:[],notifications:[],scannerSessions:[],scannerEvents:[],employees:[],workers:[],warehouseMoves:[],journalEntries:[],stockMoves:[],coupons:[],taxSettings:[],printSettings:[],purchaseRecords:[],productOffers:[],invoicePaymentSettings:[],purchaseInvoices:[],purchaseReturns:[],wasteRecords:[],archiveStats:[],categories:[],branches:[{id:'main',name:'الفرع الرئيسي',main:true,createdAt:now,updatedAt:now}],accounts:[{id:'cash',name:'صندوق الكاش',balance:0,opening:0,type:'cash',movements:[{id:'m-open',kind:'opening',amount:0,note:'رصيد افتتاحي',date:new Date().toISOString()}],createdAt:now}],settings:[{id:'main',storeName:'كاش توب',currency:'₪',lowStock:5,printWidth:'58mm',autoPrintInvoice:false}],_pendingSync:[],_deleted:{}}}
 function parse(k){try{const raw=localStorage.getItem(k);return raw?JSON.parse(raw):null}catch(e){return null}}
@@ -873,19 +873,22 @@ function store(){return parse(storeKey())||parse(storeKey()+'_backup')||defaultS
 let state=store();
 collections.forEach(c=>{if(!Array.isArray(state[c]))state[c]=[]}); if(!Array.isArray(state._pendingSync))state._pendingSync=[]; if(!state._deleted)state._deleted={};
 function save(){try{localStorage.setItem(storeKey(),JSON.stringify(state));localStorage.setItem(storeKey()+'_backup',JSON.stringify(state));localStorage.setItem(storeKey()+'_lastSaved',String(Date.now()))}catch(e){}}
-const bases=[firebaseConfig.databaseURL].filter(Boolean);
-let goodBase='';
-async function fetchJson(base,path,opt={}){
+const MONGO_RTDB_API = 'https://cash-top-api-2026.vercel.app/api/rtdb';
+const bases=[MONGO_RTDB_API];
+let goodBase=MONGO_RTDB_API;
+function dbUrl(path){
   const clean=String(path||'').replace(/^\/+/,'');
-  const url=base+'?path='+encodeURIComponent(clean);
-  const r=await fetch(url,{cache:'no-store',...opt});
-  if(!r.ok)throw new Error(r.status+' '+r.statusText);
+  return MONGO_RTDB_API+'?path='+encodeURIComponent(clean);
+}
+async function fetchJson(base,path,opt={}){
+  const r=await fetch(dbUrl(path),{cache:'no-store',mode:'cors',...opt});
+  if(!r.ok)throw new Error(r.status+' '+r.statusText+' '+(await r.text()).slice(0,120));
   if(opt.method==='DELETE')return null;
   return await r.json();
 }
-async function dbGet(path){for(const b of goodBase?[goodBase,...bases.filter(x=>x!==goodBase)]:bases){try{const v=await fetchJson(b,path);goodBase=b;return v}catch(e){}}throw new Error('تعذر الاتصال بقاعدة البيانات')}
-async function dbSet(path,val){for(const b of goodBase?[goodBase,...bases.filter(x=>x!==goodBase)]:bases){try{const v=await fetchJson(b,path,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(val)});goodBase=b;return v}catch(e){}}throw new Error('تعذر الحفظ في قاعدة البيانات')}
-async function dbRemove(path){for(const b of goodBase?[goodBase,...bases.filter(x=>x!==goodBase)]:bases){try{await fetchJson(b,path,{method:'DELETE'});goodBase=b;return true}catch(e){}}return false}
+async function dbGet(path){try{return await fetchJson(MONGO_RTDB_API,path)}catch(e){throw new Error('تعذر الاتصال بقاعدة البيانات')}}
+async function dbSet(path,val){try{return await fetchJson(MONGO_RTDB_API,path,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(val)})}catch(e){throw new Error('تعذر الحفظ في قاعدة البيانات')}}
+async function dbRemove(path){try{await fetchJson(MONGO_RTDB_API,path,{method:'DELETE'});return true}catch(e){return false}}
 function rowsFromVal(v){if(!v)return[];if(Array.isArray(v))return v.filter(Boolean);if(typeof v==='object')return Object.entries(v).filter(([id])=>!String(id).startsWith('__')).map(([id,row])=>({id,...(row||{})}));return[]}
 function remoteTs(x){const d=Date.parse(x?.updatedAt||x?.createdAt||x?.date||0);return n(x?.updatedAt)||n(x?.createdAt)||(Number.isFinite(d)?d:0)||0}
 function merge(name,rows){const map=new Map((state[name]||[]).filter(x=>x&&x.id).map(x=>[String(x.id),x]));let changed=false;rows.forEach(r=>{if(!r||!r.id)return;const id=String(r.id);const cur=map.get(id);if(!cur||remoteTs(r)>=remoteTs(cur)){map.set(id,{...cur,...r});changed=true}});state[name]=[...map.values()];return changed}

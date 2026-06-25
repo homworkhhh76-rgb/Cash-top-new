@@ -2352,8 +2352,8 @@ body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
 const firebaseConfig = {
   apiKey: "AIzaSyBM-xAF2lf0cspTu1-7HAXxyoORGGZsxA8",
   authDomain: "toppo-14392.firebaseapp.com",
-  databaseURL: (location.origin && location.origin !== "null" ? location.origin : "") + "/api/rtdb",
-  projectId: "cashtop-mongodb",
+  databaseURL: "https://cash-top-api-2026.vercel.app/api/rtdb",
+  projectId: "toppo-14392",
   storageBucket: "toppo-14392.firebasestorage.app",
   messagingSenderId: "124300854330",
   appId: "1:124300854330:web:47e832cd565a0ef5c32103",
@@ -2405,14 +2405,14 @@ function safePathPart(v){return String(v||'').trim().replace(/[.#$\[\]/]/g,'_')}
 function normalizeKey(v){return String(v||'').trim().toUpperCase().replace(/[^A-Z0-9_-]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'')}
 function makeKey(){const a=Math.random().toString(36).slice(2,6).toUpperCase(); const b=Math.random().toString(36).slice(2,6).toUpperCase(); return 'CASH TOP-'+a+'-'+b}
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function makeDbCandidates(){return [firebaseConfig.databaseURL].filter(Boolean)}
-function rawRtdbUrl(base,path){const apiBase=(location.origin && location.origin !== 'null' ? location.origin : '') + '/api/rtdb'; const cleanPath=String(path).split('/').map(x=>safePathPart(x)).join('/'); return apiBase+'?path='+encodeURIComponent(cleanPath)}
-function rtdbUrl(path){return rawRtdbUrl(firebaseConfig.databaseURL,path)}
+function makeDbCandidates(){return ['https://cash-top-api-2026.vercel.app/api/rtdb']}
+function rawRtdbUrl(base,path){return 'https://cash-top-api-2026.vercel.app/api/rtdb'+'?path='+encodeURIComponent(String(path||'').split('/').map(x=>safePathPart(x)).join('/'))}
+function rtdbUrl(path){return rawRtdbUrl('https://cash-top-api-2026.vercel.app/api/rtdb',path)}
 async function fetchTimeout(url, opts={}, ms=9000){const ctrl=new AbortController(); const timer=setTimeout(()=>ctrl.abort(),ms); try{return await fetch(url,{...opts,signal:ctrl.signal,cache:'no-store',mode:'cors'})} finally{clearTimeout(timer)}}
-async function pickDatabaseURL(){if(!navigator.onLine) return false; let last=''; for(const base of makeDbCandidates()){try{const r=await fetchTimeout(rawRtdbUrl(base,'__admin_probe__'),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({ok:true,ts:Date.now(),from:'oscar-admin'})},6500); if(r.ok){firebaseConfig.databaseURL=base; localStorage.setItem('oscarDbUrl_'+firebaseConfig.projectId,base); $('#dbStatus').textContent='متصل بقاعدة البيانات: '+base; return true} last=String(r.status)}catch(e){last=e?.name==='AbortError'?'انتهت مهلة الاتصال':(e?.message||String(e))}} $('#dbStatus').textContent='تعذر الاتصال بقاعدة البيانات'; console.warn('DB failed',last); return false}
-async function rtdbGet(path,ms=9000){const r=await fetchTimeout(rtdbUrl(path),{},ms); if(!r.ok) throw new Error('GET '+r.status); return await r.json()}
-async function rtdbSet(path,data,ms=9000){const r=await fetchTimeout(rtdbUrl(path),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)},ms); if(!r.ok) throw new Error('PUT '+r.status); return await r.json()}
-async function rtdbPatch(path,data,ms=9000){const r=await fetchTimeout(rtdbUrl(path),{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)},ms); if(!r.ok) throw new Error('PATCH '+r.status); return await r.json()}
+async function pickDatabaseURL(){if(!navigator.onLine) return false; try{await rtdbSet('__admin_probe__',{ok:true,ts:Date.now(),from:'cash-top-mongodb-admin'}); firebaseConfig.databaseURL='https://cash-top-api-2026.vercel.app/api/rtdb'; $('#dbStatus').textContent='متصل بقاعدة MongoDB'; return true}catch(e){$('#dbStatus').textContent='تعذر الاتصال بقاعدة البيانات'; console.warn('MongoDB failed',e); return false}}
+async function rtdbGet(path,ms=9000){const r=await fetchTimeout(rtdbUrl(path),{},ms); if(!r.ok) throw new Error('GET '+r.status+' '+(await r.text()).slice(0,120)); return await r.json()}
+async function rtdbSet(path,data,ms=9000){const r=await fetchTimeout(rtdbUrl(path),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)},ms); if(!r.ok) throw new Error('PUT '+r.status+' '+(await r.text()).slice(0,120)); return await r.json()}
+async function rtdbPatch(path,data,ms=9000){const old=await rtdbGet(path,ms).catch(()=>null); const merged=(old&&typeof old==='object'&&!Array.isArray(old))?{...old,...data}:{...data}; return await rtdbSet(path,merged,ms)}
 function rowsFromObject(val){if(!val) return []; if(Array.isArray(val)) return val.filter(Boolean); return Object.entries(val).map(([id,data])=>({id,...(data||{})}))}
 function adminHasSecret(a){return !!(a && (a.passwordHash || a.password || a.pass || a.adminPassword || a.plainPassword));}
 function localCompanies(){try{return JSON.parse(localStorage.getItem('oscarAdminCompanies'))||[]}catch(e){return []}}
