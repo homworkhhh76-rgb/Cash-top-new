@@ -20,8 +20,17 @@ async function getCollection() {
   const collectionName = process.env.COLLECTION_NAME || 'yop';
   const collection = client.db(dbName).collection(collectionName);
   if (!indexesReady) {
-    await collection.createIndex({ path: 1 }, { unique: true });
-    await collection.createIndex({ updatedAt: -1 });
+    // Use a partial unique index so existing legacy documents in the same collection
+    // that do not have a `path` field do not break the RTDB compatibility layer.
+    await collection.createIndex(
+      { path: 1 },
+      {
+        name: 'rtdb_path_unique',
+        unique: true,
+        partialFilterExpression: { path: { $type: 'string' } }
+      }
+    );
+    await collection.createIndex({ updatedAt: -1 }, { name: 'rtdb_updatedAt' });
     indexesReady = true;
   }
   return collection;
