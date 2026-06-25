@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>جاري المزامنة - كاش توب</title>
+<link rel="icon" type="image/png" sizes="64x64" href="icon-64.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#174ea6">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:'Cairo',system-ui,-apple-system,'Segoe UI',Tahoma,Arial,sans-serif;background:linear-gradient(180deg,#f8fbff,#eef6ff);color:#172235;overflow:hidden}
+.sync-wrap{height:100vh;display:grid;place-items:center;padding:22px}
+.sync-box{width:min(92vw,540px);text-align:center}
+.sync-logo{
+  width:150px;height:150px;margin:0 auto 30px;border-radius:42px;
+  display:grid;place-items:center;color:#174ea6;background:rgba(255,255,255,.88);
+  box-shadow:0 24px 55px rgba(23,78,166,.16),inset 0 0 28px rgba(23,78,166,.08)
+}
+.sync-logo img{width:95px;height:95px;object-fit:contain}
+h1{font-size:34px;line-height:1.25;margin:0 0 12px;font-weight:950;color:#172235}
+p{font-size:19px;color:#667085;font-weight:800;margin:0 0 34px}
+.progress-card{border:1px solid #e3eaf5;border-radius:26px;background:#fff;padding:24px;text-align:right;box-shadow:0 18px 46px rgba(15,23,42,.07)}
+.status-line{display:flex;align-items:center;gap:14px;font-size:18px;font-weight:900;color:#26344a;margin-bottom:20px}
+.status-icon{width:54px;height:54px;min-width:54px;border-radius:17px;background:#edf4ff;color:#174ea6;display:grid;place-items:center}
+.status-icon svg{width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:2.4}
+.track{height:18px;border-radius:999px;background:#e9eff7;overflow:hidden;margin:0 8px 20px}
+.fill{height:100%;width:5%;border-radius:999px;background:linear-gradient(90deg,#174ea6,#2f7df6);box-shadow:0 5px 18px rgba(23,78,166,.28);transition:width .25s ease}
+.row{display:flex;align-items:center;justify-content:space-between;color:#667085;font-weight:900}
+.pct{background:#eef4ff;color:#174ea6;border-radius:18px;padding:9px 16px;font-size:18px;font-weight:950}
+}
+@media(max-width:520px){
+  .sync-wrap{align-items:center;padding:18px}
+  .sync-logo{width:138px;height:138px;margin-top:6px}
+  h1{font-size:28px}
+  p{font-size:17px}
+  .progress-card{padding:20px}
+}
+
+/* v136 mobile-only compact cashier cart */
+@media (max-width:700px){
+  body[data-page="cashier"] #cartLines{
+    display:grid;
+    gap:3px!important;
+  }
+  body[data-page="cashier"] .cart-line{
+    grid-template-columns:minmax(0,1fr) 86px 24px 54px 22px!important;
+    gap:3px!important;
+    min-height:38px!important;
+    padding:3px 4px!important;
+    border-radius:12px!important;
+    align-items:center!important;
+  }
+  body[data-page="cashier"] .cart-line-main{
+    position:relative!important;
+    min-width:0!important;
+    padding:0!important;
+    line-height:1.05!important;
+  }
+  body[data-page="cashier"] .cart-line-main:has(.cart-variant-wrap){
+    padding-inline-end:25px!important;
+  }
+  body[data-page="cashier"] .cart-name-row,
+  body[data-page="cashier"] .cart-line-name{
+    display:block!important;
+    min-width:0!important;
+    max-width:100%!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    font-size:11px!important;
+    line-height:1.05!important;
+    font-weight:950!important;
+  }
+  body[data-page="cashier"] .cart-line-meta{
+    display:block!important;
+    margin-top:1px!important;
+    color:var(--primary)!important;
+    font-size:9px!important;
+    line-height:1!important;
+    font-weight:900!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  body[data-page="cashier"] .cart-variant-wrap{
+    position:absolute!important;
+    inset-inline-end:0!important;
+    top:50%!important;
+    transform:translateY(-50%)!important;
+    width:23px!important;
+    height:25px!important;
+    margin:0!important;
+    z-index:2!important;
+  }
+  body[data-page="cashier"] .cart-variant-select{
+    width:23px!important;
+    min-width:23px!important;
+    max-width:23px!important;
+    height:25px!important;
+    min-height:25px!important;
+    padding:0!important;
+    border-radius:9px!important;
+    font-size:0!important;
+    color:transparent!important;
+    background-color:#f8fafc!important;
+    border:1px solid var(--line)!important;
+    box-shadow:none!important;
+  }
+  body[data-page="cashier"] .cart-variant-select option{
+    color:#111827!important;
+    font-size:12px!important;
+  }
+  body[data-page="cashier"] .cart-line-unit-col{
+    order:3!important;
+    min-width:0!important;
+    width:24px!important;
+    display:flex!important;
+    justify-content:center!important;
+  }
+  body[data-page="cashier"] .cart-unit-select{
+    width:24px!important;
+    min-width:24px!important;
+    max-width:24px!important;
+    height:25px!important;
+    min-height:25px!important;
+    padding:0!important;
+    border-radius:9px!important;
+    font-size:0!important;
+    color:transparent!important;
+    background-color:#f8fafc!important;
+    border:1px solid var(--line)!important;
+    box-shadow:none!important;
+  }
+  body[data-page="cashier"] .cart-unit-select option{
+    color:#111827!important;
+    font-size:12px!important;
+  }
+  body[data-page="cashier"] .cart-unit-plain{
+    display:none!important;
+  }
+  body[data-page="cashier"] .qty-stepper{
+    order:2!important;
+    width:86px!important;
+    min-width:86px!important;
+    gap:1px!important;
+    padding:1px!important;
+    border-radius:11px!important;
+  }
+  body[data-page="cashier"] .qty-stepper .input,
+  body[data-page="cashier"] .cart-qty{
+    width:34px!important;
+    min-width:34px!important;
+    max-width:34px!important;
+    height:24px!important;
+    min-height:24px!important;
+    padding:1px 2px!important;
+    border-radius:9px!important;
+    font-size:11px!important;
+    font-weight:900!important;
+    line-height:1!important;
+  }
+  body[data-page="cashier"] .qty-btn{
+    width:22px!important;
+    height:22px!important;
+    min-width:22px!important;
+    min-height:22px!important;
+    border-radius:9px!important;
+    box-shadow:none!important;
+  }
+  body[data-page="cashier"] .qty-btn svg{
+    width:13px!important;
+    height:13px!important;
+  }
+  body[data-page="cashier"] .cart-price{
+    order:4!important;
+    width:54px!important;
+    min-width:54px!important;
+    max-width:54px!important;
+    height:26px!important;
+    min-height:26px!important;
+    padding:2px 3px!important;
+    border-radius:10px!important;
+    font-size:11px!important;
+    font-weight:900!important;
+    text-align:center!important;
+  }
+  body[data-page="cashier"] .cart-total{
+    display:none!important;
+  }
+  body[data-page="cashier"] .cart-line-remove{
+    order:5!important;
+    width:22px!important;
+    min-width:22px!important;
+    height:24px!important;
+    min-height:24px!important;
+    padding:0!important;
+    border-radius:9px!important;
+    font-size:11px!important;
+    line-height:1!important;
+  }
+  body[data-page="cashier"] .cashier-cart,
+  body[data-page="cashier"] .cart-card,
+  body[data-page="cashier"] .card:has(#cartLines){
+    padding-top:8px!important;
+    padding-bottom:8px!important;
+  }
+}
+
+
+/* v137 mobile cashier cart like reference image */
+@media (max-width:700px){
+  body[data-page="cashier"] #cartLines{
+    display:grid!important;
+    gap:3px!important;
+  }
+  body[data-page="cashier"] .cart-line{
+    direction:rtl!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) 24px 86px 54px 24px!important;
+    gap:4px!important;
+    align-items:center!important;
+    min-height:39px!important;
+    padding:3px 4px!important;
+    border-radius:12px!important;
+  }
+  body[data-page="cashier"] .cart-line-main{
+    order:0!important;
+    position:relative!important;
+    min-width:0!important;
+    padding:0!important;
+    line-height:1.05!important;
+  }
+  body[data-page="cashier"] .cart-line-main:has(.cart-variant-wrap){
+    padding-inline-start:27px!important;
+  }
+  body[data-page="cashier"] .cart-line-name{
+    display:block!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    font-size:11px!important;
+    line-height:1.05!important;
+    font-weight:950!important;
+    color:var(--text)!important;
+  }
+  body[data-page="cashier"] .cart-line-meta{
+    display:block!important;
+    margin-top:1px!important;
+    color:var(--primary)!important;
+    font-size:9px!important;
+    line-height:1!important;
+    font-weight:900!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  body[data-page="cashier"] .cart-variant-wrap{
+    position:absolute!important;
+    inset-inline-start:0!important;
+    top:50%!important;
+    transform:translateY(-50%)!important;
+    width:24px!important;
+    height:25px!important;
+    margin:0!important;
+    z-index:2!important;
+  }
+  body[data-page="cashier"] .cart-variant-select{
+    width:24px!important;
+    min-width:24px!important;
+    max-width:24px!important;
+    height:25px!important;
+    min-height:25px!important;
+    padding:0!important;
+    border-radius:9px!important;
+    font-size:0!important;
+    color:transparent!important;
+    background-color:#f8fafc!important;
+    border:1px solid var(--line)!important;
+    box-shadow:none!important;
+  }
+  body[data-page="cashier"] .cart-variant-select option{
+    color:#111827!important;
+    font-size:12px!important;
+  }
+  body[data-page="cashier"] .cart-line-unit-col{
+    order:1!important;
+    min-width:0!important;
+    width:24px!important;
+    display:flex!important;
+    justify-content:center!important;
+  }
+  body[data-page="cashier"] .cart-unit-select{
+    width:24px!important;
+    min-width:24px!important;
+    max-width:24px!important;
+    height:25px!important;
+    min-height:25px!important;
+    padding:0!important;
+    border-radius:9px!important;
+    font-size:0!important;
+    color:transparent!important;
+    background-color:#f8fafc!important;
+    border:1px solid var(--line)!important;
+    box-shadow:none!important;
+  }
+  body[data-page="cashier"] .cart-unit-select option{
+    color:#111827!important;
+    font-size:12px!important;
+  }
+  body[data-page="cashier"] .cart-unit-plain{
+    display:none!important;
+  }
+  body[data-page="cashier"] .qty-stepper{
+    order:2!important;
+    width:86px!important;
+    min-width:86px!important;
+    gap:1px!important;
+    padding:1px!important;
+    border-radius:11px!important;
+  }
+  body[data-page="cashier"] .qty-stepper .input,
+  body[data-page="cashier"] .cart-qty{
+    width:34px!important;
+    min-width:34px!important;
+    max-width:34px!important;
+    height:24px!important;
+    min-height:24px!important;
+    padding:1px 2px!important;
+    border-radius:9px!important;
+    font-size:11px!important;
+    font-weight:900!important;
+    line-height:1!important;
+    text-align:center!important;
+  }
+  body[data-page="cashier"] .qty-btn{
+    width:22px!important;
+    height:22px!important;
+    min-width:22px!important;
+    min-height:22px!important;
+    border-radius:9px!important;
+    box-shadow:none!important;
+  }
+  body[data-page="cashier"] .qty-btn svg{
+    width:13px!important;
+    height:13px!important;
+  }
+  body[data-page="cashier"] .cart-price{
+    order:3!important;
+    width:54px!important;
+    min-width:54px!important;
+    max-width:54px!important;
+    height:26px!important;
+    min-height:26px!important;
+    padding:2px 3px!important;
+    border-radius:10px!important;
+    font-size:11px!important;
+    font-weight:900!important;
+    text-align:center!important;
+  }
+  body[data-page="cashier"] .cart-total{
+    display:none!important;
+  }
+  body[data-page="cashier"] .cart-line-remove{
+    order:4!important;
+    width:24px!important;
+    min-width:24px!important;
+    height:25px!important;
+    min-height:25px!important;
+    padding:0!important;
+    border-radius:10px!important;
+    display:grid!important;
+    place-items:center!important;
+    font-size:0!important;
+    line-height:1!important;
+  }
+  body[data-page="cashier"] .cart-line-remove .cart-remove-svg{
+    width:14px!important;
+    height:14px!important;
+    fill:none!important;
+    stroke:currentColor!important;
+    stroke-width:2.1!important;
+    stroke-linecap:round!important;
+    stroke-linejoin:round!important;
+  }
+}
+
+
+/* ضبط عام للجوال والقائمة والسهم */
+select{
+  appearance:none;
+  -webkit-appearance:none;
+  background-color:#fff;
+  background-image:linear-gradient(45deg,transparent 50%,var(--primary,#174ea6) 50%),linear-gradient(135deg,var(--primary,#174ea6) 50%,transparent 50%);
+  background-position:left 14px center,left 8px center;
+  background-size:7px 7px,7px 7px;
+  background-repeat:no-repeat;
+  padding-left:30px!important;
+}
+@media (hover:none) and (pointer:coarse), (max-device-width:820px){
+  .sidebar{
+    right:-330px!important;
+    width:min(300px,86vw)!important;
+    max-width:86vw!important;
+    box-shadow:-22px 0 50px rgba(15,23,42,.16)!important;
+    border-left:1px solid var(--line)!important;
+    z-index:160!important;
+  }
+  .sidebar.show{right:0!important}
+  .main{
+    width:100%!important;
+    max-width:1220px!important;
+    margin-right:auto!important;
+    margin-left:auto!important;
+    padding-right:16px!important;
+    padding-left:16px!important;
+  }
+  #menuBtn,.side-close{
+    display:inline-flex!important;
+  }
+  #sideOverlay.show{
+    display:block!important;
+    z-index:150!important;
+  }
+  .overlay.show{display:block!important}
+}
+
+
+/* سهم قوائم لطيف */
+select{
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  background-color:#fff!important;
+  background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23174ea6' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 10 5 5 5-5'/%3E%3C/svg%3E")!important;
+  background-repeat:no-repeat!important;
+  background-position:left 10px center!important;
+  background-size:18px 18px!important;
+  padding-left:34px!important;
+}
+
+
+/* v142 رسائل وديون العملاء */
+.customer-contact-actions{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:7px!important;
+}
+.customer-contact-btn{
+  width:36px!important;
+  height:36px!important;
+  min-width:36px!important;
+  border-radius:14px!important;
+  border:1px solid var(--line,#e7ecf3)!important;
+  display:inline-grid!important;
+  place-items:center!important;
+  box-shadow:0 8px 18px rgba(15,23,42,.07)!important;
+  background:#fff!important;
+}
+.customer-contact-btn svg{
+  width:19px!important;
+  height:19px!important;
+  fill:none!important;
+  stroke:currentColor!important;
+  stroke-width:2.1!important;
+  stroke-linecap:round!important;
+  stroke-linejoin:round!important;
+}
+.customer-contact-btn.sms{color:#174ea6!important;background:#eff6ff!important}
+.customer-contact-btn.wa{color:#128c4a!important;background:#ecfdf5!important}
+.customer-debt-report-btn svg,
+.message-settings-card svg{
+  width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round
+}
+.message-settings-card .var-chips{
+  display:flex;flex-wrap:wrap;gap:7px;margin-top:8px
+}
+.message-settings-card .var-chips code{
+  direction:ltr;display:inline-flex;border-radius:999px;background:var(--soft,#eef6ff);color:var(--primary,#174ea6);padding:5px 9px;font-weight:900;font-size:12px
+}
+.message-settings-card textarea{
+  min-height:120px!important;
+  line-height:1.9!important;
+}
+
+
+/* v143 إعدادات الرسائل والطباعة */
+.message-settings-card .section-title{display:flex;align-items:center;gap:8px}
+.message-settings-card .var-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.message-settings-card .msg-var-chip{min-height:34px;border-radius:999px;font-weight:950;font-size:12px;padding:6px 10px;direction:ltr}
+.message-settings-card textarea{min-height:130px!important;line-height:1.9!important}
+.print-custom-field.hidden{display:none!important}
+@media(max-width:700px){
+  body[data-page="cashier"] #cartLines{
+    max-height:520px!important;
+    overflow-y:auto!important;
+    border:1px solid var(--line,#e7ecf3)!important;
+    border-radius:22px!important;
+    padding:8px!important;
+    background:#fff!important;
+    box-shadow:inset 4px 0 0 rgba(148,163,184,.35)!important;
+  }
+}
+@media(min-width:701px){
+  body[data-page="cashier"] #cartLines{max-height:480px!important;overflow-y:auto!important}
+  body[data-page="cashier"] .cart-line{min-height:42px!important;padding-top:5px!important;padding-bottom:5px!important}
+  body[data-page="cashier"] .cart-line-name,body[data-page="cashier"] .cart-line b{font-size:12px!important}
+  body[data-page="cashier"] .cart-unit-select,body[data-page="cashier"] .cart-variant-select,body[data-page="cashier"] .cart-qty,body[data-page="cashier"] .cart-price{font-size:11px!important;min-height:30px!important}
+  body[data-page="cashier"] .qty-btn{width:28px!important;height:28px!important;min-width:28px!important}
+}
+
+
+/* v145 تثبيت القائمة الجانبية في منظور اللابتوب */
+@media (min-width:760px){
+  body .app{
+    display:block!important;
+  }
+  body .sidebar{
+    position:fixed!important;
+    top:0!important;
+    right:0!important;
+    left:auto!important;
+    width:300px!important;
+    max-width:300px!important;
+    height:100vh!important;
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+    transform:none!important;
+    z-index:100!important;
+    box-shadow:none!important;
+    border-left:1px solid var(--line,#e5e7eb)!important;
+    border-right:0!important;
+  }
+  body .sidebar:not(.show){
+    right:0!important;
+  }
+  body .main{
+    width:calc(100vw - 310px)!important;
+    max-width:none!important;
+    margin-right:310px!important;
+    margin-left:0!important;
+    padding-right:12px!important;
+    padding-left:12px!important;
+  }
+  body #menuBtn,
+  body .side-close,
+  body #sideOverlay{
+    display:none!important;
+    visibility:hidden!important;
+    pointer-events:none!important;
+  }
+  body .overlay,
+  body .overlay.show{
+    display:none!important;
+  }
+  body .bottom-nav{
+    display:none!important;
+  }
+  body .top-card{
+    width:100%!important;
+    max-width:none!important;
+  }
+}
+@media (min-width:760px) and (max-width:980px){
+  body .sidebar{
+    width:260px!important;
+    max-width:260px!important;
+  }
+  body .main{
+    width:calc(100vw - 270px)!important;
+    margin-right:270px!important;
+  }
+}
+@media (max-width:759px){
+  body .sidebar{
+    right:-320px!important;
+  }
+  body .sidebar.show{
+    right:0!important;
+  }
+}
+
+
+/* v151 ترتيب إجراءات العملاء على سطرين */
+.customer-actions-grid{
+  display:grid!important;
+  grid-template-columns:repeat(5,max-content)!important;
+  gap:7px!important;
+  align-items:center!important;
+  justify-content:start!important;
+  min-width:430px!important;
+}
+.customer-actions-grid .mini-btn,
+.customer-actions-grid .customer-contact-btn{
+  margin:0!important;
+  white-space:nowrap!important;
+}
+.customer-actions-grid .customer-contact-btn{
+  width:34px!important;
+  height:34px!important;
+  min-width:34px!important;
+}
+@media(max-width:760px){
+  .customer-actions-grid{
+    grid-template-columns:repeat(5,1fr)!important;
+    min-width:360px!important;
+    gap:6px!important;
+  }
+  .customer-actions-grid .mini-btn{
+    padding:7px 8px!important;
+    font-size:11px!important;
+  }
+}
+
+
+/* v152 إجراءات العملاء: اللابتوب سطر واحد والجوال يبقى سطرين */
+@media(min-width:761px){
+  .table-wrap:has(#customersTable){
+    overflow-x:auto!important;
+  }
+  #customersTable{
+    min-width:1280px!important;
+  }
+  #customersTable td.actions,
+  #customersTable th:last-child{
+    min-width:660px!important;
+    width:660px!important;
+    text-align:right!important;
+    padding-right:18px!important;
+  }
+  #customersTable .customer-actions-grid{
+    display:flex!important;
+    flex-wrap:nowrap!important;
+    justify-content:flex-start!important;
+    align-items:center!important;
+    gap:7px!important;
+    min-width:620px!important;
+    direction:rtl!important;
+  }
+  #customersTable .customer-actions-grid .mini-btn{
+    min-width:auto!important;
+    padding:8px 11px!important;
+    font-size:12px!important;
+  }
+}
+
+
+/* v152 أيقونة رابط الفاتورة */
+.invoice-link-icon{
+  width:38px!important;
+  height:38px!important;
+  min-width:38px!important;
+  border-radius:14px!important;
+  display:inline-grid!important;
+  place-items:center!important;
+  padding:0!important;
+}
+.invoice-link-icon svg{
+  width:19px!important;
+  height:19px!important;
+  fill:none!important;
+  stroke:currentColor!important;
+  stroke-width:2.25!important;
+  stroke-linecap:round!important;
+  stroke-linejoin:round!important;
+}
+
+
+/* v156 ميزات التقارير والائتمان والولاء */
+.loyalty-off .loyalty-column{display:none!important}
+.credit-safe{background:#dcfce7!important;color:#166534!important}
+.credit-mid{background:#fef3c7!important;color:#92400e!important}
+.credit-risk{background:#fee2e2!important;color:#991b1b!important}
+.credit-score-chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:900}
+.loyalty-chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 9px;background:#eef6ff;color:#174ea6;font-size:11px;font-weight:900}
+.report-builder-grid{display:grid;grid-template-columns:minmax(280px,.38fr) 1fr;gap:14px}
+.report-preview-card{min-height:320px}
+.ai-cashflow-table td,.ai-cashflow-table th{white-space:nowrap}
+@media(max-width:760px){.report-builder-grid{grid-template-columns:1fr}.credit-score-chip,.loyalty-chip{font-size:10px;padding:4px 7px}}
+
+</style>
+
+<style id="v149-desktop-sidebar-final">
+/* v149 فرض القائمة الجانبية في أي منظور كمبيوتر */
+@media (min-width:600px){
+  html body .app{
+    display:block!important;
+    min-height:100vh!important;
+  }
+  html body #sidebar,
+  html body .sidebar{
+    position:fixed!important;
+    top:0!important;
+    right:0!important;
+    left:auto!important;
+    bottom:auto!important;
+    width:300px!important;
+    max-width:300px!important;
+    height:100vh!important;
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+    transform:none!important;
+    z-index:120!important;
+    box-shadow:none!important;
+    border-left:1px solid var(--line,#e5e7eb)!important;
+    overflow-y:auto!important;
+  }
+  html body #sidebar:not(.show),
+  html body .sidebar:not(.show){
+    right:0!important;
+  }
+  html body .main{
+    width:calc(100vw - 312px)!important;
+    max-width:none!important;
+    margin-right:312px!important;
+    margin-left:0!important;
+    padding-right:12px!important;
+    padding-left:12px!important;
+  }
+  html body #menuBtn,
+  html body #closeSide,
+  html body .side-close,
+  html body #sideOverlay,
+  html body .overlay,
+  html body .bottom-nav{
+    display:none!important;
+    visibility:hidden!important;
+    pointer-events:none!important;
+  }
+}
+@media (min-width:600px) and (max-width:850px){
+  html body #sidebar,
+  html body .sidebar{
+    width:250px!important;
+    max-width:250px!important;
+  }
+  html body .main{
+    width:calc(100vw - 260px)!important;
+    margin-right:260px!important;
+  }
+}
+@media (max-width:599px){
+  html body #sidebar,
+  html body .sidebar{
+    right:-330px!important;
+  }
+  html body #sidebar.show,
+  html body .sidebar.show{
+    right:0!important;
+  }
+}
+</style>
+
+
+<style id="v149-clothes-cart-table">
+/* v149 سلة وجدول خاص لمحل الملابس */
+body[data-page="cashier"] .clothing-cart-lines .cart-line{
+  border-color:#dbeafe!important;
+  background:linear-gradient(180deg,#ffffff,#fbfdff)!important;
+}
+body[data-page="cashier"] .clothing-cart-lines .cart-clothing-color,
+body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
+  background:#eef6ff!important;
+  border-color:#d7e7ff!important;
+  color:#174ea6!important;
+  font-weight:950!important;
+}
+.clothes-products-panel{
+  border:1px solid #dbeafe!important;
+  background:linear-gradient(180deg,#fff,#f8fbff)!important;
+}
+.clothes-products-panel table td:nth-child(2),
+.clothes-products-panel table td:nth-child(3),
+.clothes-products-panel table td:nth-child(4){
+  font-weight:900!important;
+}
+</style>
+
+
+<style id="v153-customers-actions-desktop-line">
+/* v153 إجراءات العملاء للابتوب: سطر واحد مع مساحة كاملة */
+@media(min-width:761px){
+  body[data-page="customers"] .table-wrap{overflow-x:auto!important;}
+  body[data-page="customers"] #customersTable{min-width:1520px!important;table-layout:auto!important;}
+  body[data-page="customers"] #customersTable th:last-child,
+  body[data-page="customers"] #customersTable td.actions{min-width:820px!important;width:820px!important;text-align:right!important;padding-right:24px!important;padding-left:24px!important;}
+  body[data-page="customers"] #customersTable .customer-actions-grid{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;justify-content:flex-start!important;align-items:center!important;gap:8px!important;min-width:780px!important;width:max-content!important;direction:rtl!important;}
+  body[data-page="customers"] #customersTable .customer-actions-grid .mini-btn,
+  body[data-page="customers"] #customersTable .customer-actions-grid .customer-contact-btn{flex:0 0 auto!important;white-space:nowrap!important;}
+}
+</style>
+
+</head>
+<body>
+<div class="sync-wrap">
+  <section class="sync-box">
+    <div class="sync-logo" aria-hidden="true"><img src="oscar-logo.png" alt="كاش توب"></div>
+    <h1>جاري المزامنة، يرجى الانتظار...</h1>
+    <p>يتم تجهيز بياناتك قبل فتح لوحة التحكم.</p>
+    <div class="progress-card">
+      <div class="status-line">
+        <span class="status-icon"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 0 1-15.6 6.1"/><path d="M3 12A9 9 0 0 1 18.6 5.9"/><path d="M7 18H3v4M17 6h4V2"/></svg></span>
+        <span id="syncText">جاري تجهيز التخزين المحلي...</span>
+      </div>
+      <div class="track"><div class="fill" id="syncFill"></div></div>
+      <div class="row"><span>تقدم العملية</span><span class="pct" id="syncPct">5%</span></div>
+    </div>
+  </section>
+</div>
+<script>
+(function(){
+if(localStorage.getItem('oscarRunLoginSync')!=='1'){location.replace('dashboard.html');return;}
+localStorage.removeItem('oscarRunLoginSync');
+if(!navigator.onLine){location.replace('dashboard.html');return;}
+const firebaseConfig = {
+  apiKey: "AIzaSyBM-xAF2lf0cspTu1-7HAXxyoORGGZsxA8",
+  authDomain: "toppo-14392.firebaseapp.com",
+  databaseURL: (location.origin && location.origin !== "null" ? location.origin : "") + "/api/rtdb",
+  projectId: "cashtop-mongodb",
+  storageBucket: "toppo-14392.firebasestorage.app",
+  messagingSenderId: "124300854330",
+  appId: "1:124300854330:web:47e832cd565a0ef5c32103",
+  measurementId: "G-Q8H7CZRMTC"
+};
+const session=JSON.parse(localStorage.getItem('oscarSession')||'null');
+if(!session){ location.replace('login.html'); return; }
+const companyKey=session.companyKey||'COMPANY001';
+const activeBranchStorageKey=`oscarActiveBranch_${encodeURIComponent(companyKey)}`;
+const branchId=session.role==='employee' ? (session.branchId||'main') : (localStorage.getItem(activeBranchStorageKey)||session.branchId||'main');
+const companyLocalPart=encodeURIComponent(companyKey);
+const branchLocalPart=encodeURIComponent(branchId);
+const storeKey=()=>`oscarStoreV2__company__${companyLocalPart}__branch__${branchLocalPart}`;
+const collections=['products','customers','suppliers','accounts','invoices','expenses','inventory','notifications','settings','scannerSessions','scannerEvents','employees','branches','workers','warehouseMoves','journalEntries','stockMoves','coupons','taxSettings','printSettings','purchaseRecords','productOffers','invoicePaymentSettings','categories','purchaseInvoices','purchaseReturns','wasteRecords','archiveStats','manufacturingRecipes','manufacturingRuns'];
+const textEl=document.getElementById('syncText'),fill=document.getElementById('syncFill'),pctEl=document.getElementById('syncPct');
+let pct=5, targetPct=5, smoothTimer=null;
+function drawPct(v){const val=Math.max(0,Math.min(100,Math.round(v)));fill.style.width=val+'%';pctEl.textContent=val+'%';}
+function startSmoothProgress(){
+  if(smoothTimer) return;
+  smoothTimer=setInterval(()=>{
+    if(pct < targetPct){
+      const gap=targetPct-pct;
+      pct += Math.max(0.35, Math.min(1.8, gap/14));
+      if(pct>targetPct) pct=targetPct;
+      drawPct(pct);
+    }else if(targetPct<98){
+      targetPct=Math.min(98,targetPct+0.18);
+    }
+  },70);
+}
+function setPct(v,msg){
+  targetPct=Math.max(targetPct,Math.min(100,Number(v)||0));
+  if(msg)textEl.textContent=msg;
+  startSmoothProgress();
+}
+async function waitProgress(v,msg){
+  setPct(v,msg);
+  await new Promise(resolve=>{
+    const t=setInterval(()=>{if(pct>=Math.min(v,99)-.8){clearInterval(t);resolve()}},35);
+  });
+}
+function finishProgress(msg){
+  if(msg)textEl.textContent=msg;
+  targetPct=100;
+  startSmoothProgress();
+}
+function safe(v){return String(v||'').replace(/[.#$[\]/]/g,'_')}
+function n(v){return Number(v||0)||0}
+function defaultStore(){const now=Date.now();return {products:[],customers:[],suppliers:[],invoices:[],expenses:[],activity:[],inventory:[],notifications:[],scannerSessions:[],scannerEvents:[],employees:[],workers:[],warehouseMoves:[],journalEntries:[],stockMoves:[],coupons:[],taxSettings:[],printSettings:[],purchaseRecords:[],productOffers:[],invoicePaymentSettings:[],purchaseInvoices:[],purchaseReturns:[],wasteRecords:[],archiveStats:[],categories:[],branches:[{id:'main',name:'الفرع الرئيسي',main:true,createdAt:now,updatedAt:now}],accounts:[{id:'cash',name:'صندوق الكاش',balance:0,opening:0,type:'cash',movements:[{id:'m-open',kind:'opening',amount:0,note:'رصيد افتتاحي',date:new Date().toISOString()}],createdAt:now}],settings:[{id:'main',storeName:'كاش توب',currency:'₪',lowStock:5,printWidth:'58mm',autoPrintInvoice:false}],_pendingSync:[],_deleted:{}}}
+function parse(k){try{const raw=localStorage.getItem(k);return raw?JSON.parse(raw):null}catch(e){return null}}
+function store(){return parse(storeKey())||parse(storeKey()+'_backup')||defaultStore()}
+let state=store();
+collections.forEach(c=>{if(!Array.isArray(state[c]))state[c]=[]}); if(!Array.isArray(state._pendingSync))state._pendingSync=[]; if(!state._deleted)state._deleted={};
+function save(){try{localStorage.setItem(storeKey(),JSON.stringify(state));localStorage.setItem(storeKey()+'_backup',JSON.stringify(state));localStorage.setItem(storeKey()+'_lastSaved',String(Date.now()))}catch(e){}}
+const bases=[firebaseConfig.databaseURL].filter(Boolean);
+let goodBase='';
+async function fetchJson(base,path,opt={}){
+  const clean=String(path||'').replace(/^\/+/,'');
+  const url=base+'?path='+encodeURIComponent(clean);
+  const r=await fetch(url,{cache:'no-store',...opt});
+  if(!r.ok)throw new Error(r.status+' '+r.statusText);
+  if(opt.method==='DELETE')return null;
+  return await r.json();
+}
+async function dbGet(path){for(const b of goodBase?[goodBase,...bases.filter(x=>x!==goodBase)]:bases){try{const v=await fetchJson(b,path);goodBase=b;return v}catch(e){}}throw new Error('تعذر الاتصال بقاعدة البيانات')}
+async function dbSet(path,val){for(const b of goodBase?[goodBase,...bases.filter(x=>x!==goodBase)]:bases){try{const v=await fetchJson(b,path,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(val)});goodBase=b;return v}catch(e){}}throw new Error('تعذر الحفظ في قاعدة البيانات')}
+async function dbRemove(path){for(const b of goodBase?[goodBase,...bases.filter(x=>x!==goodBase)]:bases){try{await fetchJson(b,path,{method:'DELETE'});goodBase=b;return true}catch(e){}}return false}
+function rowsFromVal(v){if(!v)return[];if(Array.isArray(v))return v.filter(Boolean);if(typeof v==='object')return Object.entries(v).filter(([id])=>!String(id).startsWith('__')).map(([id,row])=>({id,...(row||{})}));return[]}
+function remoteTs(x){const d=Date.parse(x?.updatedAt||x?.createdAt||x?.date||0);return n(x?.updatedAt)||n(x?.createdAt)||(Number.isFinite(d)?d:0)||0}
+function merge(name,rows){const map=new Map((state[name]||[]).filter(x=>x&&x.id).map(x=>[String(x.id),x]));let changed=false;rows.forEach(r=>{if(!r||!r.id)return;const id=String(r.id);const cur=map.get(id);if(!cur||remoteTs(r)>=remoteTs(cur)){map.set(id,{...cur,...r});changed=true}});state[name]=[...map.values()];return changed}
+function collectionPath(name){return `companies/${safe(companyKey)}/branchesData/${safe(branchId)}/data/${name}`}
+function collectionLocalIds(name){return new Set((state[name]||[]).filter(x=>x&&x.id).map(x=>String(x.id)))}
+function businessLocalCount(){
+  return collections.reduce((a,c)=>a+(Array.isArray(state[c])?state[c].length:0),0);
+}
+async function pullMissingOnly(){
+  let changed=false;
+  const localCount=businessLocalCount();
+  const dataPath=`companies/${safe(companyKey)}/branchesData/${safe(branchId)}/data`;
+  let blob=null;
+  try{blob=await dbGet(dataPath)}catch(e){console.warn('single data pull skipped',e)}
+  if(blob && typeof blob==='object'){
+    for(const name of collections){
+      const remoteRows=rowsFromVal(blob[name]);
+      if(!remoteRows.length) continue;
+      const ids=collectionLocalIds(name);
+      const missing=remoteRows.filter(r=>r&&r.id&&!ids.has(String(r.id)));
+      if(missing.length){ changed=merge(name,missing)||changed; }
+    }
+  }else if(localCount===0){
+    const first=['settings','products','categories','customers','accounts','invoices','invoicePaymentSettings'];
+    for(const name of first){
+      try{
+        const rows=rowsFromVal(await dbGet(collectionPath(name)));
+        if(rows.length){ changed=merge(name,rows)||changed; }
+      }catch(e){}
+    }
+  }
+  if(changed) save();
+  return changed;
+}
+async function importLegacyIfNeeded(){
+  if(businessLocalCount()>0) return false;
+  await importLegacy();
+  return true;
+}
+
+async function syncQueue(){
+  const q=[...(state._pendingSync||[])]; if(!q.length)return;
+  setPct(18,'جاري رفع العمليات غير المزامنة...');
+  for(let i=0;i<q.length;i++){
+    const job=q[i],name=job.collectionName||job.collection,id=String(job.id||'');
+    if(!name||!id)continue;
+    try{
+      if(job.op==='delete') await dbRemove(`${collectionPath(name)}/${safe(id)}`);
+      else await dbSet(`${collectionPath(name)}/${safe(id)}`, job.data||job.item||job.value||{id});
+      state._pendingSync=state._pendingSync.filter(x=>x!==job);
+      save();
+      setPct(18+((i+1)/q.length)*22,`تم رفع ${i+1} من ${q.length} عملية...`);
+    }catch(e){console.warn('pending sync skipped',e)}
+  }
+}
+async function pullAll(){
+  let changed=false;
+  for(let i=0;i<collections.length;i++){
+    const name=collections[i];
+    setPct(42+(i/collections.length)*46,'جاري مزامنة '+name+'...');
+    try{
+      const rows=rowsFromVal(await dbGet(collectionPath(name)));
+      if(rows.length) changed=merge(name,rows)||changed;
+    }catch(e){console.warn('pull skipped',name,e)}
+  }
+  if(changed)save();
+}
+async function importLegacy(){
+  let changed=false;
+  for(const name of collections){
+    const paths=[`data/${name}`,name,`companies/${safe(companyKey)}/branchesData/main/data/${name}`,`companies/${safe(companyKey)}/branchesData/${safe(branchId)}/data/${name}`,`companies/COMPANY001/branchesData/main/data/${name}`];
+    for(const path of [...new Set(paths)]){
+      try{const rows=rowsFromVal(await dbGet(path)); if(rows.length) changed=merge(name,rows)||changed}catch(e){}
+    }
+  }
+  if(changed)save();
+}
+(async()=>{
+  try{
+    if(!navigator.onLine){ location.replace('dashboard.html'); return; }
+    await waitProgress(14,'جاري قراءة البيانات المحلية...');
+    save();
+    await waitProgress(36,'تم تجهيز البيانات المحلية');
+    await waitProgress(54,'جاري رفع العمليات غير المزامنة...');
+    await syncQueue();
+    await waitProgress(74,'جاري جلب البيانات غير الموجودة على هذا الجهاز...');
+    await pullMissingOnly();
+    await waitProgress(88,'جاري فحص بيانات النسخ السابقة...');
+    await importLegacyIfNeeded();
+    finishProgress('تم تجهيز البيانات');
+  }catch(e){
+    console.warn(e);
+    finishProgress('تم فتح البيانات المحلية');
+  }
+  const doneTimer=setInterval(()=>{
+    if(pct>=99.5){
+      clearInterval(doneTimer);
+      setTimeout(()=>location.replace('dashboard.html'),120);
+    }
+  },45);
+})();
+})();
+</script>
+</body>
+</html>

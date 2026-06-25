@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#174EA6">
+<title>فاتورة إلكترونية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Cairo,Tajawal,Arial,sans-serif;background:linear-gradient(135deg,#eef6ff,#fffaf7 55%,#f7fbff);color:#142033;direction:rtl}.wrap{max-width:920px;margin:auto;padding:18px}.invoice-card{background:#fff;border:1px solid #e6edf5;border-radius:30px;box-shadow:0 24px 70px rgba(15,23,42,.11);overflow:hidden}.top{background:linear-gradient(135deg,#174ea6,#2f70c9);color:white;padding:28px;position:relative;overflow:hidden}.top:before{content:'';position:absolute;inset:-60px auto auto -80px;width:220px;height:220px;background:rgba(255,255,255,.12);border-radius:50%}.top-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;position:relative}.brand h1{margin:0;font-size:34px;font-weight:950}.brand p{margin:7px 0 0;font-weight:800;opacity:.9}.status{border-radius:999px;padding:10px 16px;font-weight:950;background:#ecfdf3;color:#15803d;white-space:nowrap;box-shadow:0 8px 22px rgba(0,0,0,.08)}.status.unpaid{background:#fff7ed;color:#c2410c}.body{padding:24px}.meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}.box{border:1px solid #edf2f7;border-radius:18px;padding:14px;background:#fbfdff}.box small{display:block;color:#64748b;font-weight:800;margin-bottom:5px}.box b{font-size:16px;font-weight:950}.invoice-no{font-size:20px}.items{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #edf2f7;border-radius:20px;overflow:hidden}.items th,.items td{padding:13px;border-bottom:1px solid #edf2f7;text-align:right}.items th{background:#f7fafc;color:#64748b;font-size:13px;font-weight:950}.items td{font-weight:800}.items tr:last-child td{border-bottom:0}.sum{margin-top:18px;display:grid;gap:8px;max-width:390px;margin-inline-start:auto}.sum-row{display:flex;justify-content:space-between;gap:12px;padding:11px 13px;background:#f8fafc;border-radius:14px;font-weight:900}.sum-row.total{background:linear-gradient(135deg,#174ea6,#2f70c9);color:#fff;font-size:20px}.pay{margin-top:20px;border:1px solid #fed7aa;background:#fff7ed;border-radius:20px;padding:18px}.pay h3{margin:0 0 10px;color:#9a3412}.pay-method{background:#fff;border:1px solid #ffedd5;border-radius:16px;padding:13px;margin-top:10px}.pay-method b{color:#132033}.pay-method pre{white-space:pre-wrap;font-family:inherit;margin:8px 0 0;color:#475569;font-weight:800}.done{margin-top:20px;border:1px solid #bbf7d0;background:#f0fdf4;border-radius:20px;padding:18px;color:#166534;font-weight:950;display:flex;align-items:center;gap:10px}.done svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.4}.qrbox{display:none!important;display:grid;place-items:center;border:1px dashed rgba(255,255,255,.5);border-radius:18px;padding:10px;min-width:94px}.qrbox svg{width:76px;height:76px;background:#fff;border-radius:8px}.foot{padding:15px 24px;background:#f8fafc;color:#64748b;font-size:12px;font-weight:800;text-align:center}.empty{padding:35px;text-align:center;color:#64748b;font-weight:900}@media(max-width:760px){.wrap{padding:10px}.top-row{display:grid}.meta{grid-template-columns:1fr 1fr}.brand h1{font-size:26px}.body{padding:16px}.items th,.items td{font-size:12px;padding:9px}.sum{max-width:none}.qrbox{display:none!important;display:none}}@media(max-width:460px){.meta{grid-template-columns:1fr}.invoice-card{border-radius:22px}}
+
+
+
+
+/* ضبط عام للجوال والقائمة والسهم */
+select{
+  appearance:none;
+  -webkit-appearance:none;
+  background-color:#fff;
+  background-image:linear-gradient(45deg,transparent 50%,var(--primary,#174ea6) 50%),linear-gradient(135deg,var(--primary,#174ea6) 50%,transparent 50%);
+  background-position:left 14px center,left 8px center;
+  background-size:7px 7px,7px 7px;
+  background-repeat:no-repeat;
+  padding-left:30px!important;
+}
+@media (hover:none) and (pointer:coarse), (max-device-width:820px){
+  .sidebar{
+    right:-330px!important;
+    width:min(300px,86vw)!important;
+    max-width:86vw!important;
+    box-shadow:-22px 0 50px rgba(15,23,42,.16)!important;
+    border-left:1px solid var(--line)!important;
+    z-index:160!important;
+  }
+  .sidebar.show{right:0!important}
+  .main{
+    width:100%!important;
+    max-width:1220px!important;
+    margin-right:auto!important;
+    margin-left:auto!important;
+    padding-right:16px!important;
+    padding-left:16px!important;
+  }
+  #menuBtn,.side-close{
+    display:inline-flex!important;
+  }
+  #sideOverlay.show{
+    display:block!important;
+    z-index:150!important;
+  }
+  .overlay.show{display:block!important}
+}
+
+
+/* سهم قوائم لطيف */
+select{
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  background-color:#fff!important;
+  background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23174ea6' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 10 5 5 5-5'/%3E%3C/svg%3E")!important;
+  background-repeat:no-repeat!important;
+  background-position:left 10px center!important;
+  background-size:18px 18px!important;
+  padding-left:34px!important;
+}
+
+
+/* v142 رسائل وديون العملاء */
+.customer-contact-actions{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:7px!important;
+}
+.customer-contact-btn{
+  width:36px!important;
+  height:36px!important;
+  min-width:36px!important;
+  border-radius:14px!important;
+  border:1px solid var(--line,#e7ecf3)!important;
+  display:inline-grid!important;
+  place-items:center!important;
+  box-shadow:0 8px 18px rgba(15,23,42,.07)!important;
+  background:#fff!important;
+}
+.customer-contact-btn svg{
+  width:19px!important;
+  height:19px!important;
+  fill:none!important;
+  stroke:currentColor!important;
+  stroke-width:2.1!important;
+  stroke-linecap:round!important;
+  stroke-linejoin:round!important;
+}
+.customer-contact-btn.sms{color:#174ea6!important;background:#eff6ff!important}
+.customer-contact-btn.wa{color:#128c4a!important;background:#ecfdf5!important}
+.customer-debt-report-btn svg,
+.message-settings-card svg{
+  width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round
+}
+.message-settings-card .var-chips{
+  display:flex;flex-wrap:wrap;gap:7px;margin-top:8px
+}
+.message-settings-card .var-chips code{
+  direction:ltr;display:inline-flex;border-radius:999px;background:var(--soft,#eef6ff);color:var(--primary,#174ea6);padding:5px 9px;font-weight:900;font-size:12px
+}
+.message-settings-card textarea{
+  min-height:120px!important;
+  line-height:1.9!important;
+}
+
+
+/* v143 إعدادات الرسائل والطباعة */
+.message-settings-card .section-title{display:flex;align-items:center;gap:8px}
+.message-settings-card .var-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.message-settings-card .msg-var-chip{min-height:34px;border-radius:999px;font-weight:950;font-size:12px;padding:6px 10px;direction:ltr}
+.message-settings-card textarea{min-height:130px!important;line-height:1.9!important}
+.print-custom-field.hidden{display:none!important}
+@media(max-width:700px){
+  body[data-page="cashier"] #cartLines{
+    max-height:520px!important;
+    overflow-y:auto!important;
+    border:1px solid var(--line,#e7ecf3)!important;
+    border-radius:22px!important;
+    padding:8px!important;
+    background:#fff!important;
+    box-shadow:inset 4px 0 0 rgba(148,163,184,.35)!important;
+  }
+}
+@media(min-width:701px){
+  body[data-page="cashier"] #cartLines{max-height:480px!important;overflow-y:auto!important}
+  body[data-page="cashier"] .cart-line{min-height:42px!important;padding-top:5px!important;padding-bottom:5px!important}
+  body[data-page="cashier"] .cart-line-name,body[data-page="cashier"] .cart-line b{font-size:12px!important}
+  body[data-page="cashier"] .cart-unit-select,body[data-page="cashier"] .cart-variant-select,body[data-page="cashier"] .cart-qty,body[data-page="cashier"] .cart-price{font-size:11px!important;min-height:30px!important}
+  body[data-page="cashier"] .qty-btn{width:28px!important;height:28px!important;min-width:28px!important}
+}
+
+
+/* v145 تثبيت القائمة الجانبية في منظور اللابتوب */
+@media (min-width:760px){
+  body .app{
+    display:block!important;
+  }
+  body .sidebar{
+    position:fixed!important;
+    top:0!important;
+    right:0!important;
+    left:auto!important;
+    width:300px!important;
+    max-width:300px!important;
+    height:100vh!important;
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+    transform:none!important;
+    z-index:100!important;
+    box-shadow:none!important;
+    border-left:1px solid var(--line,#e5e7eb)!important;
+    border-right:0!important;
+  }
+  body .sidebar:not(.show){
+    right:0!important;
+  }
+  body .main{
+    width:calc(100vw - 310px)!important;
+    max-width:none!important;
+    margin-right:310px!important;
+    margin-left:0!important;
+    padding-right:12px!important;
+    padding-left:12px!important;
+  }
+  body #menuBtn,
+  body .side-close,
+  body #sideOverlay{
+    display:none!important;
+    visibility:hidden!important;
+    pointer-events:none!important;
+  }
+  body .overlay,
+  body .overlay.show{
+    display:none!important;
+  }
+  body .bottom-nav{
+    display:none!important;
+  }
+  body .top-card{
+    width:100%!important;
+    max-width:none!important;
+  }
+}
+@media (min-width:760px) and (max-width:980px){
+  body .sidebar{
+    width:260px!important;
+    max-width:260px!important;
+  }
+  body .main{
+    width:calc(100vw - 270px)!important;
+    margin-right:270px!important;
+  }
+}
+@media (max-width:759px){
+  body .sidebar{
+    right:-320px!important;
+  }
+  body .sidebar.show{
+    right:0!important;
+  }
+}
+
+
+/* v151 ترتيب إجراءات العملاء على سطرين */
+.customer-actions-grid{
+  display:grid!important;
+  grid-template-columns:repeat(5,max-content)!important;
+  gap:7px!important;
+  align-items:center!important;
+  justify-content:start!important;
+  min-width:430px!important;
+}
+.customer-actions-grid .mini-btn,
+.customer-actions-grid .customer-contact-btn{
+  margin:0!important;
+  white-space:nowrap!important;
+}
+.customer-actions-grid .customer-contact-btn{
+  width:34px!important;
+  height:34px!important;
+  min-width:34px!important;
+}
+@media(max-width:760px){
+  .customer-actions-grid{
+    grid-template-columns:repeat(5,1fr)!important;
+    min-width:360px!important;
+    gap:6px!important;
+  }
+  .customer-actions-grid .mini-btn{
+    padding:7px 8px!important;
+    font-size:11px!important;
+  }
+}
+
+
+/* v152 إجراءات العملاء: اللابتوب سطر واحد والجوال يبقى سطرين */
+@media(min-width:761px){
+  .table-wrap:has(#customersTable){
+    overflow-x:auto!important;
+  }
+  #customersTable{
+    min-width:1280px!important;
+  }
+  #customersTable td.actions,
+  #customersTable th:last-child{
+    min-width:660px!important;
+    width:660px!important;
+    text-align:right!important;
+    padding-right:18px!important;
+  }
+  #customersTable .customer-actions-grid{
+    display:flex!important;
+    flex-wrap:nowrap!important;
+    justify-content:flex-start!important;
+    align-items:center!important;
+    gap:7px!important;
+    min-width:620px!important;
+    direction:rtl!important;
+  }
+  #customersTable .customer-actions-grid .mini-btn{
+    min-width:auto!important;
+    padding:8px 11px!important;
+    font-size:12px!important;
+  }
+}
+
+
+/* v152 أيقونة رابط الفاتورة */
+.invoice-link-icon{
+  width:38px!important;
+  height:38px!important;
+  min-width:38px!important;
+  border-radius:14px!important;
+  display:inline-grid!important;
+  place-items:center!important;
+  padding:0!important;
+}
+.invoice-link-icon svg{
+  width:19px!important;
+  height:19px!important;
+  fill:none!important;
+  stroke:currentColor!important;
+  stroke-width:2.25!important;
+  stroke-linecap:round!important;
+  stroke-linejoin:round!important;
+}
+
+
+/* v156 ميزات التقارير والائتمان والولاء */
+.loyalty-off .loyalty-column{display:none!important}
+.credit-safe{background:#dcfce7!important;color:#166534!important}
+.credit-mid{background:#fef3c7!important;color:#92400e!important}
+.credit-risk{background:#fee2e2!important;color:#991b1b!important}
+.credit-score-chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:900}
+.loyalty-chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 9px;background:#eef6ff;color:#174ea6;font-size:11px;font-weight:900}
+.report-builder-grid{display:grid;grid-template-columns:minmax(280px,.38fr) 1fr;gap:14px}
+.report-preview-card{min-height:320px}
+.ai-cashflow-table td,.ai-cashflow-table th{white-space:nowrap}
+@media(max-width:760px){.report-builder-grid{grid-template-columns:1fr}.credit-score-chip,.loyalty-chip{font-size:10px;padding:4px 7px}}
+
+</style>
+
+<style id="v149-desktop-sidebar-final">
+/* v149 فرض القائمة الجانبية في أي منظور كمبيوتر */
+@media (min-width:600px){
+  html body .app{
+    display:block!important;
+    min-height:100vh!important;
+  }
+  html body #sidebar,
+  html body .sidebar{
+    position:fixed!important;
+    top:0!important;
+    right:0!important;
+    left:auto!important;
+    bottom:auto!important;
+    width:300px!important;
+    max-width:300px!important;
+    height:100vh!important;
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+    transform:none!important;
+    z-index:120!important;
+    box-shadow:none!important;
+    border-left:1px solid var(--line,#e5e7eb)!important;
+    overflow-y:auto!important;
+  }
+  html body #sidebar:not(.show),
+  html body .sidebar:not(.show){
+    right:0!important;
+  }
+  html body .main{
+    width:calc(100vw - 312px)!important;
+    max-width:none!important;
+    margin-right:312px!important;
+    margin-left:0!important;
+    padding-right:12px!important;
+    padding-left:12px!important;
+  }
+  html body #menuBtn,
+  html body #closeSide,
+  html body .side-close,
+  html body #sideOverlay,
+  html body .overlay,
+  html body .bottom-nav{
+    display:none!important;
+    visibility:hidden!important;
+    pointer-events:none!important;
+  }
+}
+@media (min-width:600px) and (max-width:850px){
+  html body #sidebar,
+  html body .sidebar{
+    width:250px!important;
+    max-width:250px!important;
+  }
+  html body .main{
+    width:calc(100vw - 260px)!important;
+    margin-right:260px!important;
+  }
+}
+@media (max-width:599px){
+  html body #sidebar,
+  html body .sidebar{
+    right:-330px!important;
+  }
+  html body #sidebar.show,
+  html body .sidebar.show{
+    right:0!important;
+  }
+}
+</style>
+
+
+<style id="v149-clothes-cart-table">
+/* v149 سلة وجدول خاص لمحل الملابس */
+body[data-page="cashier"] .clothing-cart-lines .cart-line{
+  border-color:#dbeafe!important;
+  background:linear-gradient(180deg,#ffffff,#fbfdff)!important;
+}
+body[data-page="cashier"] .clothing-cart-lines .cart-clothing-color,
+body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
+  background:#eef6ff!important;
+  border-color:#d7e7ff!important;
+  color:#174ea6!important;
+  font-weight:950!important;
+}
+.clothes-products-panel{
+  border:1px solid #dbeafe!important;
+  background:linear-gradient(180deg,#fff,#f8fbff)!important;
+}
+.clothes-products-panel table td:nth-child(2),
+.clothes-products-panel table td:nth-child(3),
+.clothes-products-panel table td:nth-child(4){
+  font-weight:900!important;
+}
+</style>
+
+
+<style id="v153-customers-actions-desktop-line">
+/* v153 إجراءات العملاء للابتوب: سطر واحد مع مساحة كاملة */
+@media(min-width:761px){
+  body[data-page="customers"] .table-wrap{overflow-x:auto!important;}
+  body[data-page="customers"] #customersTable{min-width:1520px!important;table-layout:auto!important;}
+  body[data-page="customers"] #customersTable th:last-child,
+  body[data-page="customers"] #customersTable td.actions{min-width:820px!important;width:820px!important;text-align:right!important;padding-right:24px!important;padding-left:24px!important;}
+  body[data-page="customers"] #customersTable .customer-actions-grid{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;justify-content:flex-start!important;align-items:center!important;gap:8px!important;min-width:780px!important;width:max-content!important;direction:rtl!important;}
+  body[data-page="customers"] #customersTable .customer-actions-grid .mini-btn,
+  body[data-page="customers"] #customersTable .customer-actions-grid .customer-contact-btn{flex:0 0 auto!important;white-space:nowrap!important;}
+}
+</style>
+
+</head>
+<body data-public-invoice="1">
+<div class="wrap"><div id="root" class="invoice-card"><div class="empty">جارٍ تحميل الفاتورة...</div></div></div>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBM-xAF2lf0cspTu1-7HAXxyoORGGZsxA8",
+  authDomain: "toppo-14392.firebaseapp.com",
+  databaseURL: (location.origin && location.origin !== "null" ? location.origin : "") + "/api/rtdb",
+  projectId: "cashtop-mongodb",
+  storageBucket: "toppo-14392.firebasestorage.app",
+  messagingSenderId: "124300854330",
+  appId: "1:124300854330:web:47e832cd565a0ef5c32103",
+  measurementId: "G-Q8H7CZRMTC"
+};
+function n(v){return Number(String(v??0).replace(/[^\d.\-]/g,'')||0)}
+function esc(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function money(v,cur){return `${cur||'₪'} ${Number(v||0).toFixed(2)}`}
+function safe(v){return String(v||'').replace(/[.#$\[\]\/]/g,'_')}
+function rowsFromVal(val){if(!val)return[];return Object.entries(val).filter(([id])=>!String(id).startsWith('__')).map(([id,data])=>({id,...(data||{})}))}
+function decodeInvoicePayload(data){try{return JSON.parse(decodeURIComponent(escape(atob(String(data||'').replace(/-/g,'+').replace(/_/g,'/')))))}catch(e){return null}}
+function candidates(){return [firebaseConfig.databaseURL]}
+function url(base,path,q){const p=String(path).split('/').map(x=>safe(x)).join('/');const qs=q?('&'+Object.entries(q).map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`).join('&')):'';return base.replace(/\/+$/,'')+'?path='+encodeURIComponent(p)+qs}
+async function fetchJson(u,ms=8000){const c=new AbortController();const t=setTimeout(()=>c.abort(),ms);try{const r=await fetch(u,{signal:c.signal,cache:'no-store'});if(!r.ok)throw new Error(r.status);return await r.json()}finally{clearTimeout(t)}}
+function localStoreKeys(company,branch){const enc=encodeURIComponent(String(company||'COMPANY001'));const br=encodeURIComponent(String(branch||'main'));return [`oscarStoreV2__company__${enc}__branch__${br}`,`oscarStoreV2__company__${enc}`,`oscarStoreV2_${company||'COMPANY001'}`]}
+function findLocal(id,company,branch){for(const k of localStoreKeys(company,branch)){try{const st=JSON.parse(localStorage.getItem(k)||'{}');const inv=(st.invoices||[]).find(x=>String(x.number)===String(id)||String(x.id)===String(id));if(inv)return{invoice:inv,payments:st.invoicePaymentSettings||[],storeName:st.settings?.[0]?.storeName||'كاش توب',currency:st.settings?.[0]?.currency||'₪'}}catch(e){}}return null}
+async function findRemote(id,company,branch){
+  const invoicePaths=[
+    `companies/${safe(company)}/branchesData/${safe(branch)}/data/invoices`,
+    `companies/${safe(company)}/branchesData/main/data/invoices`,
+    `companies/COMPANY001/branchesData/${safe(branch)}/data/invoices`,
+    `companies/COMPANY001/branchesData/main/data/invoices`,
+    'data/invoices',
+    'invoices'
+  ];
+  const settingsPaths=[
+    `companies/${safe(company)}/branchesData/${safe(branch)}/data/settings`,
+    `companies/${safe(company)}/branchesData/main/data/settings`,
+    `companies/COMPANY001/branchesData/main/data/settings`,
+    'data/settings',
+    'settings'
+  ];
+  const payPaths=[
+    `companies/${safe(company)}/branchesData/${safe(branch)}/data/invoicePaymentSettings`,
+    `companies/${safe(company)}/branchesData/main/data/invoicePaymentSettings`,
+    `companies/COMPANY001/branchesData/main/data/invoicePaymentSettings`,
+    'data/invoicePaymentSettings',
+    'invoicePaymentSettings'
+  ];
+  for(const base of candidates()){
+    for(const path of invoicePaths){
+      try{
+        let val=await fetchJson(url(base,path,{orderBy:'"number"',equalTo:`"${id}"`}));
+        let rows=rowsFromVal(val);
+        if(!rows.length){
+          val=await fetchJson(url(base,path+'/'+safe(id)));
+          rows=val?[{id,...val}]:[];
+        }
+        if(!rows.length){
+          val=await fetchJson(url(base,path));
+          rows=rowsFromVal(val).filter(x=>String(x.number)===String(id)||String(x.id)===String(id));
+        }
+        if(rows.length){
+          const inv=rows[0];let payments=[];let settings=[];
+          for(const pp of payPaths){try{payments=rowsFromVal(await fetchJson(url(base,pp)));if(payments.length)break}catch(e){}}
+          for(const sp of settingsPaths){try{settings=rowsFromVal(await fetchJson(url(base,sp)));if(settings.length)break}catch(e){}}
+          return{invoice:inv,payments,storeName:settings?.[0]?.storeName||'كاش توب',currency:settings?.[0]?.currency||'₪'}
+        }
+      }catch(e){}
+    }
+  }
+  return null
+}
+function lineName(l){return l.name||l.productName||l.displayName||l.itemName||'منتج'}
+function lineTotal(l){return n(l.lineTotal)||n(l.total)||n(l.qty)*n(l.price)}
+function qrSvg(text){let rects='';text=String(text||'').slice(0,80);for(let i=0;i<text.length;i++){rects+=`<rect x="${4+(i*7)%68}" y="${4+(text.charCodeAt(i)*5)%68}" width="4" height="4" fill="#111"/>`}return `<svg viewBox="0 0 76 76"><rect width="76" height="76" fill="#fff"/><rect x="4" y="4" width="18" height="18" fill="none" stroke="#111" stroke-width="3"/><rect x="54" y="4" width="18" height="18" fill="none" stroke="#111" stroke-width="3"/><rect x="4" y="54" width="18" height="18" fill="none" stroke="#111" stroke-width="3"/>${rects}</svg>`}
+function render(data){const inv=data.invoice||{},cur=data.currency||'₪',payments=(data.payments||[]).filter(x=>x.active!==false);const remaining=Math.max(0,n(inv.debt)||(n(inv.total)-n(inv.paid)));const completed=String(inv.status||'issued')!=='draft'&&remaining<=0;const rows=(inv.items||[]).map(l=>`<tr><td>${esc(lineName(l))}</td><td>${n(l.qty)}</td><td>${money(l.price,cur)}</td><td>${money(lineTotal(l),cur)}</td></tr>`).join('')||'<tr><td colspan="4">لا توجد أصناف</td></tr>';const payBlock=!completed?`<div class="pay"><h3>معلومات الدفع</h3><p>هذه الفاتورة غير مكتملة. المبلغ المتبقي: <b>${money(remaining,cur)}</b></p>${payments.length?payments.map(p=>`<div class="pay-method"><b>${esc(p.name)}</b><pre>${esc(p.details)}</pre></div>`).join(''):'<div class="pay-method">لم يتم إضافة طرق دفع بعد.</div>'}</div>`:`<div class="done"><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg>تم دفع الفاتورة بالكامل — الحالة مكتملة</div>`;document.getElementById('root').innerHTML=`<div class="top"><div class="top-row"><div class="brand"><h1>${esc(data.storeName||'كاش توب')}</h1></div><div class="status ${completed?'':'unpaid'}">${completed?'مكتملة':'غير مكتملة'}</div></div></div><div class="body"><div class="meta"><div class="box"><small>رقم الفاتورة</small><b class="invoice-no">${esc(inv.number||inv.id||'—')}</b></div><div class="box"><small>العميل</small><b>${esc(inv.customerName||'نقدي')}</b></div><div class="box"><small>التاريخ</small><b>${new Date(inv.date||Date.now()).toLocaleString('ar')}</b></div><div class="box"><small>الحالة</small><b>${completed?'مكتملة':'بحاجة دفع'}</b></div></div><table class="items"><thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr></thead><tbody>${rows}</tbody></table><div class="sum"><div class="sum-row"><span>المجموع</span><b>${money(inv.subtotal||inv.subTotal||inv.total,cur)}</b></div>${n(inv.discountAmount)?`<div class="sum-row"><span>الخصم</span><b>${money(inv.discountAmount,cur)}</b></div>`:''}${n(inv.taxAmount)?`<div class="sum-row"><span>${esc(inv.taxName||'VAT')}</span><b>${money(inv.taxAmount,cur)}</b></div>`:''}<div class="sum-row total"><span>الإجمالي</span><b>${money(inv.total,cur)}</b></div><div class="sum-row"><span>المدفوع</span><b>${money(inv.paid,cur)}</b></div><div class="sum-row"><span>المتبقي</span><b>${money(remaining,cur)}</b></div></div>${payBlock}</div><div class="foot"></div>`}
+(async()=>{const u=new URL(location.href);const packed=u.searchParams.get('data')||'';if(packed){const decoded=decodeInvoicePayload(packed);if(decoded&&decoded.invoice){render(decoded);return;}}const id=u.searchParams.get('id')||u.searchParams.get('number');const company=u.searchParams.get('company')||'COMPANY001';const branch=u.searchParams.get('branch')||'main';if(!id){root.innerHTML='<div class="empty">رابط الفاتورة غير مكتمل.</div>';return}let data=findLocal(id,company,branch);if(!data&&navigator.onLine)data=await findRemote(id,company,branch);if(!data){root.innerHTML='<div class="empty">تعذر فتح الفاتورة. تأكد من الرقم أو الاتصال.</div>';return}render(data)})();
+</script>
+</body>
+</html>

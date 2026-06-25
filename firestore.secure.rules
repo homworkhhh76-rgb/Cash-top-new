@@ -1,0 +1,20 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function sameCompany(companyKey) { return signedIn() && request.auth.token.companyKey == companyKey; }
+    function isAdmin(companyKey) { return sameCompany(companyKey) && request.auth.token.role == 'admin'; }
+    function hasPerm(companyKey, perm) { return sameCompany(companyKey) && (request.auth.token.role == 'admin' || request.auth.token.permissions[perm] == true); }
+
+    match /companies/{companyKey} {
+      allow read: if sameCompany(companyKey) || isAdmin(companyKey);
+      allow write: if isAdmin(companyKey);
+      match /employees/{employeeId} { allow read, write: if hasPerm(companyKey, 'manageEmployees'); }
+      match /admin/{docId} { allow read, write: if isAdmin(companyKey); }
+      match /data/{collectionName}/{docId} {
+        allow read: if sameCompany(companyKey);
+        allow write: if sameCompany(companyKey);
+      }
+    }
+  }
+}
