@@ -2402,6 +2402,37 @@ select{
 .ai-cashflow-table td,.ai-cashflow-table th{white-space:nowrap}
 @media(max-width:760px){.report-builder-grid{grid-template-columns:1fr}.credit-score-chip,.loyalty-chip{font-size:10px;padding:4px 7px}}
 
+
+/* v172 export/report right alignment + compact edit notice + purchase-entry fixes */
+@media (min-width: 760px){
+  body[data-page="cashier"] .edit-invoice-notice{padding:8px 12px!important;min-height:44px!important;margin:0 0 10px!important;border-radius:14px!important;display:block!important;background:#fff7ed!important;border:1px solid #fed7aa!important;color:#9a3412!important;box-shadow:0 6px 16px rgba(154,52,18,.07)!important;}
+  body[data-page="cashier"] .edit-invoice-notice .toolbar{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;margin:0!important;}
+  body[data-page="cashier"] .edit-invoice-notice .ghost-btn{min-height:34px!important;padding:6px 10px!important;border-radius:10px!important;font-size:12px!important;}
+}
+body[data-page="purchaseEntry"] .purchase-compact-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;}
+body[data-page="purchaseEntry"] #purchaseLinesBody tr{position:relative!important;}
+body[data-page="purchaseEntry"] .suggest-panel.show{display:grid!important;z-index:9999!important;}
+body[data-page="purchaseEntry"] .pieceSetting.only-piece{display:block;}
+body[data-page="purchaseEntry"] .unitSetting.only-unit{display:none;}
+body[data-page="purchaseEntry"] tr.purchase-mode-unit .unitSetting.only-unit{display:block!important;}
+body[data-page="purchaseEntry"] tr.purchase-mode-unit .pieceSetting.only-piece{display:none!important;}
+body[data-page="purchaseEntry"] tr.purchase-mode-piece .unitSetting.only-unit{display:none!important;}
+@media(max-width:700px){body[data-page="purchaseEntry"] .purchase-compact-grid{grid-template-columns:1fr!important;}}
+
+
+/* v172 dropdown arrow + export quality + purchase layout */
+.smart-select{position:relative!important;}
+.smart-select .smart-input{padding-left:46px!important;}
+.smart-select:after{content:""!important;position:absolute!important;left:18px!important;top:50%!important;width:10px!important;height:10px!important;border:0!important;border-right:2.6px solid var(--primary)!important;border-bottom:2.6px solid var(--primary)!important;transform:translateY(-65%) rotate(45deg)!important;background:transparent!important;border-radius:1px!important;pointer-events:none!important;z-index:2!important;}
+.smart-select.open:after{transform:translateY(-35%) rotate(225deg)!important;}
+body[data-page="purchaseEntry"] #pageRoot>.card>.form-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;}
+body[data-page="purchaseEntry"] #pageRoot>.card>.form-grid .field.full{grid-column:1/-1!important;}
+body[data-page="purchaseEntry"] .purchase-compact-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;}
+body[data-page="purchaseEntry"] .newProductSettings{grid-template-columns:1fr!important;}
+body[data-page="purchaseEntry"] .suggest-panel.show{display:grid!important;z-index:99999!important;}
+body[data-page="purchaseEntry"] .plType,body[data-page="purchaseEntry"] .plQty,body[data-page="purchaseEntry"] .plCost,body[data-page="purchaseEntry"] .plSale,body[data-page="purchaseEntry"] .plPerUnit{font-weight:800!important;}
+@media(max-width:700px){body[data-page="purchaseEntry"] #pageRoot>.card>.form-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}body[data-page="purchaseEntry"] .purchase-compact-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}}
+
 </style>
 <link rel="icon" type="image/png" sizes="64x64" href="icon-64.png">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -2518,6 +2549,19 @@ body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
 }
 </style>
 
+<script>
+(function(){
+  const CACHE_URLS=["./", "accounts.html", "admin.html", "ai-analysis.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "custom-reports.html", "customers.html", "dashboard.html", "database.rules.json", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "local-bridge.js", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "offline-update.js", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
+  function registerCache(){
+    if(!('serviceWorker' in navigator)) return;
+    navigator.serviceWorker.register('sw.js').then(reg=>navigator.serviceWorker.ready).then(()=>{
+      const send=()=>{ try{ if(navigator.serviceWorker.controller) navigator.serviceWorker.controller.postMessage({type:'CACHE_URLS',urls:CACHE_URLS}); }catch(e){} };
+      if('requestIdleCallback' in window) requestIdleCallback(send,{timeout:5000}); else setTimeout(send,2500);
+    }).catch(()=>{});
+  }
+  registerCache();
+})();
+</script>
 </head>
 <body data-page="purchases">
   <div id="toast" class="toast"></div>
@@ -2689,7 +2733,24 @@ const App = (() => {
   function customerBalanceBadge(v){ return `<span class="badge ${customerBalanceClass(v)}">${customerBalanceText(v)}</span>`; }
 
 
-  const settings = () => (state.store.settings && state.store.settings[0]) || defaultStore().settings[0];
+  function normalizeSettingsAliases(s={}){
+    const out={...s};
+    out.storeName=String(out.storeName||out.companyName||'كاش توب').trim()||'كاش توب';
+    out.storePhone=String(out.storePhone||out.companyPhone||out.mobile||out.phone||'').trim();
+    out.companyPhone=out.storePhone; out.mobile=out.storePhone; out.phone=out.storePhone;
+    out.storeAddress=String(out.storeAddress||out.companyAddress||out.address||out.storeLocation||'').trim();
+    out.companyAddress=out.storeAddress; out.address=out.storeAddress; out.storeLocation=out.storeAddress;
+    out.storeLogoUrl=String(out.storeLogoUrl||out.logoUrl||out.menuLogoUrl||out.storeLogo||out.logo||out.programLogo||out.appLogoUrl||out.siteLogo||'').trim();
+    out.logoUrl=out.storeLogoUrl; out.storeLogo=out.storeLogoUrl; out.logo=out.storeLogoUrl; out.appLogoUrl=out.storeLogoUrl; out.siteLogo=out.storeLogoUrl;
+    return out;
+  }
+  const settings = () => {
+    const base=(state.store.settings && state.store.settings[0]) || defaultStore().settings[0];
+    let fast=null;
+    try{fast=JSON.parse(localStorage.getItem(storeKey()+'_settings_fast')||'null')}catch(e){}
+    const merged=(fast&&fast.id&&Number(fast.updatedAt||0)>=Number(base.updatedAt||0)-1000)?{...base,...fast}:base;
+    return normalizeSettingsAliases(merged);
+  };
   const coll = name => state.store[name] || [];
   function allowNegative(){ const s=settings(); return s.allowNegative===true || String(s.allowNegative)==='true'; }
 
@@ -3084,10 +3145,93 @@ const App = (() => {
     localStorage.setItem(marker,'1');
     return changed;
   }
+  
+  function fastDataCacheKey(pageName=state.page){ return storeKey()+'_fastData_'+String(pageName||'dashboard'); }
+  function fastDataCollections(pageName=state.page){
+    const map={
+      dashboard:['settings','branches','accounts','products','customers','invoices','expenses','activity','notifications'],
+      cashier:['settings','branches','products','customUnits','customers','accounts','invoices','coupons','productOffers'],
+      products:['settings','branches','products','categories','suppliers','customUnits'],
+      customers:['settings','branches','customers','accounts','invoices'],
+      invoices:['settings','branches','invoices','customers','accounts','products'],
+      accounts:['settings','branches','accounts','customers','suppliers','invoices','expenses'],
+      suppliers:['settings','branches','suppliers','accounts','products','purchaseInvoices','purchaseReturns'],
+      purchases:['settings','branches','purchaseInvoices','purchaseRecords','purchaseReturns','suppliers','products','accounts'],
+      purchaseEntry:['settings','branches','products','customUnits','suppliers','accounts','categories','purchaseInvoices'],
+      purchaseData:['settings','branches','purchaseInvoices','purchaseRecords','purchaseReturns','suppliers','products'],
+      inventory:['settings','branches','products','inventory','warehouseMoves','stockMoves'],
+      finance:['settings','branches','invoices','expenses','accounts','customers','suppliers'],
+      analytics:['settings','branches','invoices','expenses','products','accounts','customers','suppliers'],
+      notifications:['settings','branches','notifications','activity','products','customers'],
+      settings:['settings','branches','customUnits','employees','printSettings','taxSettings'],
+      employees:['settings','branches','employees'],
+      workers:['settings','branches','workers','accounts'],
+      expenses:['settings','branches','expenses','accounts'],
+      warehouse:['settings','branches','products','warehouseMoves'],
+      coupons:['settings','branches','coupons'],
+      productOffers:['settings','branches','productOffers','products','customers']
+    };
+    return [...new Set((map[pageName]||['settings','branches','products','customers','accounts','invoices']).filter(x=>collections.includes(x)))];
+  }
+  function compactFastRows(name, rows){
+    rows=Array.isArray(rows)?rows.filter(Boolean):[];
+    const caps={activity:120,notifications:120,scannerEvents:80,invoices:450,expenses:450,purchaseInvoices:350,purchaseRecords:350,purchaseReturns:250,warehouseMoves:250,stockMoves:250,products:1200,customers:1200,suppliers:800,accounts:400,workers:400,employees:300};
+    const cap=caps[name]||600;
+    return rows.slice().sort((a,b)=>(remoteTs(b)||Date.parse(b?.date||b?.createdAt||0)||0)-(remoteTs(a)||Date.parse(a?.date||a?.createdAt||0)||0)).slice(0,cap);
+  }
+  function writeFastDataCache(extraNames=[]){
+    try{
+      if(!state.store) return;
+      const names=[...new Set(fastDataCollections().concat(extraNames||[]).filter(x=>collections.includes(x)))];
+      const out={_page:state.page,_company:companyKey,_ts:Date.now(),_storage:'local-first-fast-cache'};
+      names.forEach(name=>{ out[name]=compactFastRows(name,state.store[name]); });
+      localStorage.setItem(fastDataCacheKey(), JSON.stringify(out));
+      localStorage.setItem(storeKey()+'_lastFastDataPage', state.page);
+    }catch(e){
+      try{ cleanupLocalStorageQuota(); }catch(_e){}
+      try{
+        const names=fastDataCollections().slice(0,5);
+        const out={_page:state.page,_company:companyKey,_ts:Date.now(),_storage:'local-first-fast-cache-small'};
+        names.forEach(name=>{ out[name]=compactFastRows(name,state.store[name]).slice(0,250); });
+        localStorage.setItem(fastDataCacheKey(), JSON.stringify(out));
+      }catch(_e){}
+    }
+  }
+  function scheduleFastDataCache(extraNames=[]){
+    clearTimeout(state.fastDataCacheTimer);
+    state.fastDataCacheTimer=setTimeout(()=>writeFastDataCache(extraNames),120);
+  }
+  function mergeFastDataCacheNow(){
+    try{
+      const keys=[fastDataCacheKey(), storeKey()+'_fastData_dashboard', storeKey()+'_fastData_cashier', storeKey()+'_fastData_invoices', storeKey()+'_fastData_customers', storeKey()+'_fastData_products', storeKey()+'_fastData_finance'];
+      let changed=false;
+      [...new Set(keys)].forEach(k=>{
+        const raw=localStorage.getItem(k); if(!raw) return;
+        const src=JSON.parse(raw); if(!src || src._company!==companyKey) return;
+        collections.forEach(name=>{
+          const rows=Array.isArray(src[name])?src[name].filter(Boolean):[]; if(!rows.length) return;
+          if(!Array.isArray(state.store[name])) state.store[name]=[];
+          const map=new Map(state.store[name].filter(x=>x&&x.id).map(x=>[String(x.id),x]));
+          rows.forEach(row=>{
+            if(!row || !row.id) return;
+            const id=String(row.id);
+            const old=map.get(id);
+            const merged=mergeItemRecords(name, old, row);
+            if(JSON.stringify(old||null)!==JSON.stringify(merged||null)){ map.set(id,merged); changed=true; }
+          });
+          state.store[name]=[...map.values()].sort((a,b)=>(remoteTs(b)||0)-(remoteTs(a)||0));
+        });
+      });
+      if(changed){ normalizeStoreShape(); state.store._restoredFromFastData=true; }
+      return changed;
+    }catch(e){ return false; }
+  }
+
   function loadStore(){
     requestPersistentDeviceStorage();
     try{state.store = readCurrentCompanyStore() || defaultStore()}catch(e){state.store = defaultStore()}
-    try{const sf=JSON.parse(localStorage.getItem(storeKey()+'_settings_fast')||'null'); if(sf&&sf.id){state.store.settings=[{...state.store.settings?.[0],...sf}]}}catch(e){}
+    try{mergeFastDataCacheNow();}catch(e){}
+    try{const sf=JSON.parse(localStorage.getItem(storeKey()+'_settings_fast')||'null'); const cur=state.store.settings?.[0]||{}; if(sf&&sf.id&&(!cur.updatedAt||!sf.updatedAt||Number(sf.updatedAt)>=Number(cur.updatedAt)-1000)){state.store.settings=[normalizeSettingsAliases({...cur,...sf})] } else if(cur&&cur.id){localStorage.setItem(storeKey()+'_settings_fast',JSON.stringify(normalizeSettingsAliases(cur)));}}catch(e){}
     normalizeStoreShape();
     setTimeout(()=>migrateAllLegacyLocalStores().then(changed=>{ if(changed && state.firebaseReady && navigator.onLine) runFullSync(false).catch(()=>{}); }),350);
     // v112: افتح الصفحة فوراً من النسخة المحلية الخفيفة، ثم استرجع التخزين الكبير من IndexedDB بالخلفية.
@@ -3095,9 +3239,9 @@ const App = (() => {
     const localLooksLight=!!state.store._fullInIndexedDB || localStorage.getItem(storeKey()+'_storageMode')==='indexeddb';
     const restoreTask=()=>restoreStoreFromIndexedDB(localLooksLight).then(ok=>{
       if(!ok) saveStore(false);
-      else { try{processWorkerWagesAuto?.()}catch(e){} forceLocalRender?.(); }
+      else { try{processWorkerWagesAuto?.()}catch(e){} try{writeFastDataCache();}catch(e){} forceLocalRender?.(); }
     });
-    const delay = ['invoices','purchases','finance','analytics','notifications','products','customers','inventory'].includes(state.page) ? 900 : 250;
+    const delay = 30;
     if('requestIdleCallback' in window) requestIdleCallback(restoreTask,{timeout:delay+1200});
     else setTimeout(restoreTask, delay);
   }
@@ -3123,6 +3267,7 @@ const App = (() => {
       try{localStorage.setItem(storeKey()+'_storageMode','localStorage')}catch(e){}
     }
     try{localStorage.setItem(storeKey()+'_lastSaved', String(Date.now()))}catch(e){}
+    scheduleFastDataCache();
     if(render) scheduleRender();
   }
   let renderTimer=null;
@@ -3948,6 +4093,7 @@ const App = (() => {
     mergeRemote(name, rows);
     const changed=rows.length || coll(name).length!==beforeCount;
     saveStore(false);
+    try{writeFastDataCache([name]);}catch(e){}
     if(name==='scannerEvents') processScannerEvents();
     markProgressiveLoaded(name, rows.length);
     if(forceRender){
@@ -4051,6 +4197,7 @@ const App = (() => {
       }
       if(changed){
         saveStore(false);
+        try{writeFastDataCache(names);}catch(e){}
         if(renderNow) liveRenderNow(); else scheduleRender(true);
       }
       state.syncError='';
@@ -4063,13 +4210,13 @@ const App = (() => {
   function startRealtimeSync(){
     if(state.realtimeStarted) return;
     state.realtimeStarted=true;
-    const tick=()=>{ if(!navigator.onLine || document.hidden) return; if(state.syncing || state.livePulling) return; syncQueue().then(()=>pullActiveRemoteNow(true)).catch(e=>{state.syncError=e?.message||String(e);updateStatus();}); };
-    setTimeout(tick,80);
-    setTimeout(tick,450);
-    state.realtimeTimer=setInterval(tick,1200);
-    window.addEventListener('online',()=>setTimeout(tick,60));
-    window.addEventListener('storage',e=>{if(e.key&&e.key.includes('cashtop-local-change')) setTimeout(tick,40);});
-    document.addEventListener('visibilitychange',()=>{ if(!document.hidden) setTimeout(tick,60); });
+    const tick=()=>{ if(!navigator.onLine || document.hidden) return; if(state.syncing || state.livePulling) return; syncQueue().then(()=>pullActiveRemoteNow(false)).catch(e=>{state.syncError=e?.message||String(e);updateStatus();}); };
+    setTimeout(tick,8000);
+    setTimeout(tick,22000);
+    state.realtimeTimer=setInterval(tick,45000);
+    window.addEventListener('online',()=>setTimeout(tick,3000));
+    window.addEventListener('storage',e=>{if(e.key&&e.key.includes('cashtop-local-change')) setTimeout(tick,2500);});
+    document.addEventListener('visibilitychange',()=>{ if(!document.hidden) setTimeout(tick,3500); });
   }
 
   async function pullAllRemote(){
@@ -4459,6 +4606,7 @@ const App = (() => {
           await pruneStorageLogs(false);
           state.syncError='';
           saveStore(false);
+          try{writeFastDataCache();}catch(e){}
           updateStatus();
           return;
         }
@@ -4476,7 +4624,7 @@ const App = (() => {
 
         if(state.store?._pendingSync?.length){ throw new Error(state.syncError || 'بقيت عمليات معلقة لم ترفع'); }
         state.syncError='';
-        saveStore(false); updateStatus(); scheduleRender(true);
+        saveStore(false); try{writeFastDataCache();}catch(e){} updateStatus(); scheduleRender(true);
         if(showToast) toast('تمت المزامنة');
       }catch(e){
         state.syncError=e?.message||String(e);
@@ -4491,20 +4639,20 @@ const App = (() => {
     })();
     return state.syncPromise;
   }
-  async function initFirebase(){ listenAll(); setTimeout(()=>runFullSync(false).then(()=>pullActiveRemoteNow(true)).catch(e=>{state.syncError=e?.message||String(e); updateStatus();}),120); setTimeout(()=>pullActiveRemoteNow(true).catch(()=>{}),650); }
+  async function initFirebase(){ listenAll(); const bg=()=>runFullSync(false).then(()=>pullActiveRemoteNow(false)).catch(e=>{state.syncError=e?.message||String(e); updateStatus();}); if('requestIdleCallback' in window) requestIdleCallback(bg,{timeout:9000}); else setTimeout(bg,6500); setTimeout(()=>pullActiveRemoteNow(false).catch(()=>{}),18000); }
   function autoSync(){
     // v134 Local-First: لا تعتمد أي عملية على الإنترنت؛ فقط مزامنة خلفية.
     saveStore(false);
     updateStatus();
     if(!navigator.onLine) return;
     clearTimeout(state.autoSyncTimer);
-    state.autoSyncTimer=setTimeout(()=>runFullSync(false).catch(e=>{state.syncError=e?.message||String(e); updateStatus();}),20);
+    state.autoSyncTimer=setTimeout(()=>runFullSync(false).catch(e=>{state.syncError=e?.message||String(e); updateStatus();}),2500);
   }
   function listenAll(){
     if(state.syncTimer) clearInterval(state.syncTimer);
-    state.syncTimer=setInterval(()=>{ if(document.visibilityState==='hidden') return; if(navigator.onLine && !state.syncing && !document.hidden){ syncQueue().then(()=>pullActiveRemoteNow(true)).catch(e=>{state.syncError=e?.message||String(e); updateStatus();}); } }, 1500);
-    state.expiryWatchTimer=setInterval(()=>{ if(!document.hidden && !state.forceLoggingOut){ const access=cachedCompanyAccess(); const ts=companyExpiryMs(access); if(ts && ts<Date.now()) forceSessionLogout('انتهى اشتراكك، تم تسجيل الخروج'); } }, 5000);
-    state.accessWatchTimer=setInterval(()=>{ if(navigator.onLine && !document.hidden && !state.forceLoggingOut) refreshCompanyAccess().catch(()=>{}); }, 12000);
+    state.syncTimer=setInterval(()=>{ if(document.visibilityState==='hidden') return; if(navigator.onLine && !state.syncing && !document.hidden){ syncQueue().then(()=>pullActiveRemoteNow(false)).catch(e=>{state.syncError=e?.message||String(e); updateStatus();}); } }, 60000);
+    state.expiryWatchTimer=setInterval(()=>{ if(!document.hidden && !state.forceLoggingOut){ const access=cachedCompanyAccess(); const ts=companyExpiryMs(access); if(ts && ts<Date.now()) forceSessionLogout('انتهى اشتراكك، تم تسجيل الخروج'); } }, 30000);
+    state.accessWatchTimer=setInterval(()=>{ if(navigator.onLine && !document.hidden && !state.forceLoggingOut) refreshCompanyAccess().catch(()=>{}); }, 120000);
     listenCashierSession();
     // v143 pending sync watcher
     if(state.pendingSyncWatcher) clearInterval(state.pendingSyncWatcher);
@@ -4620,11 +4768,11 @@ const App = (() => {
     $$('.nav-link').forEach(a=>{ if(a.dataset.page===state.page) a.classList.add('active') }); hideByPermissions(); applyStoreName(); initSmartSelects(document); updateNotificationBadge(); setInterval(updateNotificationBadge,6000);
     $('#menuBtn')?.addEventListener('click',()=>{ if(matchMedia('(min-width:901px)').matches) return; toggleSide(true); }); $('#sideOverlay')?.addEventListener('click',()=>toggleSide(false)); $('#closeSide')?.addEventListener('click',()=>toggleSide(false));
     $('#notificationBtn')?.addEventListener('click',()=>location.href='notifications.html'); setupSideGroups(); setupSideGroups(); $('#syncBtn')?.addEventListener('click',()=>{ const sync=getBackupSyncState?.(); if(sync && (backupSyncPendingCount?.() || backupSyncPercent(sync)<100)){ openBackupSyncPanel(); runFullSync(false).catch(e=>{state.syncError=e?.message||String(e); updateStatus();}); } else runFullSync(true); });
-    window.addEventListener('online',()=>{state.syncError=''; state.firebaseReady=false; updateStatus(); setTimeout(()=>runFullSync(false).then(()=>pullActiveRemoteNow(true)),60);});
+    window.addEventListener('online',()=>{state.syncError=''; state.firebaseReady=false; updateStatus(); setTimeout(()=>runFullSync(false).then(()=>pullActiveRemoteNow(false)),3500);});
     window.addEventListener('offline',()=>{state.syncError=''; updateStatus(); saveStore(false);});
     window.addEventListener('beforeinstallprompt',e=>{e.preventDefault(); state.deferredPrompt=e;});
     window.addEventListener('appinstalled',()=>{state.deferredPrompt=null; localStorage.setItem('cashtopInstalled','1'); toast('تم تثبيت التطبيق');});
-    document.addEventListener('visibilitychange',()=>{ if(!document.hidden && navigator.onLine && !state.syncing) setTimeout(()=>runFullSync(false).catch(e=>{state.syncError=e?.message||String(e); updateStatus();}),250); });
+    document.addEventListener('visibilitychange',()=>{ if(!document.hidden && navigator.onLine && !state.syncing) setTimeout(()=>runFullSync(false).catch(e=>{state.syncError=e?.message||String(e); updateStatus();}),8000); });
     window.addEventListener('beforeunload',()=>{try{if(state.store) localStorage.setItem(storeKey(), JSON.stringify(state.store));}catch(e){}});    if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(console.warn); setTimeout(()=>prepareInstallPrompt().catch(console.warn),700);
     document.addEventListener('click', handleGlobalClick);
     document.addEventListener('keydown', handleBarcodeScannerInput, true);
@@ -5560,9 +5708,9 @@ const App = (() => {
     return Number.isFinite(d.getTime()) ? d.toISOString() : (fallback || nowIso());
   }
 
-  function resetCashierSale(){ localStorage.removeItem(localKey('cashierCart')); clearCashierEdit(); clearCashierDiscount(); setCashierCouponCode(''); state.cashierEditHydrated=''; const paidInput=$('#paidAmount'); if(paidInput){delete paidInput.dataset.manual; paidInput.value='0';} if($('#customerName')) $('#customerName').value=''; if($('#customerPhone')) $('#customerPhone').value=''; if($('#cashierCustomerId')) $('#cashierCustomerId').value=''; if($('#cashierAccount')) $('#cashierAccount').value=defaultAccountId(); $('#editInvoiceNotice')?.remove(); syncCashierModeUI(); }
+  function resetCashierSale(){ localStorage.removeItem(localKey('cashierCart')); clearCashierEdit(); clearCashierDiscount(); setCashierCouponCode(''); state.cashierEditHydrated=''; const paidInput=$('#paidAmount'); if(paidInput){delete paidInput.dataset.manual; paidInput.value='0';} if($('#customerName')) $('#customerName').value=''; if($('#customerPhone')) $('#customerPhone').value=''; if($('#invoiceNotes')) $('#invoiceNotes').value=''; if($('#cashierCustomerId')) $('#cashierCustomerId').value=''; if($('#cashierAccount')) $('#cashierAccount').value=defaultAccountId(); $('#editInvoiceNotice')?.remove(); syncCashierModeUI(); }
   function cancelCashierInvoiceEdit(){ const wasEdit=!!getCashierEdit(); resetCashierSale(); renderCashier(); toast(wasEdit?'تم الخروج من وضع تعديل الفاتورة':'تم مسح بيانات الكاشير'); }
-  function hydrateCashierEdit(){ const meta=getCashierEdit(); if(!meta || !$('#cashierRoot')){ syncCashierModeUI(); return; } if(state.cashierEditHydrated===meta.id) { syncCashierModeUI(); return; } state.cashierEditHydrated=meta.id; if(Array.isArray(meta.items) && !getCart().length) localStorage.setItem(localKey('cashierCart'),JSON.stringify(meta.items)); if($('#customerName')) $('#customerName').value=meta.customerName||''; if($('#customerPhone')) $('#customerPhone').value=meta.phone||''; if($('#cashierCustomerId')) $('#cashierCustomerId').value=meta.customerId||''; if($('#cashierAccount')) $('#cashierAccount').value=meta.accountId||'cash'; const paid=$('#paidAmount'); if(paid){ paid.value=n(meta.paid); paid.dataset.manual='1'; } if(meta.discountType || n(meta.discountValue)>0) setCashierDiscount({type:meta.discountType||'fixed', value:n(meta.discountValue)}); else clearCashierDiscount(); if(meta.couponCode) setCashierCouponCode(meta.couponCode); else setCashierCouponCode(''); if($('#couponCode')) $('#couponCode').value=getCashierCouponCode(); const root=$('#cashierRoot'); if(root && !$('#editInvoiceNotice')) root.insertAdjacentHTML('afterbegin',`<div id="editInvoiceNotice" class="card edit-invoice-notice"><div class="toolbar"><div><b>${String(meta.status)==='draft'?'تعديل فاتورة معلقة:':'وضع تعديل فاتورة:'}</b> ${esc(meta.number||'')}<small style="display:block;margin-top:4px">${String(meta.status)==='draft'?'يمكنك حفظها كمسودة أو حفظ واعتماد لتحويلها لفاتورة عادية.':'عند الحفظ سيتم عكس الحسابات القديمة وتطبيق التعديل الجديد.'}</small><div class="form-grid" style="margin-top:10px;grid-template-columns:minmax(220px,320px)"><div class="field"><label>تاريخ الفاتورة</label><input class="input" type="datetime-local" id="cashierInvoiceDate" value="${toDateTimeLocalValue(meta.date||meta.createdAt||nowIso())}"></div></div></div><button class="ghost-btn" type="button" data-action="cancelInvoiceEdit"><span class="nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></span> الخروج من التعديل</button></div></div>`); syncCashierModeUI(); }
+  function hydrateCashierEdit(){ const meta=getCashierEdit(); if(!meta || !$('#cashierRoot')){ syncCashierModeUI(); return; } if(state.cashierEditHydrated===meta.id) { syncCashierModeUI(); return; } state.cashierEditHydrated=meta.id; if(Array.isArray(meta.items) && !getCart().length) localStorage.setItem(localKey('cashierCart'),JSON.stringify(meta.items)); if($('#customerName')) $('#customerName').value=meta.customerName||''; if($('#customerPhone')) $('#customerPhone').value=meta.phone||''; if($('#invoiceNotes')) $('#invoiceNotes').value=meta.notes||meta.note||''; if($('#cashierCustomerId')) $('#cashierCustomerId').value=meta.customerId||''; if($('#cashierAccount')) $('#cashierAccount').value=meta.accountId||'cash'; const paid=$('#paidAmount'); if(paid){ paid.value=n(meta.paid); paid.dataset.manual='1'; } if(meta.discountType || n(meta.discountValue)>0) setCashierDiscount({type:meta.discountType||'fixed', value:n(meta.discountValue)}); else clearCashierDiscount(); if(meta.couponCode) setCashierCouponCode(meta.couponCode); else setCashierCouponCode(''); if($('#couponCode')) $('#couponCode').value=getCashierCouponCode(); const root=$('#cashierRoot'); if(root && !$('#editInvoiceNotice')) root.insertAdjacentHTML('afterbegin',`<div id="editInvoiceNotice" class="card edit-invoice-notice"><div class="toolbar"><div><b>${String(meta.status)==='draft'?'تعديل فاتورة معلقة:':'وضع تعديل فاتورة:'}</b> ${esc(meta.number||'')}<small style="display:block;margin-top:4px">${String(meta.status)==='draft'?'يمكنك حفظها كمسودة أو حفظ واعتماد لتحويلها لفاتورة عادية.':'عند الحفظ سيتم عكس الحسابات القديمة وتطبيق التعديل الجديد.'}</small><div class="form-grid" style="margin-top:10px;grid-template-columns:minmax(220px,320px)"><div class="field"><label>تاريخ الفاتورة</label><input class="input" type="datetime-local" id="cashierInvoiceDate" value="${toDateTimeLocalValue(meta.date||meta.createdAt||nowIso())}"></div></div></div><button class="ghost-btn" type="button" data-action="cancelInvoiceEdit"><span class="nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></span> الخروج من التعديل</button></div></div>`); syncCashierModeUI(); }
     function getCart(){try{return JSON.parse(localStorage.getItem(localKey('cashierCart')))||[]}catch(e){return []}}
   function setCart(c){localStorage.setItem(localKey('cashierCart'),JSON.stringify(c)); renderCashier()}
   function arrangeCashierSummary(){
@@ -5774,13 +5922,13 @@ const App = (() => {
     const status=mode==='draft' ? 'draft' : 'issued';
     const payAcc=coll('accounts').find(a=>String(a.id)===String(accId)); if(status!=='draft' && !allowNegative() && payAcc && n(paid)<0){toast('المبلغ المدفوع غير صحيح','bad'); return;}
     if(status!=='draft' && !oldInvoice && !checkPlanAction('saveInvoice')) return;
-    const sourceName=oldInvoice?.sourceName||oldInvoice?.createdByName||(session?.role==='admin'?'المدير':(session?.name||session?.username||'موظف')); const invoiceDate=fromDateTimeLocalValue($('#cashierInvoiceDate')?.value, oldInvoice?.date||nowIso()); const invoice={id:oldInvoice?.id||uid('inv'),number:oldInvoice?.number||`INV-${Date.now().toString().slice(-7)}`,type:'sale',status,customerId,customerName:chosenCustomer?.name||typedCustomerName,phone:chosenCustomer?.phone||typedCustomerPhone,items:cart,subTotal:subtotal,total,paid,debt,profit:total-cost-taxAmount,cost,discountType:discount.type||'fixed',discountValue:n(discount.value),manualDiscountAmount,couponCode:totals.coupon?.code||'',couponId:totals.coupon?.id||'',couponType:totals.coupon?.type||'',couponValue:n(totals.coupon?.value),couponDiscount,offerDiscount:totals.offerDiscount||0,offerIds:totals.offerIds||[],discountAmount,taxName:tax.name,taxRate:n(tax.rate),taxAmount,taxableAmount,taxPriceType:tax.priceType,taxNumber:tax.taxNumber,showTaxInInvoice:tax.showInInvoice,accountId:accId,sourceName,createdByName:sourceName,createdBy:oldInvoice?.createdBy||(session?.userId||'admin'),updatedByName:session?.role==='admin'?'المدير':(session?.name||session?.username||'موظف'),date:invoiceDate,createdAt:oldInvoice?.createdAt||Date.now(),updatedAt:Date.now()};
+    const sourceName=oldInvoice?.sourceName||oldInvoice?.createdByName||(session?.role==='admin'?'المدير':(session?.name||session?.username||'موظف')); const invoiceDate=fromDateTimeLocalValue($('#cashierInvoiceDate')?.value, oldInvoice?.date||nowIso()); const invoice={id:oldInvoice?.id||uid('inv'),number:oldInvoice?.number||nextSequentialDocNumber('invoices'),type:'sale',status,customerId,customerName:chosenCustomer?.name||typedCustomerName,phone:chosenCustomer?.phone||typedCustomerPhone,notes:String($('#invoiceNotes')?.value||'').trim(),note:String($('#invoiceNotes')?.value||'').trim(),items:cart,subTotal:subtotal,total,paid,debt,profit:total-cost-taxAmount,cost,discountType:discount.type||'fixed',discountValue:n(discount.value),manualDiscountAmount,couponCode:totals.coupon?.code||'',couponId:totals.coupon?.id||'',couponType:totals.coupon?.type||'',couponValue:n(totals.coupon?.value),couponDiscount,offerDiscount:totals.offerDiscount||0,offerIds:totals.offerIds||[],discountAmount,taxName:tax.name,taxRate:n(tax.rate),taxAmount,taxableAmount,taxPriceType:tax.priceType,taxNumber:tax.taxNumber,showTaxInInvoice:tax.showInInvoice,accountId:accId,sourceName,createdByName:sourceName,createdBy:oldInvoice?.createdBy||(session?.userId||'admin'),updatedByName:session?.role==='admin'?'المدير':(session?.name||session?.username||'موظف'),date:invoiceDate,createdAt:oldInvoice?.createdAt||Date.now(),updatedAt:Date.now()};
     if(oldInvoice && String(oldInvoice.status||'issued')!=='draft') reverseInvoiceEffects(oldInvoice);
     setItem('invoices',invoice,oldInvoice?`تعديل فاتورة ${invoice.number}`:`حفظ فاتورة ${invoice.number}`);
     if(status!=='draft') { applyInvoiceEffects(invoice); if(!oldInvoice) applyInvoiceLoyalty(invoice); if(invoice.couponCode && !oldInvoice) incrementCouponUsage(invoice.couponCode); }
     resetCashierSale(); renderCashier();
     if(status==='draft') toast(oldInvoice && String(oldInvoice.status||'issued')!=='draft'?'تم تعليق الفاتورة وعكس المخزون والحسابات':(oldInvoice?'تم تحديث الفاتورة المعلقة':'تم حفظ الفاتورة كمسودة معلقة'));
-    else toast(oldInvoice?'تم تعديل الفاتورة وإعادة الحسابات':'تم حفظ الفاتورة بدون طباعة');
+    else toast(oldInvoice?'تم تعديل الفاتورة وإعادة الحسابات':'تم حفظ الفاتورة');
     if(status!=='draft' && !oldInvoice && settings().autoPrintInvoice) setTimeout(()=>printInvoice(invoice.id),300);
   }
 
@@ -5990,7 +6138,7 @@ const App = (() => {
     async function stop(){stopped=true; if(state.scannerStream){state.scannerStream.getTracks().forEach(t=>t.stop()); state.scannerStream=null}}
     (async()=>{ try{state.scannerStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}); video.srcObject=state.scannerStream; await video.play(); if('BarcodeDetector' in window){ const detector=new BarcodeDetector({formats:['ean_13','ean_8','code_128','code_39','qr_code','upc_a','upc_e']}); let busy=false; const loop=async()=>{ if(stopped) return; if(busy){requestAnimationFrame(loop); return;} busy=true; try{const codes=await detector.detect(video); if(codes?.length){const code=toLatinDigits(codes[0].rawValue).trim(); if(code && code!==last){last=code; if(!parsePairBarcode(code)) onCode(code); if(!continuous){stop(); box.remove(); return;}} } else {last='';}}catch(e){} finally{busy=false;} requestAnimationFrame(loop)}; loop(); }else toast(continuous?'المتصفح لا يدعم ماسح الكاميرا، استخدم قارئ الباركود USB.':'المتصفح لا يدعم ماسح الكاميرا، استخدم قارئ الباركود أو الإدخال اليدوي','warn'); }catch(e){toast(continuous?'تعذر فتح الكاميرا، استخدم قارئ الباركود USB أو افتح الصفحة من HTTPS.':'تعذر فتح الكاميرا، افتح التطبيق من HTTPS أو استخدم الإدخال اليدوي','bad')} })();
   }
-  function openCustomer(id=''){ const c=coll('customers').find(x=>x.id===id)||{name:'',phone:'',notes:'',debt:0,creditLimit:0}; openModal(id?'تعديل عميل':'إضافة عميل',`<div class="form-grid"><div class="field"><label>اسم العميل</label><input class="input" id="cName" value="${esc(c.name)}"></div><div class="field"><label>رقم الجوال</label><input class="input" id="cPhone" value="${esc(c.phone)}"></div><div class="field"><label>الحد الائتماني</label><input class="input" id="cCreditLimit" type="text" inputmode="decimal" data-number="1" value="${n(c.creditLimit)}"><small>0 = بدون حد</small></div><div class="field full"><label>ملاحظات</label><textarea id="cNotes">${esc(c.notes)}</textarea></div></div>`,'حفظ العميل',()=>{setItem('customers',{...c,id:id||uid('cus'),name:$('#cName').value,phone:$('#cPhone').value,notes:$('#cNotes').value,creditLimit:n($('#cCreditLimit').value),debt:n(c.debt),movements:c.movements||[]}, id?'تعديل عميل':'إضافة عميل'); toast('تم حفظ العميل')}) }
+  function openCustomer(id=''){ const c=coll('customers').find(x=>x.id===id)||{name:'',phone:'',address:'',notes:'',debt:0,creditLimit:0}; openModal(id?'تعديل عميل':'إضافة عميل',`<div class="form-grid"><div class="field"><label>اسم العميل</label><input class="input" id="cName" value="${esc(c.name)}"></div><div class="field"><label>رقم الجوال</label><input class="input" id="cPhone" value="${esc(c.phone)}"></div><div class="field full"><label>العنوان (اختياري)</label><input class="input" id="cAddress" value="${esc(c.address||'')}" placeholder="عنوان العميل"></div><div class="field"><label>الحد الائتماني</label><input class="input" id="cCreditLimit" type="text" inputmode="decimal" data-number="1" value="${n(c.creditLimit)}"><small>0 = بدون حد</small></div><div class="field full"><label>ملاحظات</label><textarea id="cNotes">${esc(c.notes)}</textarea></div></div>`,'حفظ العميل',()=>{setItem('customers',{...c,id:id||uid('cus'),name:$('#cName').value,phone:$('#cPhone').value,address:$('#cAddress').value,notes:$('#cNotes').value,creditLimit:n($('#cCreditLimit').value),debt:n(c.debt),movements:c.movements||[]}, id?'تعديل عميل':'إضافة عميل'); toast('تم حفظ العميل')}) }
   
   const DEFAULT_DEBT_MESSAGE_TEMPLATE = 'مرحبا {name}، الرصيد المتبقي عليك هو {balance}. شكراً لك من {store}.';
   function debtMessageTemplate(){
@@ -6034,7 +6182,7 @@ const App = (() => {
       return [c.name||'—',c.phone||'—',n(c.creditLimit)?money(c.creditLimit):'—',customerBalanceText(c.debt),moves.length,last,c.notes||''];
     });
   }
-  function downloadCustomersDebtPdf(){
+  async function downloadCustomersDebtPdf(){
     const rows=customersDebtReportRows();
     const customers=coll('customers');
     const total=customers.reduce((a,c)=>a+Math.max(0,n(c.debt)),0);
@@ -6047,6 +6195,7 @@ const App = (() => {
       ['إجمالي الحدود الائتمانية',money(creditTotal)],
       ['تاريخ التقرير',new Date().toLocaleString('ar')]
     ];
+    await exactPreloadHeaderLogo();
     const canvas=drawReportCanvas('تقرير ديون العملاء','جميع العملاء',['العميل','الجوال','الحد','الدين','الحركات','آخر حركة','ملاحظات'],rows,summary);
     downloadCanvasPdf(canvas,'تقرير-ديون-العملاء.pdf');
     toast('تم تنزيل تقرير ديون العملاء');
@@ -6076,7 +6225,7 @@ const App = (() => {
   }
 
   function renderCustomers(){const root=$('#customersTable'); if(!root) return; document.body.classList.toggle('loyalty-off',!loyaltySettings().enabled); const all=filtered(coll('customers'),['name','phone','notes']); const remoteLimited=!!state.store._customersRemoteLimited; const shown=remoteLimited?customerDisplayLimit(all.length):all.length; const rows=remoteLimited?all.slice(0,shown):all; root.innerHTML=rows.length?rows.map(c=>`<tr><td><b>${esc(c.name)}</b></td><td>${esc(c.phone)}</td><td>${esc(c.notes)}</td><td>${n(c.creditLimit)?money(c.creditLimit):'بدون حد'}</td><td>${customerBalanceBadge(c.debt)}</td><td>${customerCreditChip(c)}</td><td class="loyalty-column">${loyaltySettings().enabled?`<span class="loyalty-chip">${n(c.loyaltyPoints)} نقطة</span>`:''}</td><td class="actions"><div class="customer-actions-grid"><button class="customer-contact-btn wa" data-action="sendCustomerWhatsapp" data-id="${c.id}" title="واتساب"><svg viewBox="0 0 24 24"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5Z"/><path d="M8.8 8.7c.4 3 2.5 5.2 5.5 6 .7.2 1.4-.3 1.7-.9"/></svg></button><button class="customer-contact-btn sms" data-action="sendCustomerSms" data-id="${c.id}" title="رسالة"><svg viewBox="0 0 24 24"><path d="M4 5h16v12H8l-4 4V5Z"/><path d="M8 9h8M8 13h6"/></svg></button><button class="mini-btn" data-action="viewCustomer" data-id="${c.id}">عرض</button><button class="mini-btn green" data-action="addCustomerPayment" data-id="${c.id}">سداد</button><button class="mini-btn" data-action="addCustomerDebt" data-id="${c.id}">دين</button><button class="mini-btn gray" data-action="imageCustomer" data-id="${c.id}">صورة</button><button class="mini-btn gray" data-action="printCustomer" data-id="${c.id}">PDF</button><button class="mini-btn gray" data-action="csvCustomer" data-id="${c.id}">Excel</button><button class="mini-btn" data-action="editCustomer" data-id="${c.id}">تعديل</button><button class="mini-btn red" data-action="deleteCustomer" data-id="${c.id}">حذف</button></div></td></tr>`).join('')+(remoteLimited?pagingControlsHtml('customers',Math.max(all.length,Number(state.store._customersRemoteCount||0)),shown,5):''):`<tr><td colspan="8"><div class="empty">لا يوجد عملاء</div></td></tr>`}
-  function viewCustomer(id){ const c=coll('customers').find(x=>x.id===id); if(!c)return; const moves=(c.movements||[]).map(m=>{ const editable=isEditableCustomerMovement(m); const accName=m.accountId?(coll('accounts').find(a=>String(a.id)===String(m.accountId))?.name||m.accountId):''; return `<tr><td>${new Date(m.date).toLocaleString('ar')}</td><td>${m.type==='payment'?'سداد':'دين'}${m.refType==='invoice'?'<small style="display:block;color:var(--muted)">فاتورة</small>':''}</td><td>${money(m.amount)}</td><td>${esc(accName||'—')}</td><td>${esc(m.note)}</td><td class="actions">${editable?`<button class="mini-btn" data-action="editCustomerMovement" data-id="${c.id}" data-mid="${m.id}">تعديل</button><button class="mini-btn red" data-action="deleteCustomerMovement" data-id="${c.id}" data-mid="${m.id}">حذف</button>`:'<span class="badge warn">مرتبط بفاتورة</span>'}</td></tr>` }).join(''); openModal('ملف العميل',`<div class="card"><h2>${esc(c.name)}</h2><p>${esc(c.phone)} — الرصيد الحالي: ${customerBalanceBadge(c.debt)}</p><p>${esc(c.notes||'')}</p></div><div class="table-wrap" style="margin-top:12px"><table><thead><tr><th>التاريخ</th><th>النوع</th><th>المبلغ</th><th>الحساب</th><th>ملاحظات</th><th>إجراءات</th></tr></thead><tbody>${moves||'<tr><td colspan="6">لا يوجد حركات</td></tr>'}</tbody></table></div>`) }
+  function viewCustomer(id){ const c=coll('customers').find(x=>x.id===id); if(!c)return; const moves=(c.movements||[]).map(m=>{ const editable=isEditableCustomerMovement(m); const accName=m.accountId?(coll('accounts').find(a=>String(a.id)===String(m.accountId))?.name||m.accountId):''; return `<tr><td>${new Date(m.date).toLocaleString('ar')}</td><td>${m.type==='payment'?'سداد':'دين'}${m.refType==='invoice'?'<small style="display:block;color:var(--muted)">فاتورة</small>':''}</td><td>${money(m.amount)}</td><td>${esc(accName||'—')}</td><td>${esc(m.note)}</td><td class="actions">${editable?`<button class="mini-btn" data-action="editCustomerMovement" data-id="${c.id}" data-mid="${m.id}">تعديل</button><button class="mini-btn red" data-action="deleteCustomerMovement" data-id="${c.id}" data-mid="${m.id}">حذف</button>`:'<span class="badge warn">مرتبط بفاتورة</span>'}</td></tr>` }).join(''); openModal('ملف العميل',`<div class="card"><h2>${esc(c.name)}</h2><p>${esc(c.phone)} — الرصيد الحالي: ${customerBalanceBadge(c.debt)}</p>${c.address?`<p>${esc(c.address)}</p>`:''}<p>${esc(c.notes||'')}</p></div><div class="table-wrap" style="margin-top:12px"><table><thead><tr><th>التاريخ</th><th>النوع</th><th>المبلغ</th><th>الحساب</th><th>ملاحظات</th><th>إجراءات</th></tr></thead><tbody>${moves||'<tr><td colspan="6">لا يوجد حركات</td></tr>'}</tbody></table></div>`) }
   function openDebtPayment(colName,id,type){ const isCus=colName==='customers'; const label=type==='payment'?'سداد دفعة':'إضافة دين يدوي'; openModal(label,`<div class="form-grid"><div class="field"><label>المبلغ</label><input class="input" type="text" inputmode="decimal" data-number="1" step="0.01" id="dpAmount"></div><div class="field"><label>ملاحظات</label><input class="input" id="dpNote"></div><div class="field"><label>تاريخ الحركة</label><input class="input" type="datetime-local" id="dpDate" value="${toDateTimeLocalValue(nowIso())}"></div>${type==='payment'?selectWithSearch('dpAccount','الحساب',coll('accounts'),defaultAccountId()):''}</div>`,label,()=>{const amount=n($('#dpAmount').value); if(!amount)return false; if(isCus){ const cc=coll('customers').find(x=>String(x.id)===String(id)); if(type==='debt' && cc && n(cc.creditLimit)>0 && n(cc.debt)+amount>n(cc.creditLimit)){toast('تجاوز الحد الائتماني للعميل','bad'); return false;} addCustomerManualMovement(id,type,amount,$('#dpNote').value,type==='payment'?($('#dpAccount').value||defaultAccountId()):'',$('#dpDate')?.value||''); } else { supplierDebt(id,amount,$('#dpNote').value,type); if(type==='payment'){ addAccountMovement(($('#dpAccount').value||defaultAccountId()),'supplier_payment',-amount,$('#dpNote').value); } } toast('تم حفظ الحركة')}) }
   function openAccount(id=''){const a=coll('accounts').find(x=>x.id===id)||{name:'',balance:0,opening:0,type:'bank',movements:[]}; openModal(id?'تعديل حساب':'إضافة حساب',`<div class="form-grid"><div class="field"><label>اسم الحساب</label><input class="input" id="aName" value="${esc(a.name)}"></div><div class="field"><label>رصيد افتتاحي</label><input class="input" type="text" inputmode="decimal" data-number="1" step="0.01" id="aBalance" value="${n(a.balance)}"></div></div>`,'حفظ الحساب',()=>{const bal=n($('#aBalance').value); const item={...a,id:id||uid('acc'),name:$('#aName').value,balance:bal,opening:n(a.opening||bal),movements:a.movements||[]}; if(!id && !item.movements.length)item.movements=[{id:uid('mov'),kind:'opening',amount:bal,note:'رصيد افتتاحي',date:nowIso()}]; setItem('accounts',item,id?'تعديل حساب':'إضافة حساب'); toast('تم حفظ الحساب')})}
   function renderAccounts(){const root=$('#accountsTable'); if(!root)return; const rows=filtered(coll('accounts'),['name']); root.innerHTML=rows.map(a=>`<tr><td><b>${esc(a.name)}</b></td><td><span class="badge green">${money(a.balance)}</span></td><td>${(a.movements||[]).length}</td><td class="actions"><button class="mini-btn" data-action="viewAccount" data-id="${a.id}">الحركات</button><button class="mini-btn gray" data-action="accountStatementPdf" data-id="${a.id}">كشف PDF</button><button class="mini-btn green" data-action="accountMove" data-id="${a.id}">إضافة/سحب</button><button class="mini-btn" data-action="editAccount" data-id="${a.id}">تعديل</button><button class="mini-btn red" data-action="deleteAccount" data-id="${a.id}">حذف</button></td></tr>`).join('')}
@@ -6177,12 +6326,13 @@ const App = (() => {
     const summary=[['اسم المورد',s.name||''],['الفترة',supplierRangeLabel(range)],['إجمالي المشتريات',money(sum.total)],['المدفوع',money(sum.paid)],['المتبقي',money(sum.remaining)],['عدد السطور',sum.count]];
     return {supplier:s,range,sum,headers,rows,summary};
   }
-  function buildSupplierPurchasesCanvas(id){
+  async function buildSupplierPurchasesCanvas(id){
     const d=supplierPurchasesReportData(id); if(!d) return null;
+    await exactPreloadHeaderLogo();
     return drawReportCanvas('فاتورة مشتريات المورد', `${d.supplier.name||''} — ${supplierRangeLabel(d.range)}`, d.headers, d.rows, d.summary);
   }
-  function downloadSupplierPurchasesPdf(id){ const c=buildSupplierPurchasesCanvas(id); if(!c) return; downloadCanvasPdf(c,`supplier-purchases-${id}.pdf`); toast('تم تنزيل PDF مشتريات المورد'); }
-  function downloadSupplierPurchasesImage(id){ const c=buildSupplierPurchasesCanvas(id); if(!c) return; const a=document.createElement('a'); a.href=c.toDataURL('image/png'); a.download=`supplier-purchases-${id}.png`; a.click(); toast('تم تنزيل صورة مشتريات المورد'); }
+  async function downloadSupplierPurchasesPdf(id){ const c=await buildSupplierPurchasesCanvas(id); if(!c) return; downloadCanvasPdf(c,`supplier-purchases-${id}.pdf`); toast('تم تنزيل PDF مشتريات المورد'); }
+  async function downloadSupplierPurchasesImage(id){ const c=await buildSupplierPurchasesCanvas(id); if(!c) return; const href=URL.createObjectURL(await canvasBlob(c,'image/png')); triggerFileDownload(href,`supplier-purchases-${id}.png`,true); toast('تم تنزيل صورة مشتريات المورد'); }
   function downloadSupplierPurchasesExcel(id){ const d=supplierPurchasesReportData(id); if(!d) return; const html='\ufeff<html><head><meta charset="utf-8"><style>body{font-family:Cairo,Tahoma,Arial;direction:rtl}table{border-collapse:collapse;width:100%}th,td{border:1px solid #d1d5db;padding:8px;text-align:right}th{background:#eff6ff}</style></head><body><h2>فاتورة مشتريات المورد</h2><h3>'+esc(d.supplier.name||'')+'</h3>'+htmlTable(['البند','القيمة'],d.summary)+'<br>'+htmlTable(d.headers,d.rows)+'</body></html>'; downloadBlob(html,`supplier-purchases-${id}.xls`,'application/vnd.ms-excel;charset=utf-8'); toast('تم تنزيل Excel مشتريات المورد'); }
 
   function renderSuppliers(){const root=$('#suppliersTable'); if(!root)return; const rows=filtered(coll('suppliers'),['name','phone','notes']); root.innerHTML=rows.length?rows.map(s=>`<tr><td><b>${esc(s.name)}</b></td><td>${esc(s.phone)}</td><td>${money(s.credit)}</td><td><span class="badge ${n(s.debt)>0?'red':'green'}">${money(s.debt)}</span></td><td class="actions"><button class="mini-btn" data-action="viewSupplierPurchases" data-id="${s.id}">سجل المشتريات</button><button class="mini-btn gray" data-action="viewSupplier" data-id="${s.id}">الحركات</button><button class="mini-btn green" data-action="supplierPay" data-id="${s.id}">سداد</button><button class="mini-btn" data-action="supplierDebt" data-id="${s.id}">إضافة دين عليا</button><button class="mini-btn gray" data-action="imageSupplier" data-id="${s.id}">صورة</button><button class="mini-btn gray" data-action="printSupplier" data-id="${s.id}">PDF</button><button class="mini-btn gray" data-action="csvSupplier" data-id="${s.id}">Excel</button><button class="mini-btn" data-action="editSupplier" data-id="${s.id}">تعديل</button><button class="mini-btn red" data-action="deleteSupplier" data-id="${s.id}">حذف</button></td></tr>`).join(''):`<tr><td colspan="5"><div class="empty">لا يوجد موردين</div></td></tr>`}
@@ -6529,6 +6679,24 @@ const App = (() => {
   }
 
 
+
+  function nextSequentialDocNumber(collectionName){
+    const rows=coll(collectionName)||[];
+    const max=rows.reduce((m,x)=>{
+      const raw=String(x?.number||'').trim();
+      const digits=Number((raw.match(/\d+/g)||[]).pop()||0);
+      return Math.max(m, Number.isFinite(digits)?digits:0);
+    },0);
+    return String(max+1);
+  }
+  function invoiceDisplayNumber(inv){
+    const raw=String(inv?.number||'').trim();
+    if(raw) return raw;
+    const ordered=[...(coll('invoices')||[])].sort((a,b)=>(Number(a.createdAt||Date.parse(a.date)||0)-Number(b.createdAt||Date.parse(b.date)||0)));
+    const idx=ordered.findIndex(x=>String(x.id)===String(inv?.id));
+    return idx>=0 ? String(idx+1) : (String(inv?.id||'').replace(/^inv[_-]?/i,'#')||'#');
+  }
+
   function renderInvoices(){
     const root=$('#invoicesTable'); if(!root)return;
     const pager=$('#invoicePaging');
@@ -6539,7 +6707,7 @@ const App = (() => {
       const isDraft=String(inv.status||'issued')==='draft';
       const statusBadge=isDraft?'<span class="draft-status-badge">معلق</span>':'<span class="issued-status-badge">صادرة</span>';
       const payName=receiptAccountName(inv);
-      return `<tr><td class="inv-no"><b>${esc(inv.number)}</b></td><td class="inv-customer">${esc(inv.customerName||'نقدي')}</td><td class="inv-pay">${esc(payName)}</td><td class="inv-status">${statusBadge}</td><td class="inv-source">${esc(invoiceSourceName(inv))}</td><td class="inv-money">${money(inv.total)}</td><td class="inv-money">${money(inv.paid)}</td><td class="inv-money">${money(inv.debt)}</td><td class="inv-date">${new Date(inv.date).toLocaleString('ar')}</td><td class="actions invoice-actions inv-actions-col"><button class="mini-btn gray" data-action="viewSavedInvoice" data-id="${inv.id}">عرض</button><button class="mini-btn" data-action="editInvoice" data-id="${inv.id}">تعديل</button>${isDraft?`<button class="mini-btn green" data-action="issueInvoice" data-id="${inv.id}">إصدار</button>`:`<button class="mini-btn" data-action="printInvoice" data-id="${inv.id}">طباعة حرارية</button>`}<button class="mini-btn gray" data-action="invoicePdf" data-id="${inv.id}">PDF</button><button class="mini-btn gray" data-action="invoiceImage" data-id="${inv.id}">صورة</button><button class="mini-btn red" data-action="deleteInvoice" data-id="${inv.id}">حذف</button></td></tr>`;
+      return `<tr><td class="inv-no"><b>${esc(invoiceDisplayNumber(inv))}</b></td><td class="inv-customer">${esc(inv.customerName||'نقدي')}</td><td class="inv-pay">${esc(payName)}</td><td class="inv-status">${statusBadge}</td><td class="inv-source">${esc(invoiceSourceName(inv))}</td><td class="inv-money">${money(inv.total)}</td><td class="inv-money">${money(inv.paid)}</td><td class="inv-money">${money(inv.debt)}</td><td class="inv-date">${new Date(inv.date).toLocaleString('ar')}</td><td class="actions invoice-actions inv-actions-col"><button class="mini-btn gray" data-action="viewSavedInvoice" data-id="${inv.id}">عرض</button><button class="mini-btn" data-action="editInvoice" data-id="${inv.id}">تعديل</button>${isDraft?`<button class="mini-btn green" data-action="issueInvoice" data-id="${inv.id}">إصدار</button>`:`<button class="mini-btn" data-action="printInvoice" data-id="${inv.id}">طباعة حرارية</button>`}<button class="mini-btn gray" data-action="invoicePdf" data-id="${inv.id}">PDF</button><button class="mini-btn gray" data-action="invoiceImage" data-id="${inv.id}">صورة</button><button class="mini-btn red" data-action="deleteInvoice" data-id="${inv.id}">حذف</button></td></tr>`;
     }).join(''):`<tr><td colspan="10"><div class="empty">لا توجد فواتير</div></td></tr>`;
     root.innerHTML=rowsHtml;
     if(pager) pager.innerHTML=rows.length?invoicePagingControlsBlockHtml(all.length,shown):'';
@@ -6563,9 +6731,28 @@ const App = (() => {
   function receiptRemaining(inv){
     return Math.max(0, n(inv?.debt) || (n(inv?.total)-n(inv?.paid)));
   }
+  function stableLocalDocNumber(ns,item){
+    try{
+      const key=localKey('stableDocNumbers_'+ns);
+      const map=JSON.parse(localStorage.getItem(key)||'{}');
+      const id=String(item?.id||item?.createdAt||item?.date||Date.now());
+      if(map[id]) return map[id];
+      const vals=Object.values(map).map(v=>Number(String(v).replace(/\D/g,''))||0);
+      const existing=(coll(ns)||[]).map(x=>Number(String(x.number||x.invoiceNo||x.code||'').replace(/\D/g,''))||0).filter(Boolean);
+      const next=Math.max(0,...vals,...existing)+1;
+      map[id]=String(next);
+      localStorage.setItem(key,JSON.stringify(map));
+      return map[id];
+    }catch(e){ return String(Date.now()).slice(-6); }
+  }
   function receiptNumberText(inv){
-    const num=String(inv?.number||inv?.id||'').trim();
-    return num.replace(/^INV-/i,'#') || '#';
+    const explicit=String(inv?.number||inv?.invoiceNo||inv?.code||'').trim();
+    if(explicit) return explicit.replace(/^INV-/i,'#');
+    const display=(typeof invoiceDisplayNumber==='function') ? String(invoiceDisplayNumber(inv)||'').trim() : '';
+    if(display) return display.replace(/^INV-/i,'#');
+    const raw=String(inv?.id||'').trim();
+    const digits=toLatinDigits(raw).replace(/\D/g,'');
+    return '#'+(digits || stableLocalDocNumber('invoices',inv));
   }
 
   function receiptBarcodeValue(inv){
@@ -6703,79 +6890,255 @@ ${pc.showCustomer!==false?`<div>الزبون: ${esc(receiptCustomerName(inv))}</
 </div><script>setTimeout(()=>{${autoPrint?'window.print();':''}},250)<\/script></body></html>`;
   }
   function printInvoice(id){ try{ const inv=coll('invoices').find(x=>String(x.id)===String(id)); if(!inv){toast('الفاتورة غير موجودة','bad');return;} const html=invoicePrintableHtml(inv,true); const w=window.open('','_blank'); if(!w){ const href=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'})); triggerFileDownload(href,(inv.number||'invoice')+'.html',true); toast('تم تنزيل ملف الفاتورة لأن المتصفح منع نافذة الطباعة','warn'); return;} w.document.open(); w.document.write(html); w.document.close(); setTimeout(()=>{try{w.focus(); w.print();}catch(e){console.warn(e); toast('تعذر فتح نافذة الطباعة','bad');}},450); }catch(e){console.error(e); toast('تعذر طباعة الفاتورة','bad');} }
-  function downloadInvoicePdf(id){ try{ const inv=coll('invoices').find(x=>String(x.id)===String(id)); if(!inv){toast('الفاتورة غير موجودة','bad');return;} downloadCanvasPdf(buildInvoiceCanvas(inv),(inv.number||'invoice')+'.pdf'); toast('تم تنزيل PDF الفاتورة'); }catch(e){console.error(e); toast('تعذر تنزيل PDF الفاتورة','bad');} }
+  async function downloadInvoicePdf(id){ try{ const inv=coll('invoices').find(x=>String(x.id)===String(id)); if(!inv){toast('الفاتورة غير موجودة','bad');return;} const canvas=await buildInvoiceCanvas(inv); downloadCanvasPdf(canvas,(inv.number||'invoice')+'.pdf'); toast('تم تنزيل PDF الفاتورة'); }catch(e){console.error(e); toast('تعذر تنزيل PDF الفاتورة','bad');} }
   
   function roundRect(ctx,x,y,w,h,r){
     if(ctx.roundRect){ ctx.beginPath(); ctx.roundRect(x,y,w,h,r); return; }
     ctx.beginPath(); ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r); ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h); ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r); ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y); ctx.closePath();
   }
 
-  function buildInvoiceCanvas(inv){
-    const rows=inv.items||[];
-    const width=620;
-    const rowH=38;
-    const h=Math.max(740, 520 + rows.length*rowH);
-    const canvas=document.createElement('canvas');
-    canvas.width=width; canvas.height=h;
-    const ctx=canvas.getContext('2d'); ctx.direction='rtl';
-    const cur=settings().currency||'₪';
-    const pc=currentPrintSettings();
-    const receiptMoney=v=>`${Number(v||0).toFixed(2)} ${cur}`;
-    const saleDate=new Date(inv.date||Date.now());
-    const dateText=saleDate.toLocaleDateString('en-CA').replaceAll('-','/');
-    const timeText=saleDate.toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'});
-    const invoiceNo=receiptNumberText(inv);
-    const barcodeVal=receiptBarcodeValue(inv);
-    const barcodeCaption=barcodeVal;
-    ctx.fillStyle='#fff'; ctx.fillRect(0,0,width,h);
-    ctx.fillStyle='#111'; ctx.textAlign='center';
-    ctx.font='700 30px Tahoma, Arial'; ctx.fillText(settings().storeName||'OSKAR',width/2,42);
-    ctx.font='700 18px Tahoma, Arial'; ctx.fillText('فاتورة مبيعات',width/2,68);
-    ctx.font='600 17px Tahoma, Arial'; ctx.fillText('الموظف: '+receiptEmployeeName(inv),width/2,93);
-    const dash=(y)=>{ctx.save();ctx.strokeStyle='#111';ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(24,y);ctx.lineTo(width-24,y);ctx.stroke();ctx.restore();};
-    const line=(y)=>{ctx.save();ctx.strokeStyle='#111';ctx.setLineDash([]);ctx.beginPath();ctx.moveTo(24,y);ctx.lineTo(width-24,y);ctx.stroke();ctx.restore();};
-    dash(115);
-    ctx.font='600 17px Tahoma, Arial'; ctx.textAlign='right'; ctx.fillText('التاريخ: '+dateText,width-28,148);
-    ctx.textAlign='left'; ctx.fillText('الرقم: '+invoiceNo,28,148);
-    ctx.textAlign='right'; ctx.fillText('الزبون: '+receiptCustomerName(inv),width-28,176);
-    ctx.textAlign='left'; ctx.direction='ltr'; ctx.fillText(receiptPhone(inv)+' :رقم الهاتف',28,176); ctx.direction='rtl';
-    line(224);
-    let y=254;
-    ctx.font='600 17px Tahoma, Arial'; ctx.textAlign='right'; ctx.fillText('المنتج',width-30,y);
-    ctx.textAlign='center'; ctx.fillText('كمية',315,y); ctx.fillText('السعر',205,y); ctx.fillText('القيمة',80,y);
-    line(y+12); y+=42;
-    ctx.font='500 16px Tahoma, Arial';
-    rows.forEach(r=>{
-      ctx.textAlign='right'; ctx.fillStyle='#111'; ctx.fillText(String(lineDisplayName(r)||'').slice(0,28),width-30,y);
-      ctx.textAlign='center'; ctx.fillText(String(n(r.qty)),315,y);
-      ctx.fillText(Number(n(r.price)).toFixed(2),205,y);
-      ctx.fillText(Number(lineSaleTotal(r)).toFixed(2),80,y);
-      ctx.strokeStyle='#d1d5db'; ctx.setLineDash([]); ctx.beginPath(); ctx.moveTo(24,y+12); ctx.lineTo(width-24,y+12); ctx.stroke();
-      y+=rowH;
-    });
-    line(y+2); y+=34;
-    ctx.font='900 18px Tahoma, Arial'; ctx.textAlign='right';
-    ctx.fillText('المجموع:',width-30,y); ctx.textAlign='left'; ctx.fillText(receiptMoney(inv.subTotal||inv.total),30,y); y+=32;
-    ctx.textAlign='right'; ctx.fillText('الخصم:',width-30,y); ctx.textAlign='left'; ctx.fillText(receiptMoney(inv.discountAmount||0),30,y); y+=32; if(n(inv.taxAmount)){ctx.textAlign='right'; ctx.fillText((inv.taxName||'VAT')+':',width-30,y); ctx.textAlign='left'; ctx.fillText(receiptMoney(inv.taxAmount),30,y); y+=32;} if(n(inv.couponDiscount)){ctx.textAlign='right'; ctx.fillText('خصم الكوبون:',width-30,y); ctx.textAlign='left'; ctx.fillText(receiptMoney(inv.couponDiscount),30,y); y+=32;} y+=6;
-    ctx.strokeStyle='#111'; ctx.lineWidth=2; roundRect(ctx,24,y-28,width-48,46,7); ctx.stroke(); ctx.lineWidth=1;
-    ctx.font='700 25px Tahoma, Arial'; ctx.textAlign='right'; ctx.fillText('الإجمالي:',width-36,y+4); ctx.textAlign='left'; ctx.fillText(receiptMoney(inv.total),36,y+4); y+=70;
-    ctx.font='600 17px Tahoma, Arial'; ctx.textAlign='right'; ctx.fillText('طريقة الدفع: '+receiptAccountName(inv),width-30,y); y+=28;
-    ctx.fillText('المتبقي من المبلغ: '+receiptMoney(receiptRemaining(inv)),width-30,y); y+=28;
-    dash(y); y+=35;
-    ctx.textAlign='center'; ctx.font='600 17px Tahoma, Arial'; ctx.fillText('شكراً لتعاملك معنا',width/2,y); y+=18;
-    if(pc.showBarcode!==false && barcodeVal){
-      if(invoiceBarcodeKind(pc)==='QR'){
-        drawQrLikeCanvas(ctx,barcodeVal,width/2-55,y,110);
-        y+=126;
-        ctx.font='13px Tahoma, Arial'; ctx.fillText(barcodeCaption,width/2,y);
-      }else{
-        drawCode128(ctx,barcodeVal,145,y,330,54); y+=68;
-        ctx.font='13px Tahoma, Arial'; ctx.fillText(barcodeCaption,width/2,y);
+  
+  function exactExportStoreInfo(){
+    const s=settings();
+    return {
+      name:String(s.storeName||s.companyName||'Cash Top').trim()||'Cash Top',
+      phone:String(s.storePhone||s.companyPhone||s.mobile||'').trim(),
+      logo:String(s.storeLogoUrl||s.logoUrl||s.menuLogoUrl||s.storeLogo||s.logo||s.programLogo||s.appLogoUrl||s.siteLogo||'oscar-logo.png').trim(),
+      address:String(s.storeAddress||s.address||s.storeLocation||'').trim(),
+      currency:String(s.currency||'₪').trim()||'₪'
+    };
+  }
+  function exactExportInitials(name){
+    return String(name||'كاش توب').split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]||'').join('').slice(0,2)||'CT';
+  }
+  function exactExportMoney(v,cur){
+    const num=Number(v||0);
+    const s=Math.abs(num).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2});
+    return `${cur||'₪'} ${num<0?'-':''}${s}`;
+  }
+  function exactExportDateParts(d){
+    const x=new Date(d||Date.now());
+    return {date:x.toLocaleDateString('en-CA'), time:x.toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit',second:'2-digit'})};
+  }
+  function exactCustomerForInvoice(inv){
+    return coll('customers').find(c=>String(c.id||'')===String(inv.customerId||'')) || {};
+  }
+  function exactLineImageUrl(line){
+    if(line.image||line.imageUrl||line.photo||line.productImage) return line.image||line.imageUrl||line.photo||line.productImage;
+    const pid=line.productId||line.id;
+    const p=coll('products').find(x=>String(x.id||'')===String(pid||'') || String(x.name||'')===String(line.name||line.productName||''));
+    return p?.image||p?.imageUrl||p?.photo||p?.productImage||p?.thumbnail||'';
+  }
+  function exactLineUnit(line){
+    return line.unitName||line.unitLabel||line.unit||line.selectedUnitName||line.sellUnitName||(line.sellMode==='unit'?'كرتونة':'قطعة');
+  }
+
+  function exactCanvasFit(ctx, val, maxW, size=12, weight='700'){
+    ctx.save(); ctx.font=`${weight} ${size}px Cairo, Arial, Tahoma, sans-serif`;ctx.font=ctx.font.replace('normal ','700 ');
+    let s=String(val??'');
+    while(s.length>2 && ctx.measureText(s).width>maxW) s=s.slice(0,-1);
+    const out=s!==String(val??'')?s+'…':s;
+    ctx.restore(); return out;
+  }
+  function exactCanvasText(ctx, val, x, y, size=12, color='#111', align='right', weight='700'){
+    ctx.save(); ctx.direction='rtl'; ctx.fillStyle=color; ctx.textAlign=align; ctx.textBaseline='alphabetic'; ctx.font=`${weight} ${size}px Cairo, Arial, Tahoma, sans-serif`;ctx.font=ctx.font.replace('normal ','700 '); ctx.fillText(String(val??''),x,y); ctx.restore();
+  }
+  function exactBlueBox(ctx,x,y,w,h,fill='#e8f3fb'){
+    ctx.fillStyle=fill; ctx.fillRect(x,y,w,h);
+  }
+  function exactLine(ctx,y){ ctx.save(); ctx.strokeStyle='#8d8d8d'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(32,y); ctx.lineTo(762,y); ctx.stroke(); ctx.restore(); }
+
+  function exactDataUrlFromBlob(blob){
+    return new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=()=>resolve(r.result); r.onerror=reject; r.readAsDataURL(blob); });
+  }
+  function canvasBlob(canvas,type='image/png',quality){
+    return new Promise((resolve,reject)=>{ try{ canvas.toBlob(b=>b?resolve(b):reject(new Error('blob-failed')),type,quality); }catch(e){ reject(e); } });
+  }
+  async function exactFetchImageData(url, ms=450){
+    try{
+      url=String(url||'').trim(); if(!url) return '';
+      if(url.startsWith('data:')) return url;
+      const controller=new AbortController(); const timer=setTimeout(()=>controller.abort(),ms);
+      const res=await fetch(new URL(url,location.href).href,{mode:'cors',cache:'force-cache',signal:controller.signal});
+      clearTimeout(timer);
+      if(!res.ok) return '';
+      return await exactDataUrlFromBlob(await res.blob());
+    }catch(e){ return ''; }
+  }
+  async function exactLoadImageFast(url, ms=1800){
+    try{
+      url=String(url||'').trim();
+      if(!url) return null;
+      const resolved=url.startsWith('data:') ? url : new URL(url,location.href).href;
+      const data=await exactFetchImageData(resolved, Math.max(ms,900));
+      if(data){
+        return await new Promise(resolve=>{
+          const img=new Image();
+          const t=setTimeout(()=>resolve(null), Math.max(ms,900));
+          img.onload=()=>{clearTimeout(t); resolve(img);};
+          img.onerror=()=>{clearTimeout(t); resolve(null);};
+          img.src=data;
+        });
       }
+      if(resolved.startsWith('data:') || new URL(resolved,location.href).origin===location.origin){
+        return await new Promise(resolve=>{
+          const img=new Image();
+          img.crossOrigin='anonymous';
+          const t=setTimeout(()=>resolve(null), Math.max(ms,900));
+          img.onload=()=>{clearTimeout(t); resolve(img);};
+          img.onerror=()=>{clearTimeout(t); resolve(null);};
+          img.src=resolved;
+        });
+      }
+      return null;
+    }catch(e){ return null; }
+  }
+
+  const __exactHeaderLogoCache={url:'',img:null,loading:false};
+  function exactCachedLogoImg(){ const st=typeof exactExportStoreInfo==='function'?exactExportStoreInfo():{logo:''}; return (__exactHeaderLogoCache.url===String(st.logo||'') && __exactHeaderLogoCache.img) ? __exactHeaderLogoCache.img : null; }
+  async function exactPreloadHeaderLogo(){
+    try{
+      const st=typeof exactExportStoreInfo==='function'?exactExportStoreInfo():{logo:''};
+      const url=String(st.logo||'').trim();
+      if(!url) return null;
+      if(__exactHeaderLogoCache.url===url && __exactHeaderLogoCache.img) return __exactHeaderLogoCache.img;
+      if(__exactHeaderLogoCache.loading && __exactHeaderLogoCache.url===url) return null;
+      __exactHeaderLogoCache.url=url; __exactHeaderLogoCache.loading=true;
+      const img=await exactLoadImageFast(url,2200);
+      __exactHeaderLogoCache.img=img; __exactHeaderLogoCache.loading=false;
+      return img;
+    }catch(e){__exactHeaderLogoCache.loading=false; return null;}
+  }
+  setTimeout(()=>{try{exactPreloadHeaderLogo();}catch(e){}},900);
+  function exactDrawTableCell(ctx,x,y,w,h,text,opts={}){
+    ctx.save(); ctx.strokeStyle='#000'; ctx.lineWidth=1; ctx.strokeRect(x,y,w,h);
+    if(opts.fill){ ctx.fillStyle=opts.fill; ctx.fillRect(x+0.5,y+0.5,w-1,h-1); }
+    const size=opts.size||11, weight=opts.weight||'normal', color=opts.color||'#111';
+    const align=opts.align||'center';
+    const tx=align==='right'?x+w-5:align==='left'?x+5:x+w/2;
+    exactCanvasText(ctx, exactCanvasFit(ctx,text,w-10,size,weight), tx, y+h/2+4, size, color, align, weight);
+    ctx.restore();
+  }
+  async function exactDrawInvoiceCanvas(inv){
+    const st=exactExportStoreInfo(), cur=st.currency;
+    const customer=exactCustomerForInvoice(inv);
+    const dt=exactExportDateParts(inv.date||Date.now());
+    const rows=(inv.items||[]).slice(0,15);
+    const qtySum=(inv.items||[]).reduce((a,l)=>a+n(l.qty),0);
+    const remaining=receiptRemaining(inv);
+    const after=n(customer.debt||0) || remaining;
+    const before=n(inv.debtBefore ?? inv.customerDebtBefore ?? Math.max(0,after-remaining));
+    const paid=n(inv.paid);
+    const notes=String(inv.notes||inv.note||inv.invoiceNotes||'').trim();
+    const employee=String(inv.createdByName||inv.updatedByName||(session?.role==='admin'?'المدير':(session?.name||session?.username||'موظف'))||'المدير');
+    const branch=typeof branchName==='function' ? branchName(inv.branchId||activeBranchId?.()||'main') : 'Main Branch';
+    const logoImg=exactCachedLogoImg() || await exactPreloadHeaderLogo() || await exactLoadImageFast(st.logo,2200);
+    const productImgs=await Promise.all(rows.map(l=>exactLoadImageFast(exactLineImageUrl(l),220)));
+
+    const EXPORT_SCALE=2;
+    const canvas=document.createElement('canvas'); canvas.width=794*EXPORT_SCALE; canvas.height=1123*EXPORT_SCALE;
+    const ctx=canvas.getContext('2d'); ctx.scale(EXPORT_SCALE,EXPORT_SCALE);
+    const blue='#e8f3fb', blueText='#1d3972', black='#111', line='#8d8d8d';
+    ctx.fillStyle='#fff'; ctx.fillRect(0,0,794,1123); ctx.direction='rtl';
+
+    // Header: left store, center logo, right meta exactly like the reference
+    const leftX=32, leftW=205, topY=42, rowH=25;
+    const storeLines=[st.name, st.address, st.phone].filter(Boolean).slice(0,3);
+    while(storeLines.length<2) storeLines.push('');
+    storeLines.forEach((t,i)=>{ exactBlueBox(ctx,leftX,topY+i*(rowH+1),leftW,rowH,blue); exactCanvasText(ctx,exactCanvasFit(ctx,t,leftW-12,12),leftX+leftW/2,topY+i*(rowH+1)+17,12,blueText,'center'); });
+
+    const cx=397, logoY=48, logoSize=62;
+    if(logoImg){
+      ctx.save(); ctx.beginPath(); ctx.arc(cx,logoY+logoSize/2,logoSize/2,0,Math.PI*2); ctx.closePath(); ctx.clip();
+      const ratio=Math.max(logoSize/(logoImg.width||logoSize),logoSize/(logoImg.height||logoSize));
+      const dw=(logoImg.width||logoSize)*ratio, dh=(logoImg.height||logoSize)*ratio;
+      ctx.drawImage(logoImg,cx-dw/2,logoY+logoSize/2-dh/2,dw,dh); ctx.restore();
+    }else{
+      exactCanvasText(ctx,exactExportInitials(st.name),cx,logoY+30,12,'#20a2da','center','bold');
+      exactCanvasText(ctx,'DOC',cx,logoY+46,10,'#20a2da','center','bold');
     }
+    exactCanvasText(ctx,exactCanvasFit(ctx,st.name,230,13),cx,135,13,black,'center');
+    if(st.address) exactCanvasText(ctx,exactCanvasFit(ctx,st.address,230,11),cx,153,11,'#555','center');
+
+    const rightX=557, rightW=205, labelW=86, valW=119;
+    [['التاريخ',dt.date],['التوقيت',dt.time],['رقم الفاتورة',receiptNumberText(inv)],['العملة',cur]].forEach((r,i)=>{
+      const y=topY+i*(rowH+1); exactBlueBox(ctx,rightX+valW,y,labelW,rowH,blue);
+      exactCanvasText(ctx,r[0],rightX+valW+labelW/2,y+17,12,blueText,'center','bold');
+      exactCanvasText(ctx,exactCanvasFit(ctx,r[1],valW-10,12),rightX+valW-6,y+17,12,black,'right');
+    });
+
+    exactLine(ctx,185);
+    exactCanvasText(ctx,remaining>0?'مبيع - آجل':'مبيع - نقدي',397,210,13,blueText,'center');
+    exactLine(ctx,230);
+
+    // Customer rows on right, values right-aligned
+    const custY=246;
+    [['السيد',receiptCustomerName(inv)],['العنوان',customer.address||inv.customerAddress||'']].forEach((r,i)=>{
+      const y=custY+i*(rowH+1); exactBlueBox(ctx,rightX+valW,y,labelW,rowH,blue);
+      exactCanvasText(ctx,r[0],rightX+valW+labelW/2,y+17,12,blueText,'center','bold');
+      exactCanvasText(ctx,exactCanvasFit(ctx,r[1],430,12),rightX+valW-6,y+17,12,black,'right');
+    });
+    const phoneY=322;
+    exactCanvasText(ctx,exactCanvasFit(ctx,(receiptPhone(inv)==='—'?'':receiptPhone(inv))||customer.phone||'',160,12),180,phoneY+17,12,blueText,'center');
+    exactBlueBox(ctx,248,phoneY,165,rowH,blue); exactCanvasText(ctx,'رقم الموبايل',330,phoneY+17,12,blueText,'center');
+
+    // Table
+    const tableX=32, tableY=365;
+    const widths=[36,239,70,70,70,95,150];
+    const heads=['م','اسم المادة','العدد','الوحدة','السعر','الإجمالي','صورة المنتج'];
+    let x=tableX+730;
+    widths.forEach((w,i)=>{ x-=w; exactDrawTableCell(ctx,x,tableY,w,30,heads[i],{fill:blue,color:blueText,weight:'bold',size:11}); });
+    let y=tableY+30;
+    const bodyRows=rows.length?rows:[{}];
+    bodyRows.forEach((l,i)=>{
+      x=tableX+730;
+      const vals=rows.length?[i+1,lineDisplayName(l),n(l.qty),exactLineUnit(l),Number(n(l.price)).toLocaleString('en-US'),Number(lineSaleTotal(l)).toLocaleString('en-US'),'']:['','لا توجد أصناف','','','','',''];
+      widths.forEach((w,c)=>{
+        x-=w; exactDrawTableCell(ctx,x,y,w,28,vals[c],{size:10,align:c===1?'right':'center'});
+        if(c===6 && productImgs[i]){ const img=productImgs[i], s=22; ctx.drawImage(img,x+w/2-s/2,y+3,s,s); }
+      });
+      y+=28;
+    });
+    if((inv.items||[]).length>rows.length){
+      x=tableX; ctx.strokeStyle='#000'; ctx.strokeRect(tableX,y,730,25); exactCanvasText(ctx,`تم عرض ${rows.length} من ${(inv.items||[]).length} صنف`,397,y+17,10,blueText,'center'); y+=25;
+    }
+
+    // Summary blocks
+    const sumY=y+14, valueW=130, rowGap=26;
+    function drawSummaryRow(x,y,val,lab){ exactBlueBox(ctx,x,y,valueW,25,blue); exactCanvasText(ctx,exactCanvasFit(ctx,val,valueW-10,11),x+valueW/2,y+17,11,blueText,'center','800'); exactCanvasText(ctx,lab,Math.min(758,x+valueW+110),y+17,11,black,'right','800'); }
+    drawSummaryRow(32,sumY,Number(qtySum).toLocaleString('en-US'),'مجموع الكميات');
+    drawSummaryRow(32,sumY+rowGap,exactExportMoney(before,cur),'رصيده قبل الفاتورة');
+    drawSummaryRow(32,sumY+rowGap*2,exactExportMoney(after,cur),'رصيده بعد الفاتورة');
+    drawSummaryRow(32,sumY+rowGap*3,exactExportMoney(after,cur),'رصيد الحساب الحالي');
+    exactBlueBox(ctx,32,sumY+rowGap*4,130,25,blue); exactBlueBox(ctx,162,sumY+rowGap*4,205,25,blue);
+    exactCanvasText(ctx,'ملاحظة: أرصدة الحساب',97,sumY+rowGap*4+17,11,blueText,'center'); exactCanvasText(ctx,'احتسبت قيمتها عند الطباعة',264,sumY+rowGap*4+17,11,blueText,'center');
+
+    drawSummaryRow(520,sumY,exactExportMoney((inv.subTotal ?? inv.subtotal ?? (n(inv.total)+n(inv.discountAmount||0))),cur),'مجموع الفاتورة');
+    drawSummaryRow(520,sumY+rowGap,exactExportMoney(paid,cur),'دفعة نقدية');
+    drawSummaryRow(520,sumY+rowGap*2,exactExportMoney(inv.discountAmount||0,cur),'الخصم/الإضافة');
+    drawSummaryRow(520,sumY+rowGap*3,exactExportMoney(inv.total,cur),'صافي الفاتورة');
+
+    exactLine(ctx,sumY+rowGap*5+16);
+    const noteY=sumY+rowGap*5+52;
+    exactBlueBox(ctx,rightX+valW,noteY,labelW,25,blue); exactCanvasText(ctx,'ملاحظات',rightX+valW+labelW/2,noteY+17,12,blueText,'center','bold');
+    exactCanvasText(ctx,exactCanvasFit(ctx,notes,430,12),rightX+valW-6,noteY+17,12,black,'right');
+    exactLine(ctx,noteY+58);
+
+    const sigY=noteY+145;
+    const footerStoreName=String(st.name||'Cash Top').trim()||'Cash Top';
+    const footerBranch=String(branch||'').trim()==='الفرع الرئيسي' ? 'Main Branch' : (String(branch||'').trim()||'Main Branch');
+    exactCanvasText(ctx,footerStoreName,690,sigY,12,blueText,'right');
+    exactCanvasText(ctx,footerBranch,690,sigY+26,12,blueText,'right');
+    exactCanvasText(ctx,'Signature [ '+employee+' ]',690,sigY+52,12,blueText,'right');
+
+    exactCanvasText(ctx,[st.address,st.phone].filter(Boolean).join(' '),397,1054,11,black,'center');
+    exactCanvasText(ctx,'تاريخ الطباعة '+new Date().toLocaleString('ar'),397,1076,11,black,'center');
     return canvas;
   }
-  function downloadInvoiceImage(id){ try{ const inv=coll('invoices').find(x=>String(x.id)===String(id)); if(!inv){toast('الفاتورة غير موجودة','bad');return;} const canvas=buildInvoiceCanvas(inv); triggerFileDownload(canvas.toDataURL('image/png'),(inv.number||'invoice')+'.png',false); toast('تم تنزيل صورة الفاتورة'); }catch(e){console.error(e); toast('تعذر تنزيل صورة الفاتورة','bad');} }
+  async function buildInvoiceCanvas(inv){ return exactDrawInvoiceCanvas(inv); }
+
+  function downloadInvoiceImage(id){ return (async()=>{ try{ const inv=coll('invoices').find(x=>String(x.id)===String(id)); if(!inv){toast('الفاتورة غير موجودة','bad');return;} const canvas=await buildInvoiceCanvas(inv); triggerFileDownload(canvas.toDataURL('image/png'),(inv.number||'invoice')+'.png',false); toast('تم تنزيل صورة الفاتورة'); }catch(e){console.error(e); toast('تعذر تنزيل صورة الفاتورة','bad');} })(); }
+  
   function exportProductsExcel(){
     if(!hasPerm('export')){toast('ليس لديك صلاحية التصدير','bad'); return;}
     const rows=coll('products');
@@ -6814,8 +7177,8 @@ ${pc.showCustomer!==false?`<div>الزبون: ${esc(receiptCustomerName(inv))}</
   function cashAiPeriodMetrics(q){const r=cashAiRange(q),invs=coll('invoices').filter(i=>cashAiInRange(i,r)&&String(i.status||'issued')!=='draft'),sales=invs.reduce((a,i)=>a+n(i.total),0),paid=invs.reduce((a,i)=>a+n(i.paid),0),debt=invs.reduce((a,i)=>a+(n(i.debt)||Math.max(0,n(i.total)-n(i.paid))),0),profit=invs.reduce((a,i)=>a+cashAiInvoiceProfit(i),0),expenses=coll('expenses').filter(e=>cashAiInRange(e,r)).reduce((a,e)=>a+n(e.amount),0),purchases=coll('purchaseInvoices').filter(p=>cashAiInRange(p,r)).reduce((a,p)=>a+n(p.total),0),waste=coll('waste').filter(w=>cashAiInRange(w,r)).reduce((a,w)=>a+n(w.total||w.cost||0),0);return{r,invs,sales,paid,debt,profit,expenses,purchases,waste,net:profit-expenses-waste}}
   function cashAiShortages(){return cashAiProductSales(120).map(r=>{const monthly=r.qty/4,expected=Math.ceil(monthly*1.15),need=Math.max(0,expected-n(r.stock));return{...r,monthly,expected,need}}).filter(r=>r.need>0||n(r.stock)<=n(settings().lowStock)).sort((a,b)=>b.need-a.need)}
   function cashAiStagnant(){const now=Date.now();return cashAiProductSales(365).filter(r=>r.qty<=0||(r.lastSale&&now-r.lastSale>60*86400000)).sort((a,b)=>(a.lastSale||0)-(b.lastSale||0))}
-  function downloadCashAiShortagePdf(){const rows=cashAiShortages().slice(0,60).map(r=>[r.name,n(r.stock),r.monthly.toFixed(1),r.expected,r.need]);downloadCanvasPdf(drawReportCanvas('توقعات النواقص والمبيعات','تحليل الأشهر السابقة',['المنتج','المخزون','متوسط شهري','متوقع','كمية مقترحة'],rows,[['عدد المنتجات',rows.length],['حد التنبيه',settings().lowStock||5],['تاريخ التقرير',new Date().toLocaleDateString('ar')]]),'توقعات-النواقص-والمبيعات.pdf')}
-  function downloadCashAiStagnantPdf(){const rows=cashAiStagnant().slice(0,80).map(r=>[r.name,n(r.stock),r.qty.toFixed(1),r.lastSale?new Date(r.lastSale).toLocaleDateString('ar'):'لم يبع']);downloadCanvasPdf(drawReportCanvas('تقرير المنتجات الراكدة','مواد قليلة أو معدومة البيع',['المنتج','المخزون','المبيعات','آخر بيع'],rows,[['عدد المنتجات',rows.length],['المدة','آخر سنة'],['تاريخ التقرير',new Date().toLocaleDateString('ar')]]),'تقرير-المنتجات-الراكدة.pdf')}
+  async function downloadCashAiShortagePdf(){await exactPreloadHeaderLogo(); const rows=cashAiShortages().slice(0,60).map(r=>[r.name,n(r.stock),r.monthly.toFixed(1),r.expected,r.need]);downloadCanvasPdf(drawReportCanvas('توقعات النواقص والمبيعات','تحليل الأشهر السابقة',['المنتج','المخزون','متوسط شهري','متوقع','كمية مقترحة'],rows,[['عدد المنتجات',rows.length],['حد التنبيه',settings().lowStock||5],['تاريخ التقرير',new Date().toLocaleDateString('ar')]]),'توقعات-النواقص-والمبيعات.pdf')}
+  async function downloadCashAiStagnantPdf(){await exactPreloadHeaderLogo(); const rows=cashAiStagnant().slice(0,80).map(r=>[r.name,n(r.stock),r.qty.toFixed(1),r.lastSale?new Date(r.lastSale).toLocaleDateString('ar'):'لم يبع']);downloadCanvasPdf(drawReportCanvas('تقرير المنتجات الراكدة','مواد قليلة أو معدومة البيع',['المنتج','المخزون','المبيعات','آخر بيع'],rows,[['عدد المنتجات',rows.length],['المدة','آخر سنة'],['تاريخ التقرير',new Date().toLocaleDateString('ar')]]),'تقرير-المنتجات-الراكدة.pdf')}
   function cashAiAnswer(q){q=String(q||'').trim();const nq=cashAiNorm(q);if(!q)return'اكتب سؤالاً عن بيانات النظام.';let inv=cashAiFindInvoice(q);if(inv&&cashAiHas(q,['فاتوره','فاتورة','ربح','محتويات','متى','عميل'])){const rem=n(inv.debt)||Math.max(0,n(inv.total)-n(inv.paid));const rows=(inv.items||[]).map((l,i)=>`${i+1}. ${lineDisplayName(l)} × ${n(l.qty)} = ${money(lineSaleTotal(l))}`).join('\n')||'لا توجد أصناف';return`الفاتورة: ${inv.number||inv.id}\nالتاريخ: ${new Date(inv.date||inv.createdAt||Date.now()).toLocaleString('ar')}\nالعميل: ${inv.customerName||'نقدي'}\nالحالة: ${inv.status||'صادرة'}\nالإجمالي: ${money(inv.total)}\nالمدفوع: ${money(inv.paid)}\nالمتبقي: ${money(rem)}\nالربح التقديري: ${money(cashAiInvoiceProfit(inv))}\nالأصناف:\n${rows}`}
     if(cashAiHas(q,['ربح','ارباح','أرباح','خساره','خسائر','مبيعات','مصروف','مصروفات','صافي'])){const m=cashAiPeriodMetrics(q);return`تحليل ${m.r.label}:\nعدد الفواتير: ${m.invs.length}\nالمبيعات: ${money(m.sales)}\nالمدفوع: ${money(m.paid)}\nديون الفواتير: ${money(m.debt)}\nربح الفواتير: ${money(m.profit)}\nالمصاريف: ${money(m.expenses)}\nالهالك/الخسائر: ${money(m.waste)}\nصافي الربح: ${money(m.net)}\nالمشتريات: ${money(m.purchases)}`}
     const c=cashAiFindCustomer(q);if(c&&cashAiHas(q,['عميل','زبون','دين','اخد','أخذ','اشترى','مشتريات','حركات'])){const r=cashAiRange(q),invs=coll('invoices').filter(i=>(String(i.customerId||'')===String(c.id)||cashAiNorm(i.customerName||'')===cashAiNorm(c.name||''))&&(nq.includes('تاريخ')||nq.includes('يوم')||nq.includes('امس')?cashAiInRange(i,r):true));return`العميل: ${c.name}\nالهاتف: ${c.phone||'—'}\nالدين الحالي: ${money(c.debt)}\nحد الائتمان: ${n(c.creditLimit)?money(c.creditLimit):'بدون حد'}\nعدد فواتيره ضمن الطلب: ${invs.length}\nإجمالي مشترياته ضمن الطلب: ${money(invs.reduce((a,i)=>a+n(i.total),0))}\nآخر الفواتير:\n${invs.slice(-6).map(i=>`${i.number||i.id} - ${new Date(i.date||i.createdAt||Date.now()).toLocaleDateString('ar')} - ${money(i.total)}`).join('\n')||'لا توجد فواتير مطابقة'}`}
@@ -7018,9 +7381,10 @@ ${pc.showCustomer!==false?`<div>الزبون: ${esc(receiptCustomerName(inv))}</
     const r=currentCustomReport();
     root.innerHTML=`<div class="toolbar"><h3 class="section-title">${$('#customReportType')?.selectedOptions?.[0]?.textContent||'تقرير'}</h3><span class="badge">${r.rows.length} سجل</span></div><div class="table-wrap"><table><thead><tr>${r.headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${r.rows.length?r.rows.map(x=>`<tr>${customReportRowArray(r.type,x).map(v=>`<td>${esc(v)}</td>`).join('')}</tr>`).join(''):'<tr><td colspan="8"><div class="empty">لا توجد بيانات</div></td></tr>'}</tbody></table></div>`;
   }
-  function downloadCustomReportPdf(){
+  async function downloadCustomReportPdf(){
     const r=currentCustomReport();
     const rows=r.rows.map(x=>customReportRowArray(r.type,x));
+    await exactPreloadHeaderLogo();
     const canvas=drawReportCanvas('تقرير مخصص',$('#customReportType')?.selectedOptions?.[0]?.textContent||'',r.headers,rows,[['عدد السجلات',r.rows.length],['الفترة',(r.from||'كل الفترات')+' - '+(r.to||'كل الفترات')]]);
     downloadCanvasPdf(canvas,'تقرير-مخصص.pdf');
   }
@@ -7049,8 +7413,9 @@ ${pc.showCustomer!==false?`<div>الزبون: ${esc(receiptCustomerName(inv))}</
     }
     return out;
   }
-  function downloadCashFlowForecastPdf(){
+  async function downloadCashFlowForecastPdf(){
     const rows=cashFlowForecastRows(6).map(r=>[r.month,money(r.sales),money(r.paid),money(r.expenses),money(r.purchases),money(r.balance)]);
+    await exactPreloadHeaderLogo();
     const canvas=drawReportCanvas('التنبؤ بالتدفقات النقدية','توقع الرصيد والمبيعات والمصاريف للأشهر القادمة',['الشهر','المبيعات','التحصيل','المصاريف','المشتريات','الرصيد المتوقع'],rows,[['طريقة التوقع','متوسط الأشهر السابقة مع نمو تدريجي'],['عدد الأشهر',6]]);
     downloadCanvasPdf(canvas,'التنبؤ-بالتدفقات-النقدية.pdf');
   }
@@ -7075,56 +7440,74 @@ ${pc.showCustomer!==false?`<div>الزبون: ${esc(receiptCustomerName(inv))}</
   function asciiBytes(s){ const a=new Uint8Array(s.length); for(let i=0;i<s.length;i++) a[i]=s.charCodeAt(i)&255; return a; }
   function concatBytes(chunks){ const len=chunks.reduce((a,b)=>a+b.length,0); const out=new Uint8Array(len); let o=0; chunks.forEach(c=>{out.set(c,o); o+=c.length}); return out; }
   function downloadCanvasPdf(canvas,name){ const img=bytesFromDataUrl(canvas.toDataURL('image/jpeg',0.92)); const pdfW=595, pdfH=Math.max(420, Math.round(canvas.height*pdfW/canvas.width)); const content=`q\n${pdfW} 0 0 ${pdfH} 0 0 cm\n/Im0 Do\nQ\n`; const chunks=[]; let offset=0; const offsets=[]; const add=(c)=>{ const b=typeof c==='string'?asciiBytes(c):c; chunks.push(b); offset+=b.length; }; add('%PDF-1.4\n%\xe2\xe3\xcf\xd3\n'); const obj=(s)=>{ offsets.push(offset); add(s); }; obj('1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n'); obj('2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n'); obj(`3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pdfW} ${pdfH}] /Resources << /XObject << /Im0 5 0 R >> >> /Contents 4 0 R >>\nendobj\n`); obj(`4 0 obj\n<< /Length ${content.length} >>\nstream\n${content}endstream\nendobj\n`); offsets.push(offset); add(`5 0 obj\n<< /Type /XObject /Subtype /Image /Width ${canvas.width} /Height ${canvas.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${img.length} >>\nstream\n`); add(img); add('\nendstream\nendobj\n'); const xref=offset; add(`xref\n0 6\n0000000000 65535 f \n${offsets.map(o=>String(o).padStart(10,'0')+' 00000 n ').join('\n')}\ntrailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`); const blob=new Blob([concatBytes(chunks)],{type:'application/pdf'}); const href=URL.createObjectURL(blob); triggerFileDownload(href,name,true); }
+  
   function drawReportCanvas(title, subtitle, headers, rows, summary=[]){
-    const w=1280, rowH=48, topH=170, sumH=summary.length?Math.ceil(summary.length/3)*84:0;
-    const safeRows=rows.length?rows:[Array(headers.length).fill('—')];
-    const h=topH+sumH+86+safeRows.length*rowH+80;
-    const canvas=document.createElement('canvas'); canvas.width=w; canvas.height=h;
-    const ctx=canvas.getContext('2d'); ctx.direction='rtl';
-    ctx.fillStyle='#f3f7fb'; ctx.fillRect(0,0,w,h);
-    ctx.fillStyle='#ffffff'; roundRect(ctx,30,24,w-60,h-48,28); ctx.fill();
-    ctx.fillStyle='#174EA6'; roundRect(ctx,30,24,w-60,130,28); ctx.fill();
-    ctx.fillStyle='#fff'; ctx.textAlign='right'; ctx.font='900 38px Cairo, Tahoma, Arial'; ctx.fillText(settings().storeName||'كاش توب',w-76,72);
-    ctx.font='800 26px Cairo, Tahoma, Arial'; ctx.fillText(title,w-76,116);
-    ctx.textAlign='left'; ctx.font='700 19px Cairo, Tahoma, Arial'; ctx.fillText(subtitle||new Date().toLocaleString('ar'),76,116);
-    let y=182;
-    summary.forEach((s,i)=>{
-      const col=i%3, row=Math.floor(i/3), boxW=(w-120-24)/3, x=60+col*(boxW+12), yy=y+row*84;
-      ctx.fillStyle='#f8fafc'; roundRect(ctx,x,yy,boxW,66,16); ctx.fill();
-      ctx.strokeStyle='#e5e7eb'; ctx.stroke();
-      ctx.fillStyle='#64748b'; ctx.textAlign='right'; ctx.font='700 17px Cairo, Tahoma, Arial'; ctx.fillText(String(s[0]),x+boxW-18,yy+25);
-      ctx.fillStyle='#111827'; ctx.font='900 22px Cairo, Tahoma, Arial'; ctx.fillText(String(s[1]),x+boxW-18,yy+54);
-    });
-    y+=sumH+20;
-    const tableX=60, tableW=w-120, cols=headers.length, colW=tableW/cols;
-    ctx.fillStyle='#eaf2ff'; roundRect(ctx,tableX,y,tableW,rowH,14); ctx.fill();
-    ctx.fillStyle='#111827'; ctx.font='900 18px Cairo, Tahoma, Arial'; ctx.textAlign='right';
-    headers.forEach((hd,i)=>ctx.fillText(String(hd),tableX+tableW-i*colW-14,y+31));
-    y+=rowH;
-    ctx.font='700 16px Cairo, Tahoma, Arial';
-    safeRows.forEach((r,ri)=>{
-      ctx.fillStyle=ri%2?'#fff':'#f8fafc'; ctx.fillRect(tableX,y,tableW,rowH);
-      ctx.strokeStyle='#e5e7eb'; ctx.beginPath(); ctx.moveTo(tableX,y+rowH); ctx.lineTo(tableX+tableW,y+rowH); ctx.stroke();
-      ctx.fillStyle='#111827';
-      r.forEach((v,i)=>{ const txt=String(v??''); ctx.fillText(txt.length>28?txt.slice(0,27)+'…':txt,tableX+tableW-i*colW-14,y+31); });
-      y+=rowH;
-    });
-    ctx.fillStyle='#64748b'; ctx.textAlign='center'; ctx.font='700 16px Cairo, Tahoma, Arial'; ctx.fillText('تم إنشاء التقرير بواسطة كاش توب',w/2,h-38);
+    const st=typeof exactExportStoreInfo==='function'?exactExportStoreInfo():{name:(settings().storeName||'Cash Top'),phone:(settings().storePhone||''),address:(settings().storeAddress||''),currency:(settings().currency||'₪'),logo:''};
+    const safeRows=(Array.isArray(rows)&&rows.length?rows:[Array(Math.max(1,(headers||[]).length)).fill('—')]);
+    const maxRows=Math.min(18,safeRows.length), rowH=32, width=794, height=1123;
+    const EXPORT_SCALE=2;
+    const canvas=document.createElement('canvas'); canvas.width=width*EXPORT_SCALE; canvas.height=height*EXPORT_SCALE;
+    const ctx=canvas.getContext('2d'); ctx.scale(EXPORT_SCALE,EXPORT_SCALE);
+    const blue='#e8f3fb', blueText='#1d3972', black='#111', line='#8d8d8d';
+    ctx.fillStyle='#fff'; ctx.fillRect(0,0,width,height); ctx.direction='rtl';
+    const text=(v,x,y,size=12,color=black,align='right',weight='700')=>{ctx.save();ctx.fillStyle=color;ctx.textAlign=align;ctx.font=`${weight} ${size}px Cairo, Arial, Tahoma, sans-serif`;ctx.font=ctx.font.replace('normal ','700 ');ctx.fillText(String(v??''),x,y);ctx.restore();};
+    const fit=(v,maxW,size=12,weight='700')=>{ctx.save();ctx.font=`${weight} ${size}px Cairo, Arial, Tahoma, sans-serif`;ctx.font=ctx.font.replace('normal ','700 ');let s=String(v??'');while(s.length>2&&ctx.measureText(s).width>maxW)s=s.slice(0,-1);const out=s!==String(v??'')?s+'…':s;ctx.restore();return out;};
+    const box=(x,y,w,h)=>{ctx.fillStyle=blue;ctx.fillRect(x,y,w,h);};
+    const lineH=y=>{ctx.strokeStyle=line;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(32,y);ctx.lineTo(762,y);ctx.stroke();};
+
+    const storeX=32, storeW=205;
+    const headerStoreLines=[st.name,st.address,st.phone].filter(Boolean).slice(0,3);
+    while(headerStoreLines.length<2) headerStoreLines.push('');
+    headerStoreLines.forEach((v,i)=>{const yy=32+i*32; box(storeX,yy,storeW,31); text(fit(v,storeW-12,12),storeX+storeW/2,yy+20,12,blueText,'center');});
+    const cx=397, cy=63, logoSize=62;
+    const logoImg=exactCachedLogoImg();
+    if(logoImg){
+      ctx.save(); ctx.beginPath(); ctx.arc(cx,cy,logoSize/2,0,Math.PI*2); ctx.closePath(); ctx.clip();
+      const ratio=Math.max(logoSize/(logoImg.width||logoSize),logoSize/(logoImg.height||logoSize));
+      const dw=(logoImg.width||logoSize)*ratio, dh=(logoImg.height||logoSize)*ratio;
+      ctx.drawImage(logoImg,cx-dw/2,cy-dh/2,dw,dh); ctx.restore();
+    }else{
+      text(exactExportInitials(st.name),cx,62,12,'#20a2da','center','bold'); text('DOC',cx,78,9,'#20a2da','center','bold');
+    }
+    text(fit(st.name,220,13),cx,115,13,black,'center'); if(st.address) text(fit(st.address,230,11),cx,134,11,'#555','center');
+
+    const metaX=676, valX=664;
+    [['التاريخ',new Date().toLocaleDateString('en-CA')],['التوقيت',new Date().toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit',second:'2-digit'})],['رقم المستند','RPT-'+String(Date.now()).slice(-6)],['العملة',st.currency||'₪']].forEach((r,i)=>{const y=32+i*32;box(metaX,y,86,31);text(r[0],metaX+43,y+20,12,blueText,'center','bold');text(fit(r[1],130,12),valX,y+20,12,black,'right');});
+    lineH(185); text(title||'تقرير',397,210,13,blueText,'center'); lineH(230);
+    box(metaX,242,86,31); text('السيد',metaX+43,262,12,blueText,'center','bold'); text(fit(subtitle||'',250,12),metaX-12,262,12,black,'right');
+    box(metaX,274,86,31); text('العنوان',metaX+43,294,12,blueText,'center','bold');
+
+    const tableX=32, tableY=340, tableW=730, cols=Math.max(1,(headers||[]).length), colW=tableW/cols;
+    ctx.fillStyle=blue; ctx.fillRect(tableX,tableY,tableW,36); ctx.strokeStyle='#000'; ctx.lineWidth=1;
+    (headers||['']).forEach((hd,i)=>{const x=tableX+tableW-(i+1)*colW;ctx.strokeRect(x,tableY,colW,36);text(fit(hd,colW-10,11,'bold'),x+colW/2,tableY+23,11,blueText,'center','bold');});
+    let y=tableY+36;
+    safeRows.slice(0,maxRows).forEach(r=>{(headers||['']).forEach((hd,i)=>{const x=tableX+tableW-(i+1)*colW;ctx.strokeRect(x,y,colW,rowH);text(fit((r||[])[i]??'',colW-10,10),x+colW/2,y+20,10,black,'center','700');}); y+=rowH;});
+    const sumTop=y+16, leftX=32, rightX=540, valueW=130;
+    const leftRows=[['مجموع السجلات',rows.length],['تاريخ التقرير',new Date().toLocaleDateString('ar')],['الوصف',subtitle||'']];
+    const rightRows=(summary||[]).slice(0,4).map(x=>[x[0],x[1]]); while(rightRows.length<4) rightRows.push(['','']);
+    function drawRows(arr,x){arr.forEach((r,i)=>{const yy=sumTop+i*32;box(x,yy,valueW,31);text(fit(r[1],valueW-10,11),x+valueW/2,yy+20,11,blueText,'center','800');text(fit(r[0],150,11),Math.min(758,x+valueW+120),yy+20,11,black,'right','800');});}
+    drawRows(leftRows,leftX); drawRows(rightRows,rightX);
+    lineH(sumTop+150);
+    box(metaX,sumTop+195,86,31); text('ملاحظات',metaX+43,sumTop+215,12,blueText,'center','bold'); text(fit(title||'',260,12),metaX-12,sumTop+215,12,black,'right');
+    lineH(sumTop+250);
+    const sigX=650, sigY=sumTop+340; const footerStoreName=String(st.name||'Cash Top').trim()||'Cash Top'; const reportBranch=(typeof branchName==='function'?branchName(activeBranchId?.()||'main'):'Main Branch'); const footerBranch=String(reportBranch||'').trim()==='الفرع الرئيسي' ? 'Main Branch' : (String(reportBranch||'').trim()||'Main Branch'); text(footerStoreName,690,sigY,12,blueText,'right'); text(footerBranch,690,sigY+26,12,blueText,'right'); text('Signature [ '+(session?.name||session?.username||'Manager')+' ]',690,sigY+52,12,blueText,'right');
+    text([st.address,st.phone].filter(Boolean).join(' '),397,1054,11,black,'center'); text('تاريخ الطباعة '+new Date().toLocaleString('ar'),397,1076,11,black,'center');
     return canvas;
   }
+
   function downloadBlob(content,name,type){ const href=URL.createObjectURL(new Blob([content],{type})); triggerFileDownload(href,name,true); }
   function htmlTable(headers, rows){ return '<table dir="rtl" border="1" style="border-collapse:collapse;width:100%"><thead><tr>'+headers.map(h=>`<th>${esc(h)}</th>`).join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(v=>`<td>${esc(v)}</td>`).join('')+'</tr>').join('')+'</tbody></table>'; }
   function entityReportData(colName,id){ const item=coll(colName).find(x=>String(x.id)===String(id)); if(!item)return null; const isAcc=colName==='accounts'; const title=isAcc?'كشف حساب':(colName==='customers'?'كشف عميل':'كشف مورد'); const moves=[...(item.movements||[])].sort((a,b)=>new Date(a.date||0)-new Date(b.date||0)); let running=n(item.opening||0); const headers=isAcc?['التاريخ','النوع','وارد','صادر','الرصيد','ملاحظات']:['التاريخ','النوع','المبلغ','الرصيد','ملاحظات']; const rows=moves.map(m=>{ if(isAcc){ if(m.kind!=='opening') running+=n(m.amount); return [new Date(m.date).toLocaleString('ar'),m.kind||'',n(m.amount)>0?money(m.amount):'',n(m.amount)<0?money(Math.abs(n(m.amount))):'',money(running),m.note||'']; } running += (m.type==='payment'?-n(m.amount):n(m.amount)); return [new Date(m.date).toLocaleString('ar'),m.type==='payment'?'سداد':'دين',money(m.amount),money(Math.max(0,running)),m.note||'']; }); const balance=isAcc?n(item.balance):n(item.debt); const summary=[['الاسم',item.name||item.id],['الرصيد الحالي',money(balance)],['عدد الحركات',moves.length],['تاريخ التقرير',new Date().toLocaleString('ar')]]; return {item,title,headers,rows,summary,balance}; }
-  function downloadEntityPdf(colName,id){ const d=entityReportData(colName,id); if(!d)return; const canvas=drawReportCanvas(d.title,d.item.name||'',d.headers,d.rows,d.summary); downloadCanvasPdf(canvas,(d.item.name||id)+'.pdf'); toast('تم تنزيل PDF'); }
+  async function downloadEntityPdf(colName,id){ const d=entityReportData(colName,id); if(!d)return; await exactPreloadHeaderLogo(); const canvas=drawReportCanvas(d.title,d.item.name||'',d.headers,d.rows,d.summary); downloadCanvasPdf(canvas,(d.item.name||id)+'.pdf'); toast('تم تنزيل PDF'); }
   function printEntityReport(colName,id){ downloadEntityPdf(colName,id); }
   function downloadAccountPdf(id){ downloadEntityPdf('accounts',id); }
   function downloadEntityCSV(colName,id){ const d=entityReportData(colName,id); if(!d)return; const html='\ufeff<html><head><meta charset="utf-8"></head><body><h2>'+esc(d.title)+' - '+esc(d.item.name||'')+'</h2>'+htmlTable(['البند','القيمة'],d.summary)+ '<br>'+htmlTable(d.headers,d.rows)+'</body></html>'; downloadBlob(html,`${d.item.name||id}.xls`,'application/vnd.ms-excel;charset=utf-8'); toast('تم تنزيل ملف Excel'); }
-  function downloadEntityImage(colName,id){ const d=entityReportData(colName,id); if(!d)return; const canvas=drawReportCanvas(d.title,d.item.name||'',d.headers,d.rows,d.summary); const a=document.createElement('a'); a.href=canvas.toDataURL('image/png'); a.download=(d.item.name||id)+'.png'; a.click(); toast('تم تنزيل الصورة'); }
+  async function downloadEntityImage(colName,id){ const d=entityReportData(colName,id); if(!d)return; await exactPreloadHeaderLogo(); const canvas=drawReportCanvas(d.title,d.item.name||'',d.headers,d.rows,d.summary); const href=URL.createObjectURL(await canvasBlob(canvas,'image/png')); triggerFileDownload(href,(d.item.name||id)+'.png',true); toast('تم تنزيل الصورة'); }
   function financeSummaryRows(m){ return [['عدد الفواتير',m.count],['إجمالي البيع',money(m.sales)],['جملة البيع',money(m.cost)],['ربح البيع',money(m.sales-m.cost)],['المصروفات',money(m.exp)],['صافي الربح',money(m.profit)],['المقبوض',money(m.paid)],['ديون الفترة',money(m.debts)]]; }
   function financeInvoiceRows(m){ return m.invoices.map(inv=>[inv.number,new Date(inv.date).toLocaleString('ar'),inv.customerName||'نقدي',money(inv.total),money(invoiceCost(inv)),money(n(inv.total)-invoiceCost(inv)),money(inv.paid),money(inv.debt)]); }
   function exportFinanceExcel(){ const m=reportMetrics(); const expRows=m.expenses.map(x=>[new Date(x.date).toLocaleString('ar'),x.name,money(x.amount),coll('accounts').find(a=>a.id===x.accountId)?.name||'']); const html='\ufeff<html><head><meta charset="utf-8"><style>body{font-family:Cairo,Tahoma,Arial;direction:rtl;padding:18px}h2,h3{color:#174EA6}table{border-collapse:collapse;width:100%;margin:10px 0}th,td{border:1px solid #d1d5db;padding:8px;text-align:right}th{background:#eff6ff}</style></head><body><h2>تقرير المالية</h2>'+htmlTable(['البند','القيمة'],financeSummaryRows(m))+'<h3>الفواتير</h3>'+htmlTable(['الفاتورة','التاريخ','العميل','سعر البيع','سعر الجملة','ربح البيع','المدفوع','الدين'],financeInvoiceRows(m))+'<h3>المصروفات</h3>'+htmlTable(['التاريخ','المصروف','المبلغ','الحساب'],expRows)+'</body></html>'; downloadBlob(html,'finance-report.xls','application/vnd.ms-excel;charset=utf-8'); toast('تم تنزيل تقرير Excel'); }
-  function exportFinancePdf(){ const m=reportMetrics(); const canvas=drawReportCanvas('تقرير المالية','حسب الفلترة الحالية',['الفاتورة','التاريخ','العميل','البيع','الجملة','الربح','مدفوع','دين'],financeInvoiceRows(m),financeSummaryRows(m)); downloadCanvasPdf(canvas,'finance-report.pdf'); toast('تم تنزيل تقرير PDF'); }
-  function exportFinanceImage(){ const m=reportMetrics(); const canvas=drawReportCanvas('تقرير المالية','حسب الفلترة الحالية',['الفاتورة','التاريخ','العميل','البيع','الجملة','الربح','مدفوع','دين'],financeInvoiceRows(m),financeSummaryRows(m)); const a=document.createElement('a'); a.href=canvas.toDataURL('image/png'); a.download='finance-report.png'; a.click(); toast('تم تنزيل صورة التقرير'); }
+  async function exportFinancePdf(){ const m=reportMetrics(); await exactPreloadHeaderLogo(); const canvas=drawReportCanvas('تقرير المالية','حسب الفلترة الحالية',['الفاتورة','التاريخ','العميل','البيع','الجملة','الربح','مدفوع','دين'],financeInvoiceRows(m),financeSummaryRows(m)); downloadCanvasPdf(canvas,'finance-report.pdf'); toast('تم تنزيل تقرير PDF'); }
+  async function exportFinanceImage(){ const m=reportMetrics(); await exactPreloadHeaderLogo(); const canvas=drawReportCanvas('تقرير المالية','حسب الفلترة الحالية',['الفاتورة','التاريخ','العميل','البيع','الجملة','الربح','مدفوع','دين'],financeInvoiceRows(m),financeSummaryRows(m)); const href=URL.createObjectURL(await canvasBlob(canvas,'image/png')); triggerFileDownload(href,'finance-report.png',true); toast('تم تنزيل صورة التقرير'); }
   function applyStoreName(){ const name=settings().storeName || 'كاش توب'; const s=$('#sideStoreName'); if(s) s.textContent=name; document.querySelector('meta[name="apple-mobile-web-app-title"]')?.setAttribute('content', name); }
   
   function branchIcon(){return '<span class="branch-icon-svg"><svg viewBox="0 0 24 24"><path d="M4 21V8l8-5 8 5v13M9 21v-7h6v7M8 10h.01M12 10h.01M16 10h.01"/></svg></span>'}
@@ -7291,8 +7674,42 @@ ${pc.showCustomer!==false?`<div>الزبون: ${esc(receiptCustomerName(inv))}</
     });
   }
 
-  function renderSettings(){ const s=settings(); const name=$('#setStoreName'); if(!name) return; name.value=s.storeName||'كاش توب'; $('#setLowStock').value=s.lowStock||5; $('#setCurrency').value=s.currency||'₪'; $('#setPrintWidth').value=s.printWidth||'58mm'; const ap=$('#setAutoPrintInvoice'); if(ap) ap.value=String(!!s.autoPrintInvoice); }
-  function saveSettings(){ const s={...settings(),id:'main',storeName:$('#setStoreName').value.trim()||'كاش توب',lowStock:n($('#setLowStock').value),currency:$('#setCurrency').value||'₪',printWidth:$('#setPrintWidth').value||'58mm',autoPrintInvoice:$('#setAutoPrintInvoice')?.value==='true',allowNegative:$('#setAllowNegative')?.value==='true',updatedAt:Date.now()}; state.store.settings=[s]; queue('set','settings','main',s,false); saveStore(false); applyStoreName(); forceLocalRender(); autoSync(); toast('تم حفظ الإعدادات'); }
+  
+  function renderSettings(){ 
+    const s=settings(); 
+    const set=(id,val)=>{const el=$('#'+id); if(el) el.value=val??'';};
+    set('setStoreName',s.storeName||'كاش توب');
+    set('setStoreLogoUrl',s.storeLogoUrl||s.logoUrl||s.menuLogoUrl||s.storeLogo||s.logo||s.programLogo||s.appLogoUrl||s.siteLogo||'');
+    set('setStorePhone',s.storePhone||s.companyPhone||s.mobile||'');
+    set('setStoreAddress',s.storeAddress||s.address||s.storeLocation||'');
+    set('setLowStock',s.lowStock||5);
+    set('setCurrency',s.currency||'₪');
+    set('setPrintWidth',s.printWidth||'58mm');
+    const ap=$('#setAutoPrintInvoice'); if(ap) ap.value=String(!!s.autoPrintInvoice);
+  }
+  function saveSettings(){ 
+    const old=settings();
+    const val=(id,fallback='')=>{const el=$('#'+id); return el?el.value:fallback;};
+    const s={...old,id:'main',
+      storeName:String(val('setStoreName',old.storeName||'كاش توب')).trim()||'كاش توب',
+      storeLogoUrl:String(val('setStoreLogoUrl',old.storeLogoUrl||old.logoUrl||old.menuLogoUrl||old.storeLogo||old.logo||old.programLogo||old.appLogoUrl||old.siteLogo||'')).trim(),
+      storePhone:String(val('setStorePhone',old.storePhone||old.companyPhone||old.mobile||old.phone||'')).trim(),
+      storeAddress:String(val('setStoreAddress',old.storeAddress||old.companyAddress||old.address||old.storeLocation||'')).trim(),
+      lowStock:n(val('setLowStock',old.lowStock||5)),
+      currency:val('setCurrency',old.currency||'₪')||'₪',
+      printWidth:val('setPrintWidth',old.printWidth||'58mm')||'58mm',
+      autoPrintInvoice:$('#setAutoPrintInvoice')?.value==='true',
+      allowNegative:$('#setAllowNegative')?.value==='true',
+      updatedAt:Date.now()
+    }; 
+    const syncedSettings=normalizeSettingsAliases({...s,companyName:s.storeName,updatedAt:Date.now()});
+    state.store.settings=[syncedSettings];
+    try{localStorage.setItem(storeKey()+'_settings_fast',JSON.stringify(syncedSettings)); localStorage.setItem(companyLocalKey('settings_fast'),JSON.stringify(syncedSettings));}catch(e){}
+    queue('set','settings','main',syncedSettings,false);
+    saveStore(false); applyStoreName(); forceLocalRender(); autoSync();
+    (async()=>{try{ if(navigator.onLine){ await pickDatabaseURL(false); await rtdbSet(docPath('settings','main'), normalizeItemForRemote(syncedSettings,'settings')); await rtdbSet(`companies/${safePathPart(companyKey)}/settings/main`, normalizeItemForRemote(syncedSettings,'settings')).catch(()=>null); } }catch(e){ console.warn('settings direct sync skipped',e); }} )();
+    toast('تم حفظ الإعدادات'); 
+  }
 
   function exportBackup(){downloadBlob(JSON.stringify(state.store,null,2),'oscar-backup.json','application/json'); toast('تم تنزيل نسخة احتياطية')}
   function importBackup(file){
@@ -7437,7 +7854,7 @@ window.App = App;
 (function(){
   const PAGE_CACHE='cashtop-local-pages-v157-permanent';
   const ASSET_CACHE='cashtop-local-assets-v157-permanent';
-  const extraPages=['./','index.html','login.html','sync-loading.html','dashboard.html','cashier.html','customers.html','accounts.html','suppliers.html','products.html','categories.html','barcode-labels.html','workers.html','warehouse.html','purchases.html','invoices.html','expenses.html','inventory.html','finance.html','analytics.html','notifications.html','mobile-scanner.html','employees.html','settings.html','print-settings.html','tax-settings.html','coupons.html','product-offers.html','backup.html','manifest.json','app-version.json','offline-update.js','local-bridge.js','icon-64.png','icon-192.png','icon-512.png','oscar-logo.png'];
+  const extraPages=["./", "accounts.html", "admin.html", "ai-analysis.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "custom-reports.html", "customers.html", "dashboard.html", "database.rules.json", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "local-bridge.js", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "offline-update.js", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
   function sameOriginUrl(href){try{const u=new URL(href,location.href); return u.origin===location.origin?u:null}catch(e){return null}}
   function internalUrls(){
     const set=new Set(extraPages.map(x=>new URL(x,location.href).href));
@@ -7452,24 +7869,15 @@ window.App = App;
   async function cacheForever(){
     try{
       await persistStorage();
-      const pages=await caches.open(PAGE_CACHE);
-      const assets=await caches.open(ASSET_CACHE);
       const urls=internalUrls();
-      await Promise.allSettled(urls.map(async href=>{
-        const u=new URL(href);
-        const req=new Request(u.href,{cache:'force-cache'});
-        const hit=await pages.match(req,{ignoreSearch:true}) || await assets.match(req,{ignoreSearch:true});
-        if(hit) return;
-        const res=await fetch(req).catch(()=>null);
-        if(res && res.ok){
-          const isPage=/\.html?$/.test(u.pathname) || u.pathname.endsWith('/') || u.pathname==='';
-          await (isPage?pages:assets).put(req,res.clone());
-        }
-      }));
-      if(navigator.serviceWorker?.controller){navigator.serviceWorker.controller.postMessage({type:'CACHE_URLS',urls});}
+      if('serviceWorker' in navigator){
+        const reg=await navigator.serviceWorker.getRegistration() || await navigator.serviceWorker.register('sw.js');
+        await navigator.serviceWorker.ready.catch(()=>null);
+        if(navigator.serviceWorker.controller) navigator.serviceWorker.controller.postMessage({type:'CACHE_URLS',urls});
+      }
     }catch(e){}
   }
-  window.addEventListener('load',()=>setTimeout(cacheForever,700));
+  window.addEventListener('load',()=>setTimeout(cacheForever,2500));
   document.addEventListener('click',e=>{const a=e.target.closest('a[href]'); if(a){setTimeout(cacheForever,120)}});
 })();
 </script>

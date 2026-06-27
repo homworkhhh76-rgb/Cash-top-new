@@ -2291,6 +2291,37 @@ select{
 .ai-cashflow-table td,.ai-cashflow-table th{white-space:nowrap}
 @media(max-width:760px){.report-builder-grid{grid-template-columns:1fr}.credit-score-chip,.loyalty-chip{font-size:10px;padding:4px 7px}}
 
+
+/* v172 export/report right alignment + compact edit notice + purchase-entry fixes */
+@media (min-width: 760px){
+  body[data-page="cashier"] .edit-invoice-notice{padding:8px 12px!important;min-height:44px!important;margin:0 0 10px!important;border-radius:14px!important;display:block!important;background:#fff7ed!important;border:1px solid #fed7aa!important;color:#9a3412!important;box-shadow:0 6px 16px rgba(154,52,18,.07)!important;}
+  body[data-page="cashier"] .edit-invoice-notice .toolbar{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;margin:0!important;}
+  body[data-page="cashier"] .edit-invoice-notice .ghost-btn{min-height:34px!important;padding:6px 10px!important;border-radius:10px!important;font-size:12px!important;}
+}
+body[data-page="purchaseEntry"] .purchase-compact-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;}
+body[data-page="purchaseEntry"] #purchaseLinesBody tr{position:relative!important;}
+body[data-page="purchaseEntry"] .suggest-panel.show{display:grid!important;z-index:9999!important;}
+body[data-page="purchaseEntry"] .pieceSetting.only-piece{display:block;}
+body[data-page="purchaseEntry"] .unitSetting.only-unit{display:none;}
+body[data-page="purchaseEntry"] tr.purchase-mode-unit .unitSetting.only-unit{display:block!important;}
+body[data-page="purchaseEntry"] tr.purchase-mode-unit .pieceSetting.only-piece{display:none!important;}
+body[data-page="purchaseEntry"] tr.purchase-mode-piece .unitSetting.only-unit{display:none!important;}
+@media(max-width:700px){body[data-page="purchaseEntry"] .purchase-compact-grid{grid-template-columns:1fr!important;}}
+
+
+/* v172 dropdown arrow + export quality + purchase layout */
+.smart-select{position:relative!important;}
+.smart-select .smart-input{padding-left:46px!important;}
+.smart-select:after{content:""!important;position:absolute!important;left:18px!important;top:50%!important;width:10px!important;height:10px!important;border:0!important;border-right:2.6px solid var(--primary)!important;border-bottom:2.6px solid var(--primary)!important;transform:translateY(-65%) rotate(45deg)!important;background:transparent!important;border-radius:1px!important;pointer-events:none!important;z-index:2!important;}
+.smart-select.open:after{transform:translateY(-35%) rotate(225deg)!important;}
+body[data-page="purchaseEntry"] #pageRoot>.card>.form-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;}
+body[data-page="purchaseEntry"] #pageRoot>.card>.form-grid .field.full{grid-column:1/-1!important;}
+body[data-page="purchaseEntry"] .purchase-compact-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;}
+body[data-page="purchaseEntry"] .newProductSettings{grid-template-columns:1fr!important;}
+body[data-page="purchaseEntry"] .suggest-panel.show{display:grid!important;z-index:99999!important;}
+body[data-page="purchaseEntry"] .plType,body[data-page="purchaseEntry"] .plQty,body[data-page="purchaseEntry"] .plCost,body[data-page="purchaseEntry"] .plSale,body[data-page="purchaseEntry"] .plPerUnit{font-weight:800!important;}
+@media(max-width:700px){body[data-page="purchaseEntry"] #pageRoot>.card>.form-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}body[data-page="purchaseEntry"] .purchase-compact-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}}
+
 </style><link rel="icon" type="image/png" sizes="64x64" href="icon-64.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="theme-color" content="#2563eb">
@@ -2406,6 +2437,19 @@ body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
 }
 </style>
 
+<script>
+(function(){
+  const CACHE_URLS=["./", "accounts.html", "admin.html", "ai-analysis.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "custom-reports.html", "customers.html", "dashboard.html", "database.rules.json", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "local-bridge.js", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "offline-update.js", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
+  function registerCache(){
+    if(!('serviceWorker' in navigator)) return;
+    navigator.serviceWorker.register('sw.js').then(reg=>navigator.serviceWorker.ready).then(()=>{
+      const send=()=>{ try{ if(navigator.serviceWorker.controller) navigator.serviceWorker.controller.postMessage({type:'CACHE_URLS',urls:CACHE_URLS}); }catch(e){} };
+      if('requestIdleCallback' in window) requestIdleCallback(send,{timeout:5000}); else setTimeout(send,2500);
+    }).catch(()=>{});
+  }
+  registerCache();
+})();
+</script>
 </head>
 <body><div id="toast" class="toast"></div><main class="login-shell"><section class="login-card"><div class="brand" style="margin-bottom:18px"><div class="brand-logo"><img src="oscar-logo.png" alt="كاش توب"></div><div><h1>كاش توب</h1><p>تسجيل الدخول</p></div></div><form id="loginForm" autocomplete="off"><div class="field"><label>مفتاح الشركة</label><input class="input" id="companyKey" name="company_key_manual" autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="text"></div><div class="field"><label>اسم المستخدم</label><input class="input" id="username" name="user_manual" autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false"></div><div class="field"><label>كلمة المرور</label><input class="input" id="password" name="pass_manual" type="password" autocomplete="new-password"></div><button class="primary-btn" id="loginBtn" type="submit">تسجيل الدخول</button></form></section></main><script>
 const firebaseConfig = {
@@ -2780,7 +2824,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 (function(){
   const PAGE_CACHE='cashtop-local-pages-v157-permanent';
   const ASSET_CACHE='cashtop-local-assets-v157-permanent';
-  const extraPages=['./','index.html','login.html','dashboard.html','cashier.html','customers.html','accounts.html','suppliers.html','products.html','waste.html','shortcuts.html','purchase-returns.html','purchase-reference.html','purchase-entry.html','purchase-data.html','invoice-view.html','invoice-payment-settings.html','branches.html','admin.html','menu-settings.html','digital-menu.html','manufacturing.html','categories.html','barcode-labels.html','workers.html','warehouse.html','purchases.html','invoices.html','expenses.html','inventory.html','finance.html','analytics.html','notifications.html','mobile-scanner.html','employees.html','settings.html','print-settings.html','tax-settings.html','coupons.html','product-offers.html','backup.html','manifest.json','app-version.json','offline-update.js','local-bridge.js','icon-64.png','icon-192.png','icon-512.png','oscar-logo.png'];
+  const extraPages=["./", "accounts.html", "admin.html", "ai-analysis.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "custom-reports.html", "customers.html", "dashboard.html", "database.rules.json", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "local-bridge.js", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "offline-update.js", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
   function sameOriginUrl(href){try{const u=new URL(href,location.href); return u.origin===location.origin?u:null}catch(e){return null}}
   function internalUrls(){
     const set=new Set(extraPages.map(x=>new URL(x,location.href).href));
@@ -2795,24 +2839,15 @@ document.addEventListener('DOMContentLoaded',()=>{
   async function cacheForever(){
     try{
       await persistStorage();
-      const pages=await caches.open(PAGE_CACHE);
-      const assets=await caches.open(ASSET_CACHE);
       const urls=internalUrls();
-      await Promise.allSettled(urls.map(async href=>{
-        const u=new URL(href);
-        const req=new Request(u.href,{cache:'force-cache'});
-        const hit=await pages.match(req,{ignoreSearch:true}) || await assets.match(req,{ignoreSearch:true});
-        if(hit) return;
-        const res=await fetch(req).catch(()=>null);
-        if(res && res.ok){
-          const isPage=/\.html?$/.test(u.pathname) || u.pathname.endsWith('/') || u.pathname==='';
-          await (isPage?pages:assets).put(req,res.clone());
-        }
-      }));
-      if(navigator.serviceWorker?.controller){navigator.serviceWorker.controller.postMessage({type:'CACHE_URLS',urls});}
+      if('serviceWorker' in navigator){
+        const reg=await navigator.serviceWorker.getRegistration() || await navigator.serviceWorker.register('sw.js');
+        await navigator.serviceWorker.ready.catch(()=>null);
+        if(navigator.serviceWorker.controller) navigator.serviceWorker.controller.postMessage({type:'CACHE_URLS',urls});
+      }
     }catch(e){}
   }
-  window.addEventListener('load',()=>setTimeout(cacheForever,700));
+  window.addEventListener('load',()=>setTimeout(cacheForever,2500));
   document.addEventListener('click',e=>{const a=e.target.closest('a[href]'); if(a){setTimeout(cacheForever,120)}});
 })();
 </script>

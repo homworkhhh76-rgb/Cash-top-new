@@ -1,9 +1,9 @@
 {
-  "version": "v159-retention-45d-sync-fix",
-  "date": "2026-06-25",
-  "notes": "تنظيف تلقائي للفواتير المكتملة بعد 45 يوم، حفظ السجلات حتى 300 حركة و45 يوم، منع الفواتير الفارغة، وتثبيت صندوق الكاش مع تحسين مزامنة الحسابات",
-  "build": "mongodb-direct-api-retention-fix",
-  "updatedAt": "2026-06-25",
-  "note": "قاعدة البيانات تعمل عبر MongoDB API بدلاً من Firebase",
-  "name": "كاش توب"
+  "version": "v172-cache-local-fast-settings-sync-fix",
+  "date": "2026-06-26",
+  "notes": "تعديل نسخة 172: مجموع الفاتورة قبل الخصم، مزامنة عنوان ورقم جوال الشركة، وتأكيد تحميل الصفحات من الكاش أولاً حتى مع توفر الإنترنت.",
+  "build": "sync-settings-cache-fix",
+  "updatedAt": 1782500204768,
+  "name": "كاش توب",
+  "cacheVersion": "v172-sync-settings-cache-fix"
 }
