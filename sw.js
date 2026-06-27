@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v172-sync-settings-cache-fix';
+const CACHE_VERSION = 'v172-cache-first-customer-credit-sync-fix';
 const PAGE_CACHE = 'cashtop-pages-' + CACHE_VERSION;
 const ASSET_CACHE = 'cashtop-assets-' + CACHE_VERSION;
 const FONT_CACHE = 'cashtop-fonts-' + CACHE_VERSION;
@@ -17,19 +17,30 @@ async function matchAny(req, opts={}){
   const page = await caches.open(PAGE_CACHE);
   const asset = await caches.open(ASSET_CACHE);
   const font = await caches.open(FONT_CACHE);
-  const hit = await page.match(req, {ignoreSearch:true}) || await asset.match(req, {ignoreSearch:true}) || await font.match(req, {ignoreSearch:true});
-  if(hit) return hit;
+  const u = new URL(req.url, self.location.href);
+  const pageName = u.pathname.split('/').pop() || 'index.html';
+  const candidates = [
+    req,
+    u.href,
+    u.origin + u.pathname,
+    pageName,
+    './' + pageName,
+    u.pathname,
+    u.pathname.replace(/^\//,'')
+  ];
+  for(const c of candidates){
+    const hit = await page.match(c, {ignoreSearch:true}) || await asset.match(c, {ignoreSearch:true}) || await font.match(c, {ignoreSearch:true});
+    if(hit) return hit;
+  }
   if(opts.navigation){
-    const u = new URL(req.url);
-    const pageName = u.pathname.split('/').pop() || 'index.html';
-    return await page.match(pageName, {ignoreSearch:true}) || await page.match('index.html', {ignoreSearch:true}) || null;
+    return await page.match(pageName, {ignoreSearch:true}) || await page.match('index.html', {ignoreSearch:true}) || await page.match('./', {ignoreSearch:true}) || null;
   }
   return null;
 }
 async function putCache(urlOrReq){
   try{
     const req = typeof urlOrReq === 'string' ? new Request(urlOrReq, {cache:'reload'}) : urlOrReq;
-    const u = new URL(req.url);
+    const u = new URL(req.url, self.location.href);
     if(isExternalApi(u)) return false;
     const hit = await matchAny(req);
     if(hit) return true;
@@ -37,6 +48,11 @@ async function putCache(urlOrReq){
     if(!res || !res.ok) return false;
     const cache = await caches.open(await cacheNameForUrl(u));
     await cache.put(req, res.clone());
+    if(isPageUrl(u)){
+      const pageName = u.pathname.split('/').pop() || 'index.html';
+      await cache.put(pageName, res.clone()).catch(()=>{});
+      await cache.put('./' + pageName, res.clone()).catch(()=>{});
+    }
     return true;
   }catch(e){ return false; }
 }
@@ -92,6 +108,11 @@ self.addEventListener('fetch', event=>{
       if(res && res.ok){
         const cache = await caches.open(await cacheNameForUrl(u));
         cache.put(req, res.clone()).catch(()=>{});
+        if(isPageUrl(u)){
+          const pageName = u.pathname.split('/').pop() || 'index.html';
+          cache.put(pageName, res.clone()).catch(()=>{});
+          cache.put('./' + pageName, res.clone()).catch(()=>{});
+        }
       }
       return res;
     }catch(e){
@@ -102,7 +123,7 @@ self.addEventListener('fetch', event=>{
 self.addEventListener('message', event=>{
   const data = event.data || {};
   if(data.type === 'SKIP_WAITING') self.skipWaiting();
-  if(data.type === 'CACHE_URLS'){
+  if(data.type === 'CACHE_URLS' || data.type === 'CACHE_NOW'){
     const urls = Array.isArray(data.urls) ? data.urls : [];
     event.waitUntil(warmCache(urls));
   }

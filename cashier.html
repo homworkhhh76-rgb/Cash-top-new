@@ -2171,17 +2171,53 @@ body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
 }
 </style>
 
-<script>
+<script id="v172-cache-first-immediate-script">
 (function(){
   const CACHE_URLS=["./", "accounts.html", "admin.html", "ai-analysis.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "custom-reports.html", "customers.html", "dashboard.html", "database.rules.json", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "local-bridge.js", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "offline-update.js", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
-  function registerCache(){
-    if(!('serviceWorker' in navigator)) return;
-    navigator.serviceWorker.register('sw.js').then(reg=>navigator.serviceWorker.ready).then(()=>{
-      const send=()=>{ try{ if(navigator.serviceWorker.controller) navigator.serviceWorker.controller.postMessage({type:'CACHE_URLS',urls:CACHE_URLS}); }catch(e){} };
-      if('requestIdleCallback' in window) requestIdleCallback(send,{timeout:5000}); else setTimeout(send,2500);
-    }).catch(()=>{});
+  function pageName(){return location.pathname.split('/').pop() || 'index.html'}
+  function cacheUrls(){
+    const set=new Set(CACHE_URLS);
+    set.add(location.href); set.add(location.pathname); set.add(pageName()); set.add('./'+pageName());
+    document.querySelectorAll('a[href],link[href],script[src],img[src]').forEach(el=>{
+      const raw=el.getAttribute('href')||el.getAttribute('src');
+      if(!raw || raw.startsWith('#') || raw.startsWith('javascript:') || raw.startsWith('mailto:')) return;
+      try{ const u=new URL(raw,location.href); if(u.origin===location.origin) set.add(u.href); }catch(e){}
+    });
+    return [...set];
   }
-  registerCache();
+  function postToWorker(reg){
+    try{
+      const msg={type:'CACHE_URLS', urls:cacheUrls()};
+      [navigator.serviceWorker.controller, reg&&reg.active, reg&&reg.waiting, reg&&reg.installing].filter(Boolean).forEach(sw=>{try{sw.postMessage(msg)}catch(e){}});
+    }catch(e){}
+  }
+  async function saveCurrentPageToCache(){
+    try{
+      if(!('caches' in window)) return;
+      const cache=await caches.open('cashtop-pages-v172-cache-first-immediate-fix');
+      const req=new Request(location.href,{cache:'reload'});
+      const res=await fetch(req).catch(()=>null);
+      if(res&&res.ok){
+        await cache.put(req,res.clone());
+        await cache.put(pageName(),res.clone()).catch(()=>{});
+        await cache.put('./'+pageName(),res.clone()).catch(()=>{});
+      }
+    }catch(e){}
+  }
+  async function registerCache(){
+    if(!('serviceWorker' in navigator)) { saveCurrentPageToCache(); return; }
+    try{
+      const reg=await navigator.serviceWorker.register('sw.js',{updateViaCache:'none'});
+      await navigator.serviceWorker.ready.catch(()=>null);
+      postToWorker(reg);
+      saveCurrentPageToCache();
+      navigator.serviceWorker.addEventListener('controllerchange',()=>postToWorker(reg));
+      setTimeout(()=>postToWorker(reg),600);
+      setTimeout(()=>postToWorker(reg),2500);
+      if('requestIdleCallback' in window) requestIdleCallback(()=>postToWorker(reg),{timeout:5000}); else setTimeout(()=>postToWorker(reg),5000);
+    }catch(e){ saveCurrentPageToCache(); }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',registerCache); else registerCache();
 })();
 </script>
 </head>
@@ -2728,8 +2764,13 @@ const App = (() => {
   function recalcDebtEntity(ent){
     const moves=Array.isArray(ent?.movements)?ent.movements:[];
     if(moves.length){
-      ent.debt=moves.reduce((a,m)=>a+(m.type==='payment'?-n(m.amount):n(m.amount)),0);
-      if(ent.debt<0) ent.debt=0;
+      const balance=moves.reduce((a,m)=>a+(m.type==='payment'?-n(m.amount):n(m.amount)),0);
+      ent.debt=Number(balance.toFixed ? balance.toFixed(4) : balance);
+      ent.credit=balance<0 ? Math.abs(ent.debt) : 0;
+    }else if(n(ent.debt)<0){
+      ent.credit=Math.abs(n(ent.debt));
+    }else{
+      ent.credit=n(ent.credit||0);
     }
     return ent;
   }
@@ -4828,7 +4869,9 @@ const App = (() => {
 
   function recalcCustomerDebt(c){
     c.movements=Array.isArray(c.movements)?c.movements:[];
-    c.debt=c.movements.reduce((a,m)=>a+(m.type==='payment'?-n(m.amount):n(m.amount)),0);
+    const balance=c.movements.reduce((a,m)=>a+(m.type==='payment'?-n(m.amount):n(m.amount)),0);
+    c.debt=Number(balance.toFixed ? balance.toFixed(4) : balance);
+    c.credit=balance<0 ? Math.abs(c.debt) : 0;
     return c;
   }
   function isEditableCustomerMovement(m){ return !!m && (!m.refType || m.refType==='customerMovement'); }
@@ -4903,7 +4946,7 @@ const App = (() => {
     });
   }
 
-  function customerDebt(customerId, amount, note, type='debt', meta={}){const c=coll('customers').find(x=>x.id===customerId); if(!c) return; c.debt=n(c.debt)+(type==='payment'?-n(amount):n(amount)); c.movements=c.movements||[]; c.movements.unshift({id:uid('cm'),type,amount:n(amount),note,date:nowIso(),...meta}); setItem('customers',c,`${type==='payment'?'سداد من العميل':'إضافة دين على العميل'}: ${c.name}`)}
+  function customerDebt(customerId, amount, note, type='debt', meta={}){const c=coll('customers').find(x=>x.id===customerId); if(!c) return; c.movements=c.movements||[]; c.movements.unshift({id:uid('cm'),type,amount:n(amount),note,date:nowIso(),...meta}); recalcCustomerDebt(c); setItem('customers',c,`${type==='payment'?'سداد من العميل':'إضافة دين على العميل'}: ${c.name}`)}
   function supplierDebt(supplierId, amount, note, type='debt', meta={}){const s=coll('suppliers').find(x=>x.id===supplierId); if(!s) return; s.debt=n(s.debt)+(type==='payment'?-n(amount):n(amount)); s.movements=s.movements||[]; s.movements.unshift({id:uid('sm'),type,amount:n(amount),note,date:nowIso(),...meta}); setItem('suppliers',s,`${type==='payment'?'سداد مورد':'دين مورد'}: ${s.name}`)}
 
   function movementRefFilter(m, refType, refId){ return !(m && m.refType===refType && String(m.refId||'')===String(refId||'')); }
@@ -7118,7 +7161,7 @@ ${pc.showCustomer!==false?`<div>الزبون: ${esc(receiptCustomerName(inv))}</
 
   function downloadBlob(content,name,type){ const href=URL.createObjectURL(new Blob([content],{type})); triggerFileDownload(href,name,true); }
   function htmlTable(headers, rows){ return '<table dir="rtl" border="1" style="border-collapse:collapse;width:100%"><thead><tr>'+headers.map(h=>`<th>${esc(h)}</th>`).join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(v=>`<td>${esc(v)}</td>`).join('')+'</tr>').join('')+'</tbody></table>'; }
-  function entityReportData(colName,id){ const item=coll(colName).find(x=>String(x.id)===String(id)); if(!item)return null; const isAcc=colName==='accounts'; const title=isAcc?'كشف حساب':(colName==='customers'?'كشف عميل':'كشف مورد'); const moves=[...(item.movements||[])].sort((a,b)=>new Date(a.date||0)-new Date(b.date||0)); let running=n(item.opening||0); const headers=isAcc?['التاريخ','النوع','وارد','صادر','الرصيد','ملاحظات']:['التاريخ','النوع','المبلغ','الرصيد','ملاحظات']; const rows=moves.map(m=>{ if(isAcc){ if(m.kind!=='opening') running+=n(m.amount); return [new Date(m.date).toLocaleString('ar'),m.kind||'',n(m.amount)>0?money(m.amount):'',n(m.amount)<0?money(Math.abs(n(m.amount))):'',money(running),m.note||'']; } running += (m.type==='payment'?-n(m.amount):n(m.amount)); return [new Date(m.date).toLocaleString('ar'),m.type==='payment'?'سداد':'دين',money(m.amount),money(Math.max(0,running)),m.note||'']; }); const balance=isAcc?n(item.balance):n(item.debt); const summary=[['الاسم',item.name||item.id],['الرصيد الحالي',money(balance)],['عدد الحركات',moves.length],['تاريخ التقرير',new Date().toLocaleString('ar')]]; return {item,title,headers,rows,summary,balance}; }
+  function entityReportData(colName,id){ const item=coll(colName).find(x=>String(x.id)===String(id)); if(!item)return null; const isAcc=colName==='accounts'; const title=isAcc?'كشف حساب':(colName==='customers'?'كشف عميل':'كشف مورد'); const moves=[...(item.movements||[])].sort((a,b)=>new Date(a.date||0)-new Date(b.date||0)); let running=n(item.opening||0); const headers=isAcc?['التاريخ','النوع','وارد','صادر','الرصيد','ملاحظات']:['التاريخ','النوع','المبلغ','الرصيد','ملاحظات']; const rows=moves.map(m=>{ if(isAcc){ if(m.kind!=='opening') running+=n(m.amount); return [new Date(m.date).toLocaleString('ar'),m.kind||'',n(m.amount)>0?money(m.amount):'',n(m.amount)<0?money(Math.abs(n(m.amount))):'',money(running),m.note||'']; } running += (m.type==='payment'?-n(m.amount):n(m.amount)); return [new Date(m.date).toLocaleString('ar'),m.type==='payment'?'سداد':'دين',money(m.amount),(n(running)<0?money(Math.abs(n(running)))+' لصالحه':money(running)),m.note||'']; }); const balance=isAcc?n(item.balance):n(item.debt); const summary=[['الاسم',item.name||item.id],['الرصيد الحالي',money(balance)],['عدد الحركات',moves.length],['تاريخ التقرير',new Date().toLocaleString('ar')]]; return {item,title,headers,rows,summary,balance}; }
   async function downloadEntityPdf(colName,id){ const d=entityReportData(colName,id); if(!d)return; await exactPreloadHeaderLogo(); const canvas=drawReportCanvas(d.title,d.item.name||'',d.headers,d.rows,d.summary); downloadCanvasPdf(canvas,(d.item.name||id)+'.pdf'); toast('تم تنزيل PDF'); }
   function printEntityReport(colName,id){ downloadEntityPdf(colName,id); }
   function downloadAccountPdf(id){ downloadEntityPdf('accounts',id); }
@@ -7494,7 +7537,7 @@ window.App = App;
       if('serviceWorker' in navigator){
         const reg=await navigator.serviceWorker.getRegistration() || await navigator.serviceWorker.register('sw.js');
         await navigator.serviceWorker.ready.catch(()=>null);
-        if(navigator.serviceWorker.controller) navigator.serviceWorker.controller.postMessage({type:'CACHE_URLS',urls});
+        [navigator.serviceWorker.controller, reg&&reg.active, reg&&reg.waiting, reg&&reg.installing].filter(Boolean).forEach(sw=>{try{sw.postMessage({type:'CACHE_URLS',urls})}catch(e){}});
       }
     }catch(e){}
   }

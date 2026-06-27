@@ -486,17 +486,53 @@ body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
 }
 </style>
 
-<script>
+<script id="v172-cache-first-immediate-script">
 (function(){
   const CACHE_URLS=["./", "accounts.html", "admin.html", "ai-analysis.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "custom-reports.html", "customers.html", "dashboard.html", "database.rules.json", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "local-bridge.js", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "offline-update.js", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
-  function registerCache(){
-    if(!('serviceWorker' in navigator)) return;
-    navigator.serviceWorker.register('sw.js').then(reg=>navigator.serviceWorker.ready).then(()=>{
-      const send=()=>{ try{ if(navigator.serviceWorker.controller) navigator.serviceWorker.controller.postMessage({type:'CACHE_URLS',urls:CACHE_URLS}); }catch(e){} };
-      if('requestIdleCallback' in window) requestIdleCallback(send,{timeout:5000}); else setTimeout(send,2500);
-    }).catch(()=>{});
+  function pageName(){return location.pathname.split('/').pop() || 'index.html'}
+  function cacheUrls(){
+    const set=new Set(CACHE_URLS);
+    set.add(location.href); set.add(location.pathname); set.add(pageName()); set.add('./'+pageName());
+    document.querySelectorAll('a[href],link[href],script[src],img[src]').forEach(el=>{
+      const raw=el.getAttribute('href')||el.getAttribute('src');
+      if(!raw || raw.startsWith('#') || raw.startsWith('javascript:') || raw.startsWith('mailto:')) return;
+      try{ const u=new URL(raw,location.href); if(u.origin===location.origin) set.add(u.href); }catch(e){}
+    });
+    return [...set];
   }
-  registerCache();
+  function postToWorker(reg){
+    try{
+      const msg={type:'CACHE_URLS', urls:cacheUrls()};
+      [navigator.serviceWorker.controller, reg&&reg.active, reg&&reg.waiting, reg&&reg.installing].filter(Boolean).forEach(sw=>{try{sw.postMessage(msg)}catch(e){}});
+    }catch(e){}
+  }
+  async function saveCurrentPageToCache(){
+    try{
+      if(!('caches' in window)) return;
+      const cache=await caches.open('cashtop-pages-v172-cache-first-immediate-fix');
+      const req=new Request(location.href,{cache:'reload'});
+      const res=await fetch(req).catch(()=>null);
+      if(res&&res.ok){
+        await cache.put(req,res.clone());
+        await cache.put(pageName(),res.clone()).catch(()=>{});
+        await cache.put('./'+pageName(),res.clone()).catch(()=>{});
+      }
+    }catch(e){}
+  }
+  async function registerCache(){
+    if(!('serviceWorker' in navigator)) { saveCurrentPageToCache(); return; }
+    try{
+      const reg=await navigator.serviceWorker.register('sw.js',{updateViaCache:'none'});
+      await navigator.serviceWorker.ready.catch(()=>null);
+      postToWorker(reg);
+      saveCurrentPageToCache();
+      navigator.serviceWorker.addEventListener('controllerchange',()=>postToWorker(reg));
+      setTimeout(()=>postToWorker(reg),600);
+      setTimeout(()=>postToWorker(reg),2500);
+      if('requestIdleCallback' in window) requestIdleCallback(()=>postToWorker(reg),{timeout:5000}); else setTimeout(()=>postToWorker(reg),5000);
+    }catch(e){ saveCurrentPageToCache(); }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',registerCache); else registerCache();
 })();
 </script>
 </head>

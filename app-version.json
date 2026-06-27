@@ -1,9 +1,9 @@
 {
-  "version": "v172-cache-local-fast-settings-sync-fix",
+  "version": "v172-cache-first-customer-credit-sync-fix",
   "date": "2026-06-26",
-  "notes": "تعديل نسخة 172: مجموع الفاتورة قبل الخصم، مزامنة عنوان ورقم جوال الشركة، وتأكيد تحميل الصفحات من الكاش أولاً حتى مع توفر الإنترنت.",
-  "build": "sync-settings-cache-fix",
-  "updatedAt": 1782500204768,
+  "notes": "فتح الصفحات من الكاش أولاً، وإصلاح مزامنة رصيد العميل السالب لصالح العميل عند سداد مبلغ أكبر من الدين.",
+  "build": "cache-first-customer-credit-sync",
+  "updatedAt": 1782546299670,
   "name": "كاش توب",
-  "cacheVersion": "v172-sync-settings-cache-fix"
+  "cacheVersion": "v172-cache-first-customer-credit-sync-fix"
 }
