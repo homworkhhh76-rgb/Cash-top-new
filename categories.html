@@ -2719,7 +2719,7 @@ const App = (() => {
   const defaultStore = () => ({
     products: [], customers: [], suppliers: [], invoices: [], expenses: [], activity: [], inventory: [], notifications: [], customUnits: [], scannerSessions: [], scannerEvents: [], employees: [], representatives: [], representativeInventory: [], representativeMovements: [], representativeTransactions: [], representativeOrders: [], representativeNotifications: [], representativeReturns: [], workers: [], warehouseMoves: [], journalEntries: [], stockMoves: [], coupons: [], taxSettings: [], printSettings: [], purchaseRecords: [], productOffers: [], invoicePaymentSettings: [], purchaseInvoices: [], purchaseReturns: [], wasteRecords: [], archiveStats: [], manufacturingRecipes: [], manufacturingRuns: [], categories: [], branches: [{id:'main',name:'الفرع الرئيسي',location:'الرئيسي',main:true,createdAt:Date.now(),updatedAt:Date.now()}],
     accounts: [{id:'cash',name:'صندوق الكاش',balance:0,opening:0,type:'cash',movements:[{id:'m-open',kind:'opening',amount:0,note:'رصيد افتتاحي',date:new Date().toISOString()}],createdAt:Date.now()}],
-    settings: [{id:'main',storeName:'كاش توب',currency:'₪',lowStock:5,profitRate:25,printWidth:'58mm',autoPrintInvoice:false}],
+    settings: [{id:'main',storeName:'كاش توب',currency:'₪',lowStock:5,profitRate:25,printWidth:'58mm',autoPrintInvoice:false,quantityByPrice:false}],
     _pendingSync: [], _deleted: {}, _lastLocalChange: Date.now()
   });
   const state = {store:null,page:document.body.dataset.page||'dashboard',online:navigator.onLine,db:null,auth:null,user:null,firebaseReady:false,unsubs:[],deferredPrompt:null,activityShown:5,scannerStream:null,scanLast:{code:'',time:0},cashierSession:null,bc:null,rtcPc:null,rtcChannel:null,localBridge:null,localBridgeReady:false,bridgeTried:false,didEnsureRemote:false,didSnapshotPush:localStorage.getItem(localKey('snapshotPushed'))==='1',backupSync:null};
@@ -2798,6 +2798,7 @@ const App = (() => {
     out.companyAddress=out.storeAddress; out.address=out.storeAddress; out.storeLocation=out.storeAddress;
     out.storeLogoUrl=String(out.storeLogoUrl||out.logoUrl||out.menuLogoUrl||out.storeLogo||out.logo||out.programLogo||out.appLogoUrl||out.siteLogo||'').trim();
     out.logoUrl=out.storeLogoUrl; out.storeLogo=out.storeLogoUrl; out.logo=out.storeLogoUrl; out.appLogoUrl=out.storeLogoUrl; out.siteLogo=out.storeLogoUrl;
+    out.quantityByPrice=(out.quantityByPrice===true || String(out.quantityByPrice)==='true');
     return out;
   }
   const settings = () => {
@@ -6078,13 +6079,18 @@ const App = (() => {
     if(cart[i]){
       if(k==='sellMode') cart[i]=normalizeCartLine({...cart[i],sellMode:v,manualPrice:false,manualCost:false});
       else if(k==='lineTotal'){
-        if(settings().quantityByPrice===true || String(settings().quantityByPrice)==='true'){
+        const desiredTotal=Math.max(0,n(v));
+        const qtyByPrice=(settings().quantityByPrice===true || String(settings().quantityByPrice)==='true');
+        if(qtyByPrice){
           const base=normalizeCartLine({...cart[i],manualPrice:false});
           const unitPrice=Math.max(0.000001,n(base.price)||n(cart[i].price)||1);
-          const qty=Math.max(0.001,n(v)/unitPrice);
+          const qty=Math.max(0.001,desiredTotal/unitPrice);
           cart[i]=normalizeCartLine({...cart[i],qty,manualPrice:false});
         }else{
-          const q=Math.max(0.000001,n(cart[i].qty)||1); cart[i].price=n(v)/q; cart[i].manualPrice=true; cart[i]=normalizeCartLine(cart[i]);
+          const q=Math.max(0.000001,n(cart[i].qty)||1);
+          cart[i].price=desiredTotal/q;
+          cart[i].manualPrice=true;
+          cart[i]=normalizeCartLine(cart[i]);
         }
       }
       else if(k==='variantId') cart[i]=normalizeCartLine({...cart[i],variantId:v,variantLocked:false,sellMode:'piece',manualPrice:false,manualCost:false});
@@ -7932,7 +7938,7 @@ ${pc.showCustomer!==false?`<div>الزبون: ${esc(receiptCustomerName(inv))}</
     set('setLowStock',s.lowStock||5);
     set('setCurrency',s.currency||'₪');
     set('setPrintWidth',s.printWidth||'58mm');
-    const ap=$('#setAutoPrintInvoice'); if(ap) ap.value=String(!!s.autoPrintInvoice);
+    const ap=$('#setAutoPrintInvoice'); if(ap) ap.value=String(!!s.autoPrintInvoice); const qbp=$('#setQuantityByPrice'); if(qbp) qbp.value=String(s.quantityByPrice===true || String(s.quantityByPrice)==='true');
   }
   function saveSettings(){ 
     const old=settings();

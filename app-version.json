@@ -1,6 +1,6 @@
 {
-  "version": "v183-dashboard-chart-cache-first-fast",
-  "build": "restore-sales-profit-chart-first-slider-cache-first-mobile-desktop",
-  "cacheVersion": "v183",
+  "version": "v184-quantity-by-price-cache-first",
+  "build": "cashier-quantity-by-price-setting-sync-cache-first",
+  "cacheVersion": "v184",
   "updatedAt": "2026-06-28"
 }
