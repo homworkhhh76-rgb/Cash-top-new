@@ -2439,7 +2439,7 @@ body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
 
 <script id="v172-cache-first-immediate-script">
 (function(){
-  const CACHE_URLS=["./", "accounts.html", "admin.html", "ai-analysis.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "custom-reports.html", "customers.html", "dashboard.html", "database.rules.json", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "local-bridge.js", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "offline-update.js", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
+  const CACHE_URLS=["./", "accounts.html", "admin.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "customers.html", "dashboard.html", "database.rules.json", "digital-menu.html", "employees.html", "representatives.html", "representative-dashboard.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "local-bridge.js", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "offline-update.js", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
   function pageName(){return location.pathname.split('/').pop() || 'index.html'}
   function cacheUrls(){
     const set=new Set(CACHE_URLS);
@@ -2556,6 +2556,29 @@ function normalizeAdmin(admin){
   return null;
 }
 function rowsFromObject(val){ if(!val) return []; if(Array.isArray(val)) return val.filter(Boolean).map(x=>({id:x.id,...x})); return Object.entries(val).map(([id,data])=>({id,...(data||{})})); }
+
+function localRepresentativesFor(companyKey){
+  const out=[];
+  try{ const a=JSON.parse(localStorage.getItem('oscarRepresentatives_'+companyKey)||'[]'); if(Array.isArray(a)) out.push(...a); }catch(e){}
+  try{ const s=readLocalCompanyStore(companyKey); if(Array.isArray(s?.representatives)) out.push(...s.representatives); }catch(e){}
+  const seen=new Set();
+  return out.filter(r=>{ const id=String(r?.id||r?.representativeId||r?.username||''); if(!id || seen.has(id)) return false; seen.add(id); return true; });
+}
+function repsFromBranchesData(raw){
+  const out=[];
+  try{
+    Object.values(raw||{}).forEach(branch=>{
+      const reps=(branch&&branch.data&&branch.data.representatives) || (branch&&branch.representatives) || null;
+      rowsFromObject(reps).forEach(r=>out.push(r));
+    });
+  }catch(e){}
+  return out;
+}
+function mergeRepresentativeRows(...lists){
+  const map=new Map();
+  lists.flat().filter(Boolean).forEach(r=>{ const id=String(r.id||r.representativeId||r.username||''); if(!id) return; map.set(id,{...r,id:r.id||r.representativeId||id,representativeId:r.representativeId||r.id||id}); });
+  return [...map.values()];
+}
 function isRealCompanyRecord(c){
   if(!c || typeof c!=='object') return false;
   const admin=normalizeAdmin(c.admin);
@@ -2595,7 +2618,7 @@ async function upgradePlainSecretIfNeeded(companyKey, admin, pass){
   const salt=admin.passwordSalt || (companyKey+'_admin_'+Date.now());
   const upgraded={...admin,passwordSalt:salt,passwordHash:await sha256(pass+salt),updatedAt:Date.now()};
   delete upgraded.password; delete upgraded.pass; delete upgraded.adminPassword; delete upgraded.plainPassword;
-  try{ await rtdbPatch(`companies/${safePathPart(companyKey)}`,{admin:{main:upgraded},updatedAt:Date.now()},8000); }catch(e){ console.warn('admin password upgrade skipped',e); }
+  try{ await rtdbPatch(`companies/${safePathPart(companyKey)}`,{admin:{main:upgraded},updatedAt:Date.now()},1500); }catch(e){ console.warn('admin password upgrade skipped',e); }
   return upgraded;
 }
 async function rtdbPatch(path,data,ms=9000){const old=await rtdbGet(path,ms).catch(()=>null); const merged=(old&&typeof old==='object'&&!Array.isArray(old))?{...old,...data}:{...data}; return await rtdbSet(path,merged,ms)}
@@ -2620,9 +2643,10 @@ async function fetchCloudCompany(companyKey){
     if(!ok) return {status:'db-error',company:null};
 
     const base=`companies/${safePathPart(companyKey)}`;
-    const [adminRes, employeesRes, activeRes, subscriptionEndRes, expiresAtRes, durationUnitRes, durationCountRes, planIdRes, planRes, deletedAtRes, companyNameRes, storeNameRes, updatedAtRes, createdAtRes, keyProbeRes] = await Promise.all([
+    const [adminRes, employeesRes, representativesRes, activeRes, subscriptionEndRes, expiresAtRes, durationUnitRes, durationCountRes, planIdRes, planRes, deletedAtRes, companyNameRes, storeNameRes, updatedAtRes, createdAtRes, keyProbeRes] = await Promise.all([
       safeRead(`${base}/admin`,4500),
       safeRead(`${base}/employees`,4500),
+      safeRead(`${base}/representatives`,4500),
       safeRead(`${base}/active`,3500),
       safeRead(`${base}/subscriptionEnd`,3500),
       safeRead(`${base}/expiresAt`,3500),
@@ -2638,11 +2662,14 @@ async function fetchCloudCompany(companyKey){
       safeRead(`${base}/companyKey`,3500)
     ]);
 
-    const anyOk=[adminRes,employeesRes,activeRes,subscriptionEndRes,expiresAtRes,durationUnitRes,durationCountRes,planIdRes,planRes,deletedAtRes,companyNameRes,storeNameRes,updatedAtRes,createdAtRes,keyProbeRes].some(x=>x.ok);
+    const anyOk=[adminRes,employeesRes,representativesRes,activeRes,subscriptionEndRes,expiresAtRes,durationUnitRes,durationCountRes,planIdRes,planRes,deletedAtRes,companyNameRes,storeNameRes,updatedAtRes,createdAtRes,keyProbeRes].some(x=>x.ok);
     if(!anyOk) return {status:'error',company:null};
 
     const adminRaw=adminRes.ok?adminRes.value:null;
     const employeesRaw=employeesRes.ok?employeesRes.value:null;
+    const representativesRaw=representativesRes.ok?representativesRes.value:null;
+    const branchesDataRes=await safeRead(`${base}/branchesData`,4500);
+    const branchRepresentativesRaw=branchesDataRes.ok?branchesDataRes.value:null;
     const active=activeRes.ok?activeRes.value:undefined;
     const subscriptionEnd=subscriptionEndRes.ok?subscriptionEndRes.value:undefined;
     const expiresAt=expiresAtRes.ok?expiresAtRes.value:0;
@@ -2657,21 +2684,23 @@ async function fetchCloudCompany(companyKey){
     const createdAt=createdAtRes.ok?(createdAtRes.value||0):0;
     const keyProbe=keyProbeRes.ok?keyProbeRes.value:undefined;
 
-    const remoteMissing=keyProbeRes.ok && keyProbe===null && adminRes.ok && adminRaw===null && employeesRes.ok && employeesRaw===null && activeRes.ok && (active===null || active===undefined) && subscriptionEndRes.ok && (subscriptionEnd===null || subscriptionEnd===undefined) && !companyName && !storeName;
+    const remoteMissing=keyProbeRes.ok && keyProbe===null && adminRes.ok && adminRaw===null && employeesRes.ok && employeesRaw===null && representativesRes.ok && representativesRaw===null && (!branchRepresentativesRaw || !Object.keys(branchRepresentativesRaw||{}).length) && activeRes.ok && (active===null || active===undefined) && subscriptionEndRes.ok && (subscriptionEnd===null || subscriptionEnd===undefined) && !companyName && !storeName;
     if(remoteMissing) return {status:'missing',company:null};
 
     const adminVal=normalizeAdmin(adminRaw);
     const employees=rowsFromObject(employeesRaw || {});
-    const hasLoginData=!!(adminVal || employees.length);
+    const representatives=mergeRepresentativeRows(rowsFromObject(representativesRaw || {}), repsFromBranchesData(branchRepresentativesRaw || {}), localRepresentativesFor(companyKey));
+    const hasLoginData=!!(adminVal || employees.length || representatives.length);
     const hasIdentity=!!(companyName || storeName || updatedAt || createdAt || hasLoginData || active!==undefined || subscriptionEnd || Number(expiresAt||0)>0);
     if(!hasIdentity || !hasLoginData) return {status:'error',company:null};
 
-    return {status:'ok',company:{companyKey,active:active!==false,subscriptionEnd:subscriptionEnd||'2099-12-31',expiresAt:Number(expiresAt||0),durationUnit:durationUnit||'',durationCount:Number(durationCount||0),planId,plan,deletedAt:Number(deletedAt||0),admin:adminVal,employees,_fromCloud:true,companyName:companyName||storeName||'',storeName:storeName||companyName||'',updatedAt,createdAt}};
+    return {status:'ok',company:{companyKey,active:active!==false,subscriptionEnd:subscriptionEnd||'2099-12-31',expiresAt:Number(expiresAt||0),durationUnit:durationUnit||'',durationCount:Number(durationCount||0),planId,plan,deletedAt:Number(deletedAt||0),admin:adminVal,employees,representatives,_fromCloud:true,companyName:companyName||storeName||'',storeName:storeName||companyName||'',updatedAt,createdAt}};
   }catch(e){console.warn('cloud login lightweight read failed',e); return {status:'error',company:null};}
 }
 async function cacheCloudCompany(company){
   if(!company) return;
   if(company.employees?.length) localStorage.setItem('oscarEmployees_'+company.companyKey,JSON.stringify(company.employees));
+  if(company.representatives?.length) localStorage.setItem('oscarRepresentatives_'+company.companyKey,JSON.stringify(company.representatives));
   localStorage.setItem('oscarCompany_'+company.companyKey,JSON.stringify({companyKey:company.companyKey,companyName:company.companyName||company.storeName||'',storeName:company.storeName||company.companyName||'',active:company.active,subscriptionEnd:company.subscriptionEnd,expiresAt:Number(company.expiresAt||0),durationUnit:company.durationUnit||'',durationCount:Number(company.durationCount||0),deletedAt:Number(company.deletedAt||0),admin:company.admin,_fromCloud:true,updatedAt:Date.now()}));
 }
 async function login(e){
@@ -2695,6 +2724,12 @@ async function login(e){
     }else{
       company=await getLocalCompany(companyKey);
       if(!company){
+        const localReps=localRepresentativesFor(companyKey);
+        if(localReps.length){
+          company={companyKey,active:true,subscriptionEnd:'2099-12-31',expiresAt:0,employees:[],representatives:localReps,admin:null,_fromLocalReps:true};
+        }
+      }
+      if(!company){
         toast(navigator.onLine?'تعذر التحقق من مفتاح الشركة':'لا توجد بيانات دخول محفوظة لهذا المفتاح بدون إنترنت','bad');
         return reset();
       }
@@ -2713,17 +2748,30 @@ async function login(e){
       let emps=company.employees||[];
       if(!emps.length){try{emps=JSON.parse(localStorage.getItem('oscarEmployees_'+companyKey)) || readLocalCompanyStore(companyKey)?.employees || []}catch(e){emps=[]}}
       const emp=emps.find(x=>String(x.username||'')===username || String(x.id||'')===username);
-      if(!emp){toast('اسم المستخدم غير موجود داخل هذا المفتاح','bad'); return reset();}
-      if(emp.active===false){toast('حساب الموظف موقوف','bad'); return reset();}
-      if(!hasUsableSecret(emp)){toast('كلمة مرور الموظف غير مضبوطة. عدّل الموظف وأدخل كلمة مرور','bad'); return reset();}
-      if(!(await verifySecret(emp,pass))){toast('اسم المستخدم أو كلمة المرور غير صحيحة لهذا المفتاح','bad'); return reset();}
-      emp.lastLogin=Date.now(); localStorage.setItem('oscarEmployees_'+companyKey,JSON.stringify(emps));
-      session={companyKey,userId:emp.id,name:emp.name||emp.username,role:'employee',branchId:emp.branchId||'main',branchName:emp.branchName||'',permissions:emp.permissions||{},loginAt:Date.now()};
+      if(emp){
+        if(emp.active===false){toast('حساب الموظف موقوف','bad'); return reset();}
+        if(!hasUsableSecret(emp)){toast('كلمة مرور الموظف غير مضبوطة. عدّل الموظف وأدخل كلمة مرور','bad'); return reset();}
+        if(!(await verifySecret(emp,pass))){toast('اسم المستخدم أو كلمة المرور غير صحيحة لهذا المفتاح','bad'); return reset();}
+        emp.lastLogin=Date.now(); localStorage.setItem('oscarEmployees_'+companyKey,JSON.stringify(emps));
+        session={companyKey,userId:emp.id,name:emp.name||emp.username,role:'employee',branchId:emp.branchId||'main',branchName:emp.branchName||'',permissions:emp.permissions||{},loginAt:Date.now()};
+      }else{
+        let reps=company.representatives||[];
+        if(!reps.length){try{reps=JSON.parse(localStorage.getItem('oscarRepresentatives_'+companyKey)) || []}catch(e){reps=[]}}
+        const rep=reps.find(x=>String(x.username||'').trim().toLowerCase()===username.toLowerCase() || String(x.id||x.representativeId||'').trim()===username);
+        if(!rep){toast('اسم المستخدم غير موجود داخل هذا المفتاح','bad'); return reset();}
+        const repStatus=String(rep.status||'active').toLowerCase();
+        if(rep.active===false || ['stopped','inactive','disabled','موقوف','ايقاف','إيقاف'].includes(repStatus)){toast('حساب المندوب موقوف','bad'); return reset();}
+        if(!hasUsableSecret(rep)){toast('كلمة مرور المندوب غير مضبوطة','bad'); return reset();}
+        if(!(await verifySecret(rep,pass))){toast('اسم المستخدم أو كلمة المرور غير صحيحة لهذا المفتاح','bad'); return reset();}
+        rep.lastLogin=Date.now(); localStorage.setItem('oscarRepresentatives_'+companyKey,JSON.stringify(reps));
+        session={companyKey,userId:rep.id||rep.representativeId,name:rep.name||rep.username,username:rep.username,role:'representative',representativeId:rep.id||rep.representativeId,area:rep.area||'',branchId:rep.branchId||'main',branchName:rep.branchName||'',permissions:{viewSales:true,addSales:true,print:true},loginAt:Date.now()};
+        try{localStorage.setItem('oscarCurrentRepresentative_'+companyKey,JSON.stringify(rep));}catch(e){}
+      }
     }
     localStorage.setItem('oscarSession',JSON.stringify(session));
     localStorage.setItem('oscarRunLoginSync','1');
     toast('تم تسجيل الدخول');
-    setTimeout(()=>location.replace(navigator.onLine?'sync-loading.html':'dashboard.html'),120);
+    setTimeout(()=>location.replace(session.role==='representative'?'representative-dashboard.html':(navigator.onLine?'sync-loading.html':'dashboard.html')),120);
   }catch(err){console.error(err); toast('تعذر تسجيل الدخول: '+(err.message||err),'bad'); reset();}
 }
 function reset(){const btn=$('#loginBtn'); btn.disabled=false; btn.textContent='تسجيل الدخول'}
@@ -2768,7 +2816,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   let saved=null; try{saved=JSON.parse(localStorage.getItem('oscarSession')||'null')}catch(e){}
   if(saved && !force){
     if(savedSessionCanAutoEnter(saved)){
-      location.replace('dashboard.html');
+      location.replace(saved.role==='representative'?'representative-dashboard.html':'dashboard.html');
       return;
     }
     localStorage.removeItem('oscarSession');
@@ -2860,7 +2908,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 (function(){
   const PAGE_CACHE='cashtop-local-pages-v157-permanent';
   const ASSET_CACHE='cashtop-local-assets-v157-permanent';
-  const extraPages=["./", "accounts.html", "admin.html", "ai-analysis.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "custom-reports.html", "customers.html", "dashboard.html", "database.rules.json", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "local-bridge.js", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "offline-update.js", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
+  const extraPages=["./", "accounts.html", "admin.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "customers.html", "dashboard.html", "database.rules.json", "digital-menu.html", "employees.html", "representatives.html", "representative-dashboard.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "local-bridge.js", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "offline-update.js", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
   function sameOriginUrl(href){try{const u=new URL(href,location.href); return u.origin===location.origin?u:null}catch(e){return null}}
   function internalUrls(){
     const set=new Set(extraPages.map(x=>new URL(x,location.href).href));

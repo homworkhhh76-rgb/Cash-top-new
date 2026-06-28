@@ -1,9 +1,9 @@
-const CACHE_VERSION = 'v172-cache-first-customer-credit-sync-fix';
+const CACHE_VERSION = 'v177-clean-fast-delete-cache-first-no-ai-custom';
 const PAGE_CACHE = 'cashtop-pages-' + CACHE_VERSION;
 const ASSET_CACHE = 'cashtop-assets-' + CACHE_VERSION;
 const FONT_CACHE = 'cashtop-fonts-' + CACHE_VERSION;
 const LEGACY_PREFIXES = ['cashtop-pwa-', 'cashtop-local-pages-', 'cashtop-local-assets-', 'cashtop-font-cache-', 'cashtop-pages-', 'cashtop-assets-', 'cashtop-fonts-'];
-const PRECACHE = ["./", "DATABASE_STRUCTURE.md", "README-MONGODB-DIRECT.txt", "README.md", "READ_ME_ADMIN_COMPANY_KEYS.txt", "READ_ME_AUTO_LOGIN_KEY_REFRESH.txt", "READ_ME_CASHIER_CUSTOMER_SEARCH.txt", "READ_ME_CLEAN_RECEIPT_SILENT_SYNC.txt", "READ_ME_EMPTY_SEARCH_DROPDOWNS.txt", "READ_ME_FAST_SYNC_QR_CAMERA.txt", "READ_ME_FULL_OFFLINE_LOCAL_FIRST.txt", "READ_ME_ISOLATED_COMPANY_LOCAL_STORE.txt", "READ_ME_KEYBOARD_SAFE_SYNC.txt", "READ_ME_LEGACY_DATA_MERGE_LOGIN_FIX.txt", "READ_ME_LOCAL_FIRST_DELETE_EDIT.txt", "READ_ME_OFFLINE_DELETE_CLEAR_COMPANY.txt", "READ_ME_OFFLINE_FIRST_SYNC.txt", "READ_ME_RETENTION_45_DAYS_SYNC_FIX.txt", "READ_ME_ROOT_ACCOUNTING_REPORTS_UNITS.txt", "READ_ME_STABLE_AUTO_LOGIN_NO_KEY_CHECK.txt", "READ_ME_SYNC_FIX.txt", "READ_ME_UNIT_STOCK_BIGCODE_MOBILE.txt", "accounts.html", "admin.html", "ai-analysis.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "custom-reports.html", "customers.html", "dashboard.html", "database.rules.json", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "local-bridge.js", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "offline-update.js", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "settings.html", "shortcuts.html", "suppliers.html", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html", "sw.js"];
+const PRECACHE = ["./", "DATABASE_STRUCTURE.md", "README-MONGODB-DIRECT.txt", "README.md", "READ_ME_ADMIN_COMPANY_KEYS.txt", "READ_ME_AUTO_LOGIN_KEY_REFRESH.txt", "READ_ME_CASHIER_CUSTOMER_SEARCH.txt", "READ_ME_CLEAN_RECEIPT_SILENT_SYNC.txt", "READ_ME_EMPTY_SEARCH_DROPDOWNS.txt", "READ_ME_FAST_SYNC_QR_CAMERA.txt", "READ_ME_FULL_OFFLINE_LOCAL_FIRST.txt", "READ_ME_ISOLATED_COMPANY_LOCAL_STORE.txt", "READ_ME_KEYBOARD_SAFE_SYNC.txt", "READ_ME_LEGACY_DATA_MERGE_LOGIN_FIX.txt", "READ_ME_LOCAL_FIRST_DELETE_EDIT.txt", "READ_ME_OFFLINE_DELETE_CLEAR_COMPANY.txt", "READ_ME_OFFLINE_FIRST_SYNC.txt", "READ_ME_RETENTION_45_DAYS_SYNC_FIX.txt", "READ_ME_ROOT_ACCOUNTING_REPORTS_UNITS.txt", "READ_ME_STABLE_AUTO_LOGIN_NO_KEY_CHECK.txt", "READ_ME_SYNC_FIX.txt", "READ_ME_UNIT_STOCK_BIGCODE_MOBILE.txt", "accounts.html", "admin.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "customers.html", "dashboard.html", "database.rules.json", "digital-menu.html", "employees.html", "representatives.html", "representative-dashboard.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "local-bridge.js", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "offline-update.js", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "settings.html", "shortcuts.html", "suppliers.html", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html", "sw.js"];
 const PAGE_RE = /(?:^|\/)[^/?#]*\.html?$/i;
 const STATIC_RE = /\.(?:js|css|json|png|jpg|jpeg|svg|webp|ico|woff2?|ttf|map|md|txt)$/i;
 function isPageUrl(u){ return u.pathname.endsWith('/') || PAGE_RE.test(u.pathname) || u.pathname.split('/').pop()===''; }
@@ -63,10 +63,10 @@ async function warmCache(list){
     while(i < queue.length){
       const item = queue[i++];
       await putCache(item);
-      await new Promise(r=>setTimeout(r, 20));
+      await new Promise(r=>setTimeout(r, 2));
     }
   };
-  await Promise.all([worker(), worker()]);
+  await Promise.all([worker(), worker(), worker(), worker()]);
 }
 self.addEventListener('install', event=>{
   self.skipWaiting();

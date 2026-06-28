@@ -1,9 +1,9 @@
 {
-  "version": "v172-cache-first-customer-credit-sync-fix",
-  "date": "2026-06-26",
-  "notes": "فتح الصفحات من الكاش أولاً، وإصلاح مزامنة رصيد العميل السالب لصالح العميل عند سداد مبلغ أكبر من الدين.",
-  "build": "cache-first-customer-credit-sync",
-  "updatedAt": 1782546299670,
+  "version": "v177-clean-fast-delete-cache-first-no-ai-custom",
+  "date": "2026-06-28",
+  "notes": "إصلاح الحذف المحلي الفوري، منع الفواتير الوهمية الصفرية، تسريع المزامنة، تحديث Cache First لكل الصفحات، إزالة تحليل الذكاء الاصطناعي والتقارير المخصصة والبطاقة الزرقاء في لوحة المتابعة.",
+  "build": "clean-fast-delete-cache-first-no-ai-custom",
+  "updatedAt": 1782600600000,
   "name": "كاش توب",
-  "cacheVersion": "v172-cache-first-customer-credit-sync-fix"
+  "cacheVersion": "v177"
 }
