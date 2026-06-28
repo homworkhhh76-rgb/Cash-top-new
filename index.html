@@ -2390,7 +2390,7 @@ body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
 
 <script id="v172-cache-first-immediate-script">
 (function(){
-  const CACHE_URLS=["./", "DATABASE_STRUCTURE.md", "README-MONGODB-DIRECT.txt", "README.md", "READ_ME_ADMIN_COMPANY_KEYS.txt", "READ_ME_AUTO_LOGIN_KEY_REFRESH.txt", "READ_ME_CASHIER_CUSTOMER_SEARCH.txt", "READ_ME_CLEAN_RECEIPT_SILENT_SYNC.txt", "READ_ME_EMPTY_SEARCH_DROPDOWNS.txt", "READ_ME_FAST_SYNC_QR_CAMERA.txt", "READ_ME_FULL_OFFLINE_LOCAL_FIRST.txt", "READ_ME_ISOLATED_COMPANY_LOCAL_STORE.txt", "READ_ME_KEYBOARD_SAFE_SYNC.txt", "READ_ME_LEGACY_DATA_MERGE_LOGIN_FIX.txt", "READ_ME_LOCAL_CACHE_FAST_V169.txt", "READ_ME_LOCAL_FIRST_DELETE_EDIT.txt", "READ_ME_OFFLINE_DELETE_CLEAR_COMPANY.txt", "READ_ME_OFFLINE_FIRST_SYNC.txt", "READ_ME_REPRESENTATIVES_SYSTEM.txt", "READ_ME_RETENTION_45_DAYS_SYNC_FIX.txt", "READ_ME_ROOT_ACCOUNTING_REPORTS_UNITS.txt", "READ_ME_STABLE_AUTO_LOGIN_NO_KEY_CHECK.txt", "READ_ME_SYNC_FIX.txt", "READ_ME_UNIT_STOCK_BIGCODE_MOBILE.txt", "READ_ME_V171_FIXES.txt", "READ_ME_V172_CACHE_FIRST_IMMEDIATE.txt", "READ_ME_V172_CUSTOMER_CREDIT_SYNC_FIX.txt", "READ_ME_V172_FIXES.txt", "READ_ME_V172_SETTINGS_SYNC_CACHE_FIX.txt", "READ_ME_V174_REP_LOGIN_CASHIER_COMMISSION.txt", "READ_ME_V175_REPRESENTATIVES_FINAL_FIX.txt", "READ_ME_V177_CLEAN_FAST_CACHE_FIX.txt", "READ_ME_V178_HARD_DELETE_CLEAN_CACHE.txt", "READ_ME_V179_PURCHASE_ENTRY_FIX.txt", "accounts.html", "admin.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "customers.html", "dashboard.html", "database.rules.json", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "local-bridge.js", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "offline-update.js", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "representative-dashboard.html", "representatives.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
+  const CACHE_URLS=["./", "DATABASE_STRUCTURE.md", "README.md", "accounts.html", "admin.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "customers.html", "dashboard.html", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "representative-dashboard.html", "representatives.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
   function pageName(){return location.pathname.split('/').pop() || 'index.html'}
   function cacheUrls(){
     const set=new Set(CACHE_URLS);
@@ -2411,7 +2411,7 @@ body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
   async function saveCurrentPageToCache(){
     try{
       if(!('caches' in window)) return;
-      const cache=await caches.open('cashtop-pages-v172-cache-first-immediate-fix');
+      const cache=await caches.open('cashtop-pages-v183-dashboard-chart-cache-first-fast');
       const req=new Request(location.href,{cache:'reload'});
       const res=await fetch(req).catch(()=>null);
       if(res&&res.ok){
@@ -2487,7 +2487,7 @@ function readLocalCompanyStore(companyKey){
 }
 function rawRtdbUrl(base,path){return 'https://cash-top-api-2026.vercel.app/api/rtdb'+'?path='+encodeURIComponent(String(path||'').split('/').map(x=>safePathPart(x)).join('/'))}
 function rtdbUrl(path){return rawRtdbUrl('https://cash-top-api-2026.vercel.app/api/rtdb',path)}
-async function fetchTimeout(url, opts={}, ms=8000){const ctrl=new AbortController(); const timer=setTimeout(()=>ctrl.abort(),ms); try{return await fetch(url,{...opts,signal:ctrl.signal,cache:'no-store',mode:'cors'})} finally{clearTimeout(timer)}}
+async function fetchTimeout(url, opts={}, ms=8000){if(window.__loginCompanyKey && localStorage.getItem('oscarOfflineLock_'+window.__loginCompanyKey)==='1' && /api\/rtdb|vercel\.app\/api\/rtdb|firebaseio\.com/i.test(String(url||''))) throw new Error('OFFLINE_MODE_LOCAL_ONLY'); const ctrl=new AbortController(); const timer=setTimeout(()=>ctrl.abort(),ms); try{return await fetch(url,{...opts,signal:ctrl.signal,cache:'no-store',mode:'cors'})} finally{clearTimeout(timer)}}
 async function pickDatabaseURL(companyKey){
   if(!navigator.onLine) return false;
   try{
@@ -2665,6 +2665,7 @@ async function login(e){
   }catch(err){console.error(err); toast('تعذر تسجيل الدخول: '+(err.message||err),'bad'); reset();}
 }
 function reset(){const btn=$('#loginBtn'); btn.disabled=false; btn.textContent='تسجيل الدخول'}
+function loginOfflineAfterExpiryAllowed(c){return !!(c && (c.offlineAfterExpiry===true || c.allowOfflineAfterExpiry===true || String(c.offlineAfterExpiry)==='true' || String(c.allowOfflineAfterExpiry)==='true' || (String(c.durationUnit)==='year' && Number(c.durationCount||0)>=1)));}
 function cachedCompanyAccess(companyKey){
   try{return JSON.parse(localStorage.getItem('oscarCompany_'+companyKey)||'null')}catch(e){return null}
 }
@@ -2679,13 +2680,13 @@ function isExpiredAccess(c){
   if(!c) return false;
   if(c.active===false) return true;
   const ts=accessExpiryMs(c);
-  return !!(ts && ts<Date.now());
+  return !!(ts && ts<Date.now() && !loginOfflineAfterExpiryAllowed(c));
 }
 function expiredAccessReason(c){
   if(c?.deletedAt) return 'تم حذف مفتاح الشركة';
   if(c?.active===false) return 'تم إيقاف مفتاح الشركة';
   const ts=accessExpiryMs(c);
-  if(ts && ts<Date.now()) return 'انتهى اشتراكك';
+  if(ts && ts<Date.now()){ if(loginOfflineAfterExpiryAllowed(c)) return ''; return 'انتهى اشتراكك'; }
   return '';
 }
 function savedSessionCanAutoEnter(s){
@@ -2798,7 +2799,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 (function(){
   const PAGE_CACHE='cashtop-local-pages-v157-permanent';
   const ASSET_CACHE='cashtop-local-assets-v157-permanent';
-  const extraPages=["./", "DATABASE_STRUCTURE.md", "README-MONGODB-DIRECT.txt", "README.md", "READ_ME_ADMIN_COMPANY_KEYS.txt", "READ_ME_AUTO_LOGIN_KEY_REFRESH.txt", "READ_ME_CASHIER_CUSTOMER_SEARCH.txt", "READ_ME_CLEAN_RECEIPT_SILENT_SYNC.txt", "READ_ME_EMPTY_SEARCH_DROPDOWNS.txt", "READ_ME_FAST_SYNC_QR_CAMERA.txt", "READ_ME_FULL_OFFLINE_LOCAL_FIRST.txt", "READ_ME_ISOLATED_COMPANY_LOCAL_STORE.txt", "READ_ME_KEYBOARD_SAFE_SYNC.txt", "READ_ME_LEGACY_DATA_MERGE_LOGIN_FIX.txt", "READ_ME_LOCAL_CACHE_FAST_V169.txt", "READ_ME_LOCAL_FIRST_DELETE_EDIT.txt", "READ_ME_OFFLINE_DELETE_CLEAR_COMPANY.txt", "READ_ME_OFFLINE_FIRST_SYNC.txt", "READ_ME_REPRESENTATIVES_SYSTEM.txt", "READ_ME_RETENTION_45_DAYS_SYNC_FIX.txt", "READ_ME_ROOT_ACCOUNTING_REPORTS_UNITS.txt", "READ_ME_STABLE_AUTO_LOGIN_NO_KEY_CHECK.txt", "READ_ME_SYNC_FIX.txt", "READ_ME_UNIT_STOCK_BIGCODE_MOBILE.txt", "READ_ME_V171_FIXES.txt", "READ_ME_V172_CACHE_FIRST_IMMEDIATE.txt", "READ_ME_V172_CUSTOMER_CREDIT_SYNC_FIX.txt", "READ_ME_V172_FIXES.txt", "READ_ME_V172_SETTINGS_SYNC_CACHE_FIX.txt", "READ_ME_V174_REP_LOGIN_CASHIER_COMMISSION.txt", "READ_ME_V175_REPRESENTATIVES_FINAL_FIX.txt", "READ_ME_V177_CLEAN_FAST_CACHE_FIX.txt", "READ_ME_V178_HARD_DELETE_CLEAN_CACHE.txt", "READ_ME_V179_PURCHASE_ENTRY_FIX.txt", "accounts.html", "admin.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "customers.html", "dashboard.html", "database.rules.json", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "local-bridge.js", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "offline-update.js", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "representative-dashboard.html", "representatives.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
+  const extraPages=["./", "DATABASE_STRUCTURE.md", "README.md", "accounts.html", "admin.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "customers.html", "dashboard.html", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "representative-dashboard.html", "representatives.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
   function sameOriginUrl(href){try{const u=new URL(href,location.href); return u.origin===location.origin?u:null}catch(e){return null}}
   function internalUrls(){
     const set=new Set(extraPages.map(x=>new URL(x,location.href).href));
@@ -2869,4 +2870,5 @@ document.addEventListener('DOMContentLoaded',()=>{
   }).observe(document.documentElement,{childList:true,subtree:true});
 })();
 </script>
+
 </body></html>

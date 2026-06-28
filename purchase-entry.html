@@ -2758,7 +2758,7 @@ body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
 
 <script id="v172-cache-first-immediate-script">
 (function(){
-  const CACHE_URLS=["./", "DATABASE_STRUCTURE.md", "README-MONGODB-DIRECT.txt", "README.md", "READ_ME_ADMIN_COMPANY_KEYS.txt", "READ_ME_AUTO_LOGIN_KEY_REFRESH.txt", "READ_ME_CASHIER_CUSTOMER_SEARCH.txt", "READ_ME_CLEAN_RECEIPT_SILENT_SYNC.txt", "READ_ME_EMPTY_SEARCH_DROPDOWNS.txt", "READ_ME_FAST_SYNC_QR_CAMERA.txt", "READ_ME_FULL_OFFLINE_LOCAL_FIRST.txt", "READ_ME_ISOLATED_COMPANY_LOCAL_STORE.txt", "READ_ME_KEYBOARD_SAFE_SYNC.txt", "READ_ME_LEGACY_DATA_MERGE_LOGIN_FIX.txt", "READ_ME_LOCAL_CACHE_FAST_V169.txt", "READ_ME_LOCAL_FIRST_DELETE_EDIT.txt", "READ_ME_OFFLINE_DELETE_CLEAR_COMPANY.txt", "READ_ME_OFFLINE_FIRST_SYNC.txt", "READ_ME_REPRESENTATIVES_SYSTEM.txt", "READ_ME_RETENTION_45_DAYS_SYNC_FIX.txt", "READ_ME_ROOT_ACCOUNTING_REPORTS_UNITS.txt", "READ_ME_STABLE_AUTO_LOGIN_NO_KEY_CHECK.txt", "READ_ME_SYNC_FIX.txt", "READ_ME_UNIT_STOCK_BIGCODE_MOBILE.txt", "READ_ME_V171_FIXES.txt", "READ_ME_V172_CACHE_FIRST_IMMEDIATE.txt", "READ_ME_V172_CUSTOMER_CREDIT_SYNC_FIX.txt", "READ_ME_V172_FIXES.txt", "READ_ME_V172_SETTINGS_SYNC_CACHE_FIX.txt", "READ_ME_V174_REP_LOGIN_CASHIER_COMMISSION.txt", "READ_ME_V175_REPRESENTATIVES_FINAL_FIX.txt", "READ_ME_V177_CLEAN_FAST_CACHE_FIX.txt", "READ_ME_V178_HARD_DELETE_CLEAN_CACHE.txt", "READ_ME_V179_PURCHASE_ENTRY_FIX.txt", "accounts.html", "admin.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "customers.html", "dashboard.html", "database.rules.json", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "local-bridge.js", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "offline-update.js", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "representative-dashboard.html", "representatives.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
+  const CACHE_URLS=["./", "DATABASE_STRUCTURE.md", "README.md", "accounts.html", "admin.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "customers.html", "dashboard.html", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "representative-dashboard.html", "representatives.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
   function pageName(){return location.pathname.split('/').pop() || 'index.html'}
   function cacheUrls(){
     const set=new Set(CACHE_URLS);
@@ -2779,7 +2779,7 @@ body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
   async function saveCurrentPageToCache(){
     try{
       if(!('caches' in window)) return;
-      const cache=await caches.open('cashtop-pages-v172-cache-first-immediate-fix');
+      const cache=await caches.open('cashtop-pages-v183-dashboard-chart-cache-first-fast');
       const req=new Request(location.href,{cache:'reload'});
       const res=await fetch(req).catch(()=>null);
       if(res&&res.ok){
@@ -2805,6 +2805,25 @@ body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',registerCache); else registerCache();
 })();
 </script>
+
+<style id="v180-purchase-entry-polish">
+/* v180: مشتريات بتصميم بطاقة إضافة منتج + اقتراحات تحت الحقل مباشرة */
+body[data-page="purchaseEntry"] .purchase-card-line{position:relative;border:0!important;box-shadow:0 10px 30px rgba(15,23,42,.06);border-radius:28px;background:#fff;padding:14px;margin:10px 0}
+body[data-page="purchaseEntry"] .purchase-card-line .field{position:relative;border:0!important;background:transparent!important;box-shadow:none!important;margin:0!important}
+body[data-page="purchaseEntry"] .purchase-compact-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px!important;align-items:end}
+body[data-page="purchaseEntry"] .purchase-values-grid{margin-top:12px}
+body[data-page="purchaseEntry"] .pi-product-search{z-index:30;overflow:visible!important}
+body[data-page="purchaseEntry"] .suggest-panel.plSuggest{position:absolute!important;top:calc(100% + 6px)!important;right:0!important;left:0!important;z-index:99999!important;background:#fff;border:1px solid #dbe7f6;border-radius:18px;box-shadow:0 18px 45px rgba(15,23,42,.16);max-height:280px;overflow:auto;padding:6px;display:none}
+body[data-page="purchaseEntry"] .suggest-panel.plSuggest.show{display:block!important}
+body[data-page="purchaseEntry"] .suggest-item{width:100%;display:flex;text-align:right;border:0;background:#fff;border-radius:14px;padding:10px 12px;font-weight:900;color:#142033}
+body[data-page="purchaseEntry"] .suggest-item:hover{background:#eef6ff}
+body[data-page="purchaseEntry"] .suggest-item small{display:block;color:#64748b;font-weight:800;margin-top:2px}
+body[data-page="purchaseEntry"] .barcode-input-wrap{display:flex;gap:8px;align-items:center}
+body[data-page="purchaseEntry"] .barcode-input-wrap .input{min-width:0;flex:1}
+body[data-page="purchaseEntry"] .barcode-input-wrap button{width:48px;height:48px;border-radius:16px;border:1px solid var(--line);background:#fff;color:var(--primary);display:grid;place-items:center;box-shadow:0 8px 22px rgba(15,23,42,.06)}
+body[data-page="purchaseEntry"] .barcode-input-wrap svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:560px){body[data-page="purchaseEntry"] .purchase-compact-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px!important}body[data-page="purchaseEntry"] .purchase-card-line{padding:12px;border-radius:24px}.pi-line-footer{display:flex;justify-content:space-between;gap:8px;align-items:center}}
+</style>
 </head>
 <body data-page="purchaseEntry">
   <div id="toast" class="toast"></div>
@@ -2908,6 +2927,27 @@ const App = (() => {
   const APP_INSTANCE_ID = 'oscar-pos';
   const session = JSON.parse(localStorage.getItem('oscarSession')||'null');
   const companyKey = new URLSearchParams(location.search).get('company') || session?.companyKey || 'COMPANY001';
+
+  function generateAutoBarcode(prefix='20'){
+    prefix=String(prefix||'20').replace(/\D/g,'')||'20';
+    const body=String(Date.now()).slice(-9)+String(Math.floor(Math.random()*900+100));
+    return prefix+body;
+  }
+  try{ if(typeof window!=='undefined' && !window.generateAutoBarcode) window.generateAutoBarcode=generateAutoBarcode; }catch(e){}
+  function offlineCompanyAccess(){ try{return JSON.parse(localStorage.getItem('oscarCompany_'+companyKey)||'null')}catch(e){return null} }
+  function offlineAccessExpiryMs(c){ const ts=Number(c?.expiresAt||0); if(ts>0) return ts; const end=String(c?.subscriptionEnd||'').trim(); if(end && end!=='2099-12-31') return new Date(end+'T23:59:59').getTime(); return 0; }
+  function offlineAfterExpiryAllowed(c){ return !!(c && (c.offlineAfterExpiry===true || c.allowOfflineAfterExpiry===true || String(c.offlineAfterExpiry)==='true' || String(c.allowOfflineAfterExpiry)==='true' || (String(c.durationUnit)==='year' && Number(c.durationCount||0)>=1))); }
+  function isLocalOfflineMode(){
+    const c=offlineCompanyAccess()||{};
+    const expired=!!(offlineAccessExpiryMs(c) && offlineAccessExpiryMs(c)<Date.now());
+    const offline=!!(session?.offlineMode || c.offlinePlan===true || c.syncMode==='offline' || c.planMode==='offline' || String(c.syncMode).toLowerCase()==='offline' || localStorage.getItem('oscarOfflineLock_'+companyKey)==='1' || (expired && offlineAfterExpiryAllowed(c)));
+    if(offline){
+      try{localStorage.setItem('oscarOfflineLock_'+companyKey,'1');}catch(e){}
+      try{ if(session && !session.offlineMode){ session.offlineMode=true; session.syncMode='offline'; localStorage.setItem('oscarSession',JSON.stringify(session)); } }catch(e){}
+    }
+    return offline;
+  }
+
   const safeLocalPart = v => encodeURIComponent(String(v || 'COMPANY001').trim());
   const companyLocalPart = safeLocalPart(companyKey);
   const activeBranchStorageKey = `oscarActiveBranch_${companyLocalPart}`;
@@ -3710,7 +3750,7 @@ const App = (() => {
     if(session && state.page!=='scanner'){
       const access=cachedCompanyAccess();
       const ts=companyExpiryMs(access);
-      if(ts && ts<Date.now()){ forceSessionLogout('انتهى اشتراكك، تم تسجيل الخروج'); return false; }
+      if(ts && ts<Date.now() && !offlineAfterExpiryAllowed(access)){ forceSessionLogout('انتهى اشتراكك، تم تسجيل الخروج'); return false; }
     }
     return true;
   }
@@ -4122,6 +4162,9 @@ const App = (() => {
   }
   function rtdbUrl(path){ return mongoApiPath(path); }
   async function fetchTimeout(url, opts={}, ms=12000){
+    if(typeof isLocalOfflineMode==='function' && isLocalOfflineMode() && /api\/rtdb|vercel\.app\/api\/rtdb|firebaseio\.com/i.test(String(url||''))){
+      throw new Error('OFFLINE_MODE_LOCAL_ONLY');
+    }
     const ctrl=new AbortController(); const timer=setTimeout(()=>ctrl.abort(),ms);
     try{return await fetch(url,{...opts,signal:ctrl.signal,cache:'no-store',mode:'cors'});} finally{clearTimeout(timer);}
   }
@@ -4169,6 +4212,7 @@ const App = (() => {
     return Object.fromEntries(rows);
   }
   async function pickDatabaseURL(forceProbe=false){
+    if(isLocalOfflineMode()){ state.syncError='وضع أوف لاين - المزامنة متوقفة'; state.firebaseReady=false; return false; }
     if(state.firebaseReady && !forceProbe) return true;
     if(!navigator.onLine){state.syncError=''; state.firebaseReady=false; return false;}
     try{
@@ -4185,6 +4229,7 @@ const App = (() => {
     }
   }
   async function rtdbGet(path){
+    if(typeof isLocalOfflineMode==='function' && isLocalOfflineMode()) throw new Error('OFFLINE_MODE_LOCAL_ONLY');
     const r=await fetchTimeout(rtdbUrl(path),{},12000);
     if(!r.ok) throw new Error('MongoDB GET '+r.status+' '+(await r.text()).slice(0,160));
     return await r.json();
@@ -4202,11 +4247,13 @@ const App = (() => {
     return val&&typeof val==='object'?Object.keys(val).filter(k=>!String(k).startsWith('__')).length:0;
   }
   async function rtdbSet(path, data){
+    if(typeof isLocalOfflineMode==='function' && isLocalOfflineMode()) throw new Error('OFFLINE_MODE_LOCAL_ONLY');
     const r=await fetchTimeout(rtdbUrl(path),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)},12000);
     if(!r.ok) throw new Error('MongoDB PUT '+r.status+' '+(await r.text()).slice(0,160));
     return await r.json();
   }
   async function rtdbRemove(path){
+    if(typeof isLocalOfflineMode==='function' && isLocalOfflineMode()) throw new Error('OFFLINE_MODE_LOCAL_ONLY');
     const r=await fetchTimeout(rtdbUrl(path),{method:'DELETE'},12000);
     if(!r.ok) throw new Error('MongoDB DELETE '+r.status+' '+(await r.text()).slice(0,160));
     return await r.json();
@@ -4258,6 +4305,7 @@ const App = (() => {
     return changed;
   }
   async function refreshCompanyAccess(){
+    if(isLocalOfflineMode()) return true;
     // فحص خفيف للمفتاح والموظف. لا يخرج المستخدم بسبب فشل قراءة ناتج عن ضعف النت.
     if(!session || state.page==='scanner') return true;
     if(!navigator.onLine || !state.firebaseReady) return true;
@@ -4313,11 +4361,11 @@ const App = (() => {
       const resolvedSubscription=subscriptionEndRes.ok && subscriptionEnd ? subscriptionEnd : (oldAccess.subscriptionEnd||'2099-12-31');
       const resolvedExpires=expiresAtRes.ok && Number(expiresAt||0)>0 ? Number(expiresAt||0) : Number(oldAccess.expiresAt||0);
       const resolvedDeleted=deletedAtRes.ok && Number(deletedAt||0)>0 ? Number(deletedAt||0) : 0;
-      const access={...oldAccess,companyKey,companyName:companyName||storeName||oldAccess.companyName||'',storeName:storeName||companyName||oldAccess.storeName||'',active:resolvedActive,subscriptionEnd:resolvedSubscription,expiresAt:resolvedExpires,durationUnit:(durationUnitRes.ok&&durationUnit)?durationUnit:(oldAccess.durationUnit||''),durationCount:(durationCountRes.ok&&durationCount!==undefined)?Number(durationCount||0):Number(oldAccess.durationCount||0),planId:(planIdRes.ok&&planId)?planId:(oldAccess.planId||oldAccess.plan?.id||'diamond'),plan:(planRes.ok&&plan)?plan:(oldAccess.plan||null),deletedAt:resolvedDeleted,admin:admin||oldAccess.admin||null,_fromCloud:true,updatedAt:Date.now()};
+      const access={...oldAccess,companyKey,companyName:companyName||storeName||oldAccess.companyName||'',storeName:storeName||companyName||oldAccess.storeName||'',active:resolvedActive,subscriptionEnd:resolvedSubscription,expiresAt:resolvedExpires,durationUnit:(durationUnitRes.ok&&durationUnit)?durationUnit:(oldAccess.durationUnit||''),durationCount:(durationCountRes.ok&&durationCount!==undefined)?Number(durationCount||0):Number(oldAccess.durationCount||0),planId:(planIdRes.ok&&planId)?planId:(oldAccess.planId||oldAccess.plan?.id||'diamond'),plan:(planRes.ok&&plan)?plan:(oldAccess.plan||null),deletedAt:resolvedDeleted,syncMode:oldAccess.syncMode||'online',offlinePlan:oldAccess.offlinePlan===true,offlineAfterExpiry:oldAccess.offlineAfterExpiry===true,allowOfflineAfterExpiry:oldAccess.allowOfflineAfterExpiry===true,admin:admin||oldAccess.admin||null,_fromCloud:true,updatedAt:Date.now()};
       localStorage.setItem('oscarCompany_'+companyKey,JSON.stringify(access));
 
       // الإيقاف/الحذف يعتمد فقط على قراءة Firebase الناجحة، أما انتهاء الوقت فيعتمد على الوقت المحلي كذلك.
-      if((resolvedDeleted || (activeRes.ok && active===false)) || (companyExpiryMs(access) && companyExpiryMs(access)<Date.now())){
+      if((resolvedDeleted || (activeRes.ok && active===false)) || (companyExpiryMs(access) && companyExpiryMs(access)<Date.now() && !offlineAfterExpiryAllowed(access))){
         forceSessionLogout(companyStopReason(access));
         return false;
       }
@@ -4346,6 +4394,7 @@ const App = (() => {
     return true;
   }
   async function ensureRemoteBase(){
+    if(isLocalOfflineMode()) return;
     if(state.didEnsureRemote) return;
     // لا نسحب companies/{key} كاملاً. فقط نضمن وجود الإعدادات الأساسية إن لم تكن موجودة.
     try{
@@ -4527,6 +4576,7 @@ const App = (() => {
     try{ window.scrollTo(scrollX,scrollY); }catch(_e){}
   }
   async function pullActiveRemoteNow(renderNow=true){
+    if(isLocalOfflineMode()) return false;
     if(!state.store || !navigator.onLine) return false;
     if(state.livePulling) return false;
     state.livePulling=true;
@@ -4565,6 +4615,7 @@ const App = (() => {
     }
   }
   function startRealtimeSync(){
+    if(isLocalOfflineMode()) return;
     if(state.realtimeStarted) return;
     state.realtimeStarted=true;
     const tick=()=>{ if(!navigator.onLine || document.hidden) return; if(state.syncing || state.livePulling) return; syncQueue().then(()=>pullActiveRemoteNow(false)).catch(e=>{state.syncError=e?.message||String(e);updateStatus();}); };
@@ -4577,6 +4628,7 @@ const App = (() => {
   }
 
   async function pullAllRemote(){
+    if(isLocalOfflineMode()) return;
     if(!state.firebaseReady || !navigator.onLine) return;
     await pullRemoteDeletes().then(changed=>{ if(changed){ saveStore(false); scheduleRender(true); } }).catch(e=>console.warn('pull deletes skipped',e));
     let hadError=false;
@@ -4615,6 +4667,7 @@ const App = (() => {
   }
   
   async function syncQueue(){
+    if(isLocalOfflineMode()){ state.syncing=false; updateStatus(); return; }
     if(!state.store) return;
     if(!Array.isArray(state.store._pendingSync)) state.store._pendingSync=[];
     const pending = state.store._pendingSync.length;
@@ -4958,6 +5011,7 @@ const App = (() => {
   }
 
   async function runFullSync(showToast=false){
+    if(typeof isLocalOfflineMode==='function' && isLocalOfflineMode()){ state.syncError='وضع أوف لاين - المزامنة متوقفة'; state.firebaseReady=false; updateStatus?.(); return false; }
     if(state.syncPromise) return state.syncPromise;
     state.syncPromise=(async()=>{
       state.syncing=true; updateStatus();
@@ -5014,8 +5068,10 @@ const App = (() => {
     })();
     return state.syncPromise;
   }
-  async function initFirebase(){ listenAll(); const bg=()=>runFullSync(false).then(()=>pullActiveRemoteNow(false)).catch(e=>{state.syncError=e?.message||String(e); updateStatus();}); setTimeout(bg,250); setTimeout(()=>pullActiveRemoteNow(false).catch(()=>{}),2500); }
+  async function initFirebase(){
+    if(isLocalOfflineMode()){ state.firebaseReady=false; updateStatus(); return; } listenAll(); const bg=()=>runFullSync(false).then(()=>pullActiveRemoteNow(false)).catch(e=>{state.syncError=e?.message||String(e); updateStatus();}); setTimeout(bg,250); setTimeout(()=>pullActiveRemoteNow(false).catch(()=>{}),2500); }
   function autoSync(){
+    if(isLocalOfflineMode()){ saveStore(false); updateStatus(); return; }
     // v134 Local-First: لا تعتمد أي عملية على الإنترنت؛ فقط مزامنة خلفية.
     saveStore(false);
     updateStatus();
@@ -5026,7 +5082,7 @@ const App = (() => {
   function listenAll(){
     if(state.syncTimer) clearInterval(state.syncTimer);
     state.syncTimer=setInterval(()=>{ if(document.visibilityState==='hidden') return; if(navigator.onLine && !state.syncing && !document.hidden){ syncQueue().then(()=>pullActiveRemoteNow(false)).catch(e=>{state.syncError=e?.message||String(e); updateStatus();}); } }, 3500);
-    state.expiryWatchTimer=setInterval(()=>{ if(!document.hidden && !state.forceLoggingOut){ const access=cachedCompanyAccess(); const ts=companyExpiryMs(access); if(ts && ts<Date.now()) forceSessionLogout('انتهى اشتراكك، تم تسجيل الخروج'); } }, 30000);
+    state.expiryWatchTimer=setInterval(()=>{ if(!document.hidden && !state.forceLoggingOut){ const access=cachedCompanyAccess(); const ts=companyExpiryMs(access); if(ts && ts<Date.now() && !offlineAfterExpiryAllowed(access)) forceSessionLogout('انتهى اشتراكك، تم تسجيل الخروج'); } }, 30000);
     state.accessWatchTimer=setInterval(()=>{ if(navigator.onLine && !document.hidden && !state.forceLoggingOut) refreshCompanyAccess().catch(()=>{}); }, 120000);
     listenCashierSession();
     // v143 pending sync watcher
@@ -5041,7 +5097,7 @@ const App = (() => {
     const backupPending=backupSyncPendingCount?.() || 0;
     const backupPct=backupSync ? backupSyncPercent(backupSync) : 0;
     if(dot) dot.classList.toggle('off',!state.online || !!state.syncError);
-    if(btn) btn.title = backupSync&&backupPending ? (`مزامنة النسخة الاحتياطية: ${backupPct}%`) : (state.syncError ? ('فشل آخر تزامن: '+shortSyncError()) : (state.localBridgeReady?'جسر محلي متصل':(state.online?'متصل - اضغط للمزامنة':'بدون نت - محفوظ محلياً وسيزامن تلقائياً')));
+    if(btn) btn.title = backupSync&&backupPending ? (`مزامنة النسخة الاحتياطية: ${backupPct}%`) : (state.syncError ? ('فشل آخر تزامن: '+shortSyncError()) : (isLocalOfflineMode()?'وضع أوف لاين - محفوظ محلياً فقط':(state.localBridgeReady?'جسر محلي متصل':(state.online?'متصل - اضغط للمزامنة':'بدون نت - محفوظ محلياً وسيزامن تلقائياً'))));
     if(pend){
       if(backupSync && (backupPending || backupPct<100)){ pend.textContent=backupPct+'%'; pend.classList.remove('hidden'); }
       else { pend.textContent = pending? String(pending) : ''; pend.classList.toggle('hidden', !pending); }
@@ -5143,11 +5199,11 @@ const App = (() => {
     $$('.nav-link').forEach(a=>{ if(a.dataset.page===state.page) a.classList.add('active') }); hideByPermissions(); applyStoreName(); initSmartSelects(document); updateNotificationBadge(); setInterval(updateNotificationBadge,6000);
     $('#menuBtn')?.addEventListener('click',()=>{ if(matchMedia('(min-width:901px)').matches) return; toggleSide(true); }); $('#sideOverlay')?.addEventListener('click',()=>toggleSide(false)); $('#closeSide')?.addEventListener('click',()=>toggleSide(false));
     $('#notificationBtn')?.addEventListener('click',()=>location.href='notifications.html'); setupSideGroups(); setupSideGroups(); $('#syncBtn')?.addEventListener('click',()=>{ const sync=getBackupSyncState?.(); if(sync && (backupSyncPendingCount?.() || backupSyncPercent(sync)<100)){ openBackupSyncPanel(); runFullSync(false).catch(e=>{state.syncError=e?.message||String(e); updateStatus();}); } else runFullSync(true); });
-    window.addEventListener('online',()=>{state.syncError=''; state.firebaseReady=false; updateStatus(); setTimeout(()=>runFullSync(false).then(()=>pullActiveRemoteNow(false)),800);});
+    window.addEventListener('online',()=>{ if(typeof isLocalOfflineMode==='function' && isLocalOfflineMode()){state.syncError='وضع أوف لاين - المزامنة متوقفة'; state.firebaseReady=false; updateStatus(); return;} state.syncError=''; state.firebaseReady=false; updateStatus(); setTimeout(()=>runFullSync(false).then(()=>pullActiveRemoteNow(false)),450);});
     window.addEventListener('offline',()=>{state.syncError=''; updateStatus(); saveStore(false);});
     window.addEventListener('beforeinstallprompt',e=>{e.preventDefault(); state.deferredPrompt=e;});
     window.addEventListener('appinstalled',()=>{state.deferredPrompt=null; localStorage.setItem('cashtopInstalled','1'); toast('تم تثبيت التطبيق');});
-    document.addEventListener('visibilitychange',()=>{ if(!document.hidden && navigator.onLine && !state.syncing) setTimeout(()=>runFullSync(false).catch(e=>{state.syncError=e?.message||String(e); updateStatus();}),1200); });
+    document.addEventListener('visibilitychange',()=>{ if(!document.hidden && navigator.onLine && !state.syncing && !(typeof isLocalOfflineMode==='function' && isLocalOfflineMode())) setTimeout(()=>runFullSync(false).catch(e=>{state.syncError=e?.message||String(e); updateStatus();}),650); });
     window.addEventListener('beforeunload',()=>{try{if(state.store) localStorage.setItem(storeKey(), JSON.stringify(state.store));}catch(e){}});    if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(console.warn); setTimeout(()=>prepareInstallPrompt().catch(console.warn),700);
     document.addEventListener('click', handleGlobalClick);
     document.addEventListener('keydown', handleBarcodeScannerInput, true);
@@ -5925,7 +5981,29 @@ const App = (() => {
   function removeProductVariantRow(btn){ const root=$('#productVariantsBox'); btn.closest('.variant-row')?.remove(); if(root && !root.querySelector('.variant-row')) root.innerHTML='<div class="empty">لا يوجد أصناف إضافية بعد</div>'; const calc=$('#productCalc'); if(calc) calc.dispatchEvent(new Event('recalc',{bubbles:true})); toast('تم حذف الصنف'); }
   function scanVariantBarcode(btn,kind='unit'){ openBarcodeModal(code=>{ const row=btn.closest('.variant-row'); if(row){ const target=kind==='piece'?'.vPieceBarcode':'.vBarcode'; const input=row.querySelector(target); if(input) input.value=code; toast(kind==='piece'?'تم تسجيل باركود قطعة الصنف':'تم تسجيل باركود وحدة الصنف'); } }, false); }
   function collectProductVariants(){ return $$('.variant-row').map(row=>variantDataFromRow(row,false)).filter(v=>!v._empty).map(({_empty,...v})=>v); }
-    function validateProductBarcodes(item, editingId=''){ const codes=[]; const add=(code,label,owner)=>{ const c=String(code||'').trim(); if(c) codes.push({code:c,label,owner}); }; add(item.barcode,'باركود وحدة المنتج','product'); add(item.pieceBarcode,'باركود قطعة المنتج','product'); productVariants(item).forEach(v=>{ const owner='variant:'+(v.id||variantLabel(v)); add(v.barcode,`باركود وحدة الصنف ${variantLabel(v)}`,owner); add(v.pieceBarcode,`باركود قطعة الصنف ${variantLabel(v)}`,owner); }); const seen=new Map(); for(const c of codes){ if(seen.has(c.code) && seen.get(c.code)!==c.owner){ toast(`الباركود مكرر داخل نفس المنتج: ${c.code}`,'bad'); return false; } seen.set(c.code,c.owner); } if(editingId){ for(const c of [...new Map(codes.map(x=>[x.code,x])).values()]){ const hit=findBarcodeProduct(c.code); if(hit && String(hit.product.id)!==String(editingId)){ toast(`الباركود مستخدم مسبقاً في ${hit.product.name}`,'bad'); return false; } } } return true; }
+
+  function ensureProductBarcodes(item){
+    if(!item) return item;
+    const gen=(prefix='20')=>{
+      if(typeof generateAutoBarcode==='function') return generateAutoBarcode(prefix);
+      const body=String(Date.now()).slice(-9)+String(Math.floor(Math.random()*900+100));
+      return String(prefix||'20').replace(/\D/g,'')+body;
+    };
+    const isUnit = String(item.mode||'')==='unit' || n(item.piecesPerUnit)>1 || n(item.units)>0 || item.customUnitId;
+    if(isUnit){
+      if(!item.barcode && !item.unitBarcode) item.barcode=gen('21');
+      if(!item.unitBarcode) item.unitBarcode=item.barcode||gen('21');
+      if(!item.pieceBarcode) item.pieceBarcode=gen('22');
+    }else{
+      if(!item.pieceBarcode && !item.barcode) item.pieceBarcode=gen('20');
+      if(!item.pieceBarcode) item.pieceBarcode=item.barcode;
+      if(!item.barcode) item.barcode=item.pieceBarcode;
+    }
+    try{ productVariants(item).forEach(v=>{ if(!v.pieceBarcode && !v.barcode) v.pieceBarcode=gen('23'); if(!v.pieceBarcode) v.pieceBarcode=v.barcode; if((String(v.mode||'')==='unit'||n(v.piecesPerUnit)>1||n(v.units)>0) && !v.barcode) v.barcode=gen('24'); if(!v.barcode) v.barcode=v.pieceBarcode; }); }catch(e){}
+    return item;
+  }
+  
+function validateProductBarcodes(item, editingId=''){ const codes=[]; const add=(code,label,owner)=>{ const c=String(code||'').trim(); if(c) codes.push({code:c,label,owner}); }; add(item.barcode,'باركود وحدة المنتج','product'); add(item.pieceBarcode,'باركود قطعة المنتج','product'); productVariants(item).forEach(v=>{ const owner='variant:'+(v.id||variantLabel(v)); add(v.barcode,`باركود وحدة الصنف ${variantLabel(v)}`,owner); add(v.pieceBarcode,`باركود قطعة الصنف ${variantLabel(v)}`,owner); }); const seen=new Map(); for(const c of codes){ if(seen.has(c.code) && seen.get(c.code)!==c.owner){ toast(`الباركود مكرر داخل نفس المنتج: ${c.code}`,'bad'); return false; } seen.set(c.code,c.owner); } if(editingId){ for(const c of [...new Map(codes.map(x=>[x.code,x])).values()]){ const hit=findBarcodeProduct(c.code); if(hit && String(hit.product.id)!==String(editingId)){ toast(`الباركود مستخدم مسبقاً في ${hit.product.name}`,'bad'); return false; } } } return true; }
   function mergeVariantList(oldList=[], newList=[]){ const out=[...oldList]; newList.forEach(nv=>{ const nCodes=[nv.barcode,nv.pieceBarcode].filter(Boolean).map(String); const i=out.findIndex(v=>String(v.id)===String(nv.id) || nCodes.some(c=>[v.barcode,v.pieceBarcode].filter(Boolean).map(String).includes(c))); if(i>=0){ out[i]={...out[i],...nv,stock:n(out[i].stock)+n(nv.stock),pieceBarcode:nv.pieceBarcode||out[i].pieceBarcode||nv.barcode||out[i].barcode,updatedAt:Date.now()}; } else out.push({...nv,id:nv.id||uid('var'),createdAt:Date.now(),updatedAt:Date.now()}); }); return out; }
   function weightedAverageCost(oldQty, oldCost, purchaseQty, purchaseCost){ oldQty=n(oldQty); oldCost=n(oldCost); purchaseQty=n(purchaseQty); purchaseCost=n(purchaseCost); const totalQty=oldQty+purchaseQty; return totalQty>0 ? ((oldQty*oldCost)+(purchaseQty*purchaseCost))/totalQty : purchaseCost; }
   function mergeProductAdditionWithExisting(existing, item, matchedVariant=null){
@@ -6730,7 +6808,12 @@ const App = (() => {
   }
   async function downloadSupplierPurchasesPdf(id){ const c=await buildSupplierPurchasesCanvas(id); if(!c) return; downloadCanvasPdf(c,`supplier-purchases-${id}.pdf`); toast('تم تنزيل PDF مشتريات المورد'); }
   async function downloadSupplierPurchasesImage(id){ const c=await buildSupplierPurchasesCanvas(id); if(!c) return; const href=URL.createObjectURL(await canvasBlob(c,'image/png')); triggerFileDownload(href,`supplier-purchases-${id}.png`,true); toast('تم تنزيل صورة مشتريات المورد'); }
-  function downloadSupplierPurchasesExcel(id){ const d=supplierPurchasesReportData(id); if(!d) return; const html='\ufeff<html><head><meta charset="utf-8"><style>body{font-family:Cairo,Tahoma,Arial;direction:rtl}table{border-collapse:collapse;width:100%}th,td{border:1px solid #d1d5db;padding:8px;text-align:right}th{background:#eff6ff}</style></head><body><h2>فاتورة مشتريات المورد</h2><h3>'+esc(d.supplier.name||'')+'</h3>'+htmlTable(['البند','القيمة'],d.summary)+'<br>'+htmlTable(d.headers,d.rows)+'</body></html>'; downloadBlob(html,`supplier-purchases-${id}.xls`,'application/vnd.ms-excel;charset=utf-8'); toast('تم تنزيل Excel مشتريات المورد'); }
+  function downloadSupplierPurchasesExcel(id){
+    const d=supplierPurchasesReportData(id); if(!d) return;
+    const html='\ufeff<html dir="rtl"><head><meta charset="utf-8"><style>body{font-family:Cairo,Tahoma,Arial;direction:rtl;text-align:right}table{border-collapse:collapse;width:100%}th,td{border:1px solid #d1d5db;padding:8px;text-align:right}th{background:#eff6ff}</style></head><body><h2>فاتورة مشتريات المورد</h2><h3>'+esc(d.supplier.name||'')+'</h3>'+htmlTable(['البند','القيمة'],d.summary)+'<br>'+htmlTable(d.headers,d.rows)+'</body></html>';
+    downloadBlob(html,`supplier-purchases-${id}.xls`,'application/vnd.ms-excel;charset=utf-8');
+    toast('تم تنزيل Excel مشتريات المورد');
+  }
 
   function renderSuppliers(){const root=$('#suppliersTable'); if(!root)return; const rows=filtered(coll('suppliers'),['name','phone','notes']); root.innerHTML=rows.length?rows.map(s=>`<tr><td><b>${esc(s.name)}</b></td><td>${esc(s.phone)}</td><td>${money(s.credit)}</td><td><span class="badge ${n(s.debt)>0?'red':'green'}">${money(s.debt)}</span></td><td class="actions"><button class="mini-btn" data-action="viewSupplierPurchases" data-id="${s.id}">سجل المشتريات</button><button class="mini-btn gray" data-action="viewSupplier" data-id="${s.id}">الحركات</button><button class="mini-btn green" data-action="supplierPay" data-id="${s.id}">سداد</button><button class="mini-btn" data-action="supplierDebt" data-id="${s.id}">إضافة دين عليا</button><button class="mini-btn gray" data-action="imageSupplier" data-id="${s.id}">صورة</button><button class="mini-btn gray" data-action="printSupplier" data-id="${s.id}">PDF</button><button class="mini-btn gray" data-action="csvSupplier" data-id="${s.id}">Excel</button><button class="mini-btn" data-action="editSupplier" data-id="${s.id}">تعديل</button><button class="mini-btn red" data-action="deleteSupplier" data-id="${s.id}">حذف</button></td></tr>`).join(''):`<tr><td colspan="5"><div class="empty">لا يوجد موردين</div></td></tr>`}
   function supplierMovementTypeLabel(m){ if(m.type==='payment') return 'سداد'; if(m.refType==='product') return 'دين من إضافة منتج'; return 'دين عليا'; }
@@ -7542,7 +7625,7 @@ ${pc.showCustomer!==false?`<div>الزبون: ${esc(receiptCustomerName(inv))}</
     const head=['اسم المنتج','الباركود','المخزون الكلي','سعر الجملة','سعر البيع','عدد الأصناف','الوحدة','المورد','التصنيف'];
     const body=rows.map(p=>[p.name,p.barcode,n(productTotalStock(p)),money(p.purchasePrice),money(p.salePrice),productVariants(p).length,p.unitName||'قطعة',coll('suppliers').find(s=>s.id===p.supplierId)?.name||'',p.category||'']);
     const table='<table dir="rtl"><thead><tr>'+head.map(h=>`<th>${esc(h)}</th>`).join('')+'</tr></thead><tbody>'+body.map(r=>'<tr>'+r.map(v=>`<td>${esc(v)}</td>`).join('')+'</tr>').join('')+'</tbody></table>';
-    const html='\ufeff<html><head><meta charset="utf-8"></head><body>'+table+'</body></html>';
+    const html='\ufeff<html dir="rtl"><head><meta charset="utf-8"></head><body>'+table+'</body></html>';
     downloadBlob(html,'products.xls','application/vnd.ms-excel;charset=utf-8'); toast('تم تصدير المنتجات Excel');
   }
   function openInventoryAdjust(){openModal('جرد / تعديل مخزون',`<div class="form-grid">${selectWithSearch('invProduct','المنتج',coll('products'),coll('products')[0]?.id||'')}<div class="field"><label>الكمية الجديدة بالقطع</label><input class="input" type="text" inputmode="decimal" data-number="1" step="0.001" id="invQty"></div><div class="field full"><label>ملاحظات</label><input class="input" id="invNote"></div></div>`,'حفظ الجرد',()=>{const p=coll('products').find(x=>x.id===$('#invProduct').value); if(!p)return false; const old=p.stock; p.stock=n($('#invQty').value); setItem('products',p,`جرد مخزون ${p.name}`); setItem('inventory',{id:uid('stk'),productId:p.id,productName:p.name,oldQty:old,newQty:p.stock,note:$('#invNote').value,date:nowIso()},'تسجيل حركة جرد'); toast('تم تحديث المخزون')})}
@@ -7762,11 +7845,20 @@ ${pc.showCustomer!==false?`<div>الزبون: ${esc(receiptCustomerName(inv))}</
   async function downloadEntityPdf(colName,id){ const d=entityReportData(colName,id); if(!d)return; await exactPreloadHeaderLogo(); const canvas=drawReportCanvas(d.title,d.item.name||'',d.headers,d.rows,d.summary); downloadCanvasPdf(canvas,(d.item.name||id)+'.pdf'); toast('تم تنزيل PDF'); }
   function printEntityReport(colName,id){ downloadEntityPdf(colName,id); }
   function downloadAccountPdf(id){ downloadEntityPdf('accounts',id); }
-  function downloadEntityCSV(colName,id){ const d=entityReportData(colName,id); if(!d)return; const html='\ufeff<html><head><meta charset="utf-8"></head><body><h2>'+esc(d.title)+' - '+esc(d.item.name||'')+'</h2>'+htmlTable(['البند','القيمة'],d.summary)+ '<br>'+htmlTable(d.headers,d.rows)+'</body></html>'; downloadBlob(html,`${d.item.name||id}.xls`,'application/vnd.ms-excel;charset=utf-8'); toast('تم تنزيل ملف Excel'); }
+  function downloadEntityCSV(colName,id){
+    const d=entityReportData(colName,id); if(!d)return;
+    const html='\ufeff<html dir="rtl"><head><meta charset="utf-8"></head><body><h2>'+esc(d.title)+' - '+esc(d.item.name||'')+'</h2>'+htmlTable(['البند','القيمة'],d.summary)+'<br>'+htmlTable(d.headers,d.rows)+'</body></html>';
+    downloadBlob(html,`${d.item.name||id}.xls`,'application/vnd.ms-excel;charset=utf-8'); toast('تم تنزيل ملف Excel');
+  }
   async function downloadEntityImage(colName,id){ const d=entityReportData(colName,id); if(!d)return; await exactPreloadHeaderLogo(); const canvas=drawReportCanvas(d.title,d.item.name||'',d.headers,d.rows,d.summary); const href=URL.createObjectURL(await canvasBlob(canvas,'image/png')); triggerFileDownload(href,(d.item.name||id)+'.png',true); toast('تم تنزيل الصورة'); }
   function financeSummaryRows(m){ return [['عدد الفواتير',m.count],['إجمالي البيع',money(m.sales)],['جملة البيع',money(m.cost)],['ربح البيع',money(m.sales-m.cost)],['المصروفات',money(m.exp)],['صافي الربح',money(m.profit)],['المقبوض',money(m.paid)],['ديون الفترة',money(m.debts)]]; }
   function financeInvoiceRows(m){ return m.invoices.map(inv=>[inv.number,new Date(inv.date).toLocaleString('ar'),inv.customerName||'نقدي',money(inv.total),money(invoiceCost(inv)),money(n(inv.total)-invoiceCost(inv)),money(inv.paid),money(inv.debt)]); }
-  function exportFinanceExcel(){ const m=reportMetrics(); const expRows=m.expenses.map(x=>[new Date(x.date).toLocaleString('ar'),x.name,money(x.amount),coll('accounts').find(a=>a.id===x.accountId)?.name||'']); const html='\ufeff<html><head><meta charset="utf-8"><style>body{font-family:Cairo,Tahoma,Arial;direction:rtl;padding:18px}h2,h3{color:#174EA6}table{border-collapse:collapse;width:100%;margin:10px 0}th,td{border:1px solid #d1d5db;padding:8px;text-align:right}th{background:#eff6ff}</style></head><body><h2>تقرير المالية</h2>'+htmlTable(['البند','القيمة'],financeSummaryRows(m))+'<h3>الفواتير</h3>'+htmlTable(['الفاتورة','التاريخ','العميل','سعر البيع','سعر الجملة','ربح البيع','المدفوع','الدين'],financeInvoiceRows(m))+'<h3>المصروفات</h3>'+htmlTable(['التاريخ','المصروف','المبلغ','الحساب'],expRows)+'</body></html>'; downloadBlob(html,'finance-report.xls','application/vnd.ms-excel;charset=utf-8'); toast('تم تنزيل تقرير Excel'); }
+  function exportFinanceExcel(){
+    const m=reportMetrics();
+    const expRows=m.expenses.map(x=>[new Date(x.date).toLocaleString('ar'),x.name,money(x.amount),coll('accounts').find(a=>a.id===x.accountId)?.name||'']);
+    const html='\ufeff<html dir="rtl"><head><meta charset="utf-8"><style>body{font-family:Cairo,Tahoma,Arial;direction:rtl;padding:18px}h2,h3{color:#174EA6}table{border-collapse:collapse;width:100%;margin:10px 0}th,td{border:1px solid #d1d5db;padding:8px;text-align:right}th{background:#eff6ff}</style></head><body><h2>تقرير المالية</h2>'+htmlTable(['البند','القيمة'],financeSummaryRows(m))+'<h3>الفواتير</h3>'+htmlTable(['الفاتورة','التاريخ','العميل','سعر البيع','سعر الجملة','ربح البيع','المدفوع','الدين'],financeInvoiceRows(m))+'<h3>المصروفات</h3>'+htmlTable(['التاريخ','المصروف','المبلغ','الحساب'],expRows)+'</body></html>';
+    downloadBlob(html,'finance-report.xls','application/vnd.ms-excel;charset=utf-8'); toast('تم تنزيل تقرير Excel');
+  }
   async function exportFinancePdf(){ const m=reportMetrics(); await exactPreloadHeaderLogo(); const canvas=drawReportCanvas('تقرير المالية','حسب الفلترة الحالية',['الفاتورة','التاريخ','العميل','البيع','الجملة','الربح','مدفوع','دين'],financeInvoiceRows(m),financeSummaryRows(m)); downloadCanvasPdf(canvas,'finance-report.pdf'); toast('تم تنزيل تقرير PDF'); }
   async function exportFinanceImage(){ const m=reportMetrics(); await exactPreloadHeaderLogo(); const canvas=drawReportCanvas('تقرير المالية','حسب الفلترة الحالية',['الفاتورة','التاريخ','العميل','البيع','الجملة','الربح','مدفوع','دين'],financeInvoiceRows(m),financeSummaryRows(m)); const href=URL.createObjectURL(await canvasBlob(canvas,'image/png')); triggerFileDownload(href,'finance-report.png',true); toast('تم تنزيل صورة التقرير'); }
   function applyStoreName(){ const name=settings().storeName || 'كاش توب'; const s=$('#sideStoreName'); if(s) s.textContent=name; document.querySelector('meta[name="apple-mobile-web-app-title"]')?.setAttribute('content', name); }
@@ -8225,7 +8317,7 @@ window.App = App;
 (function(){
   const PAGE_CACHE='cashtop-local-pages-v157-permanent';
   const ASSET_CACHE='cashtop-local-assets-v157-permanent';
-  const extraPages=["./", "DATABASE_STRUCTURE.md", "README-MONGODB-DIRECT.txt", "README.md", "READ_ME_ADMIN_COMPANY_KEYS.txt", "READ_ME_AUTO_LOGIN_KEY_REFRESH.txt", "READ_ME_CASHIER_CUSTOMER_SEARCH.txt", "READ_ME_CLEAN_RECEIPT_SILENT_SYNC.txt", "READ_ME_EMPTY_SEARCH_DROPDOWNS.txt", "READ_ME_FAST_SYNC_QR_CAMERA.txt", "READ_ME_FULL_OFFLINE_LOCAL_FIRST.txt", "READ_ME_ISOLATED_COMPANY_LOCAL_STORE.txt", "READ_ME_KEYBOARD_SAFE_SYNC.txt", "READ_ME_LEGACY_DATA_MERGE_LOGIN_FIX.txt", "READ_ME_LOCAL_CACHE_FAST_V169.txt", "READ_ME_LOCAL_FIRST_DELETE_EDIT.txt", "READ_ME_OFFLINE_DELETE_CLEAR_COMPANY.txt", "READ_ME_OFFLINE_FIRST_SYNC.txt", "READ_ME_REPRESENTATIVES_SYSTEM.txt", "READ_ME_RETENTION_45_DAYS_SYNC_FIX.txt", "READ_ME_ROOT_ACCOUNTING_REPORTS_UNITS.txt", "READ_ME_STABLE_AUTO_LOGIN_NO_KEY_CHECK.txt", "READ_ME_SYNC_FIX.txt", "READ_ME_UNIT_STOCK_BIGCODE_MOBILE.txt", "READ_ME_V171_FIXES.txt", "READ_ME_V172_CACHE_FIRST_IMMEDIATE.txt", "READ_ME_V172_CUSTOMER_CREDIT_SYNC_FIX.txt", "READ_ME_V172_FIXES.txt", "READ_ME_V172_SETTINGS_SYNC_CACHE_FIX.txt", "READ_ME_V174_REP_LOGIN_CASHIER_COMMISSION.txt", "READ_ME_V175_REPRESENTATIVES_FINAL_FIX.txt", "READ_ME_V177_CLEAN_FAST_CACHE_FIX.txt", "READ_ME_V178_HARD_DELETE_CLEAN_CACHE.txt", "READ_ME_V179_PURCHASE_ENTRY_FIX.txt", "accounts.html", "admin.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "customers.html", "dashboard.html", "database.rules.json", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "local-bridge.js", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "offline-update.js", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "representative-dashboard.html", "representatives.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
+  const extraPages=["./", "DATABASE_STRUCTURE.md", "README.md", "accounts.html", "admin.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "customers.html", "dashboard.html", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "representative-dashboard.html", "representatives.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
   function sameOriginUrl(href){try{const u=new URL(href,location.href); return u.origin===location.origin?u:null}catch(e){return null}}
   function internalUrls(){
     const set=new Set(extraPages.map(x=>new URL(x,location.href).href));
@@ -8391,8 +8483,10 @@ function toggleSettings(tr){
  const rawType=tr.querySelector('.plType').value, unit=purchaseCustomUnit(rawType), type=unit?'unit':rawType, isNew=tr.querySelector('.plKnownMode').value==='new';
  if(unit){ tr.querySelector('.plUnitName').value=unit.unitName||''; tr.querySelector('.plPerUnit').value=n(unit.piecesPerUnit)||1; }
  tr.classList.toggle('purchase-mode-unit', type==='unit'); tr.classList.toggle('purchase-mode-piece', type==='piece');
- tr.querySelectorAll('.unitSetting').forEach(e=>e.style.display=(isNew&&type==='unit')?'block':'none');
- tr.querySelectorAll('.pieceSetting').forEach(e=>e.style.display=(isNew&&type==='piece')?'block':'none');
+ const settings=tr.querySelector('.newProductSettings');
+ if(settings) settings.style.display=(isNew || type==='unit')?'block':'none';
+ tr.querySelectorAll('.unitSetting').forEach(e=>e.style.display=(type==='unit')?'block':'none');
+ tr.querySelectorAll('.pieceSetting').forEach(e=>e.style.display=(isNew || type==='unit')?'block':'none');
  const per=tr.querySelector('.plPerUnit'), perWrap=tr.querySelector('.perUnitWrap');
  if(perWrap) perWrap.style.display=(type==='unit')?'block':'none';
  per.disabled=type==='piece' && !isNew;
@@ -8403,13 +8497,16 @@ function rowData(tr){
  const rawType=tr.querySelector('.plType').value, customUnit=purchaseCustomUnit(rawType), type=customUnit?'unit':rawType, qty=n(tr.querySelector('.plQty').value), per=type==='unit'?(customUnit?(n(customUnit.piecesPerUnit)||1):(n(tr.querySelector('.plPerUnit').value)||1)):1;
  const purchaseInput=n(tr.querySelector('.plCost').value), saleInput=n(tr.querySelector('.plSale').value);
  const stockQty=type==='unit'?qty*per:qty, pieceCost=type==='unit'?purchaseInput/per:purchaseInput, pieceSale=type==='unit'?(saleInput? saleInput/per:0):saleInput, total=qty*purchaseInput;
- let pieceBarcode=tr.querySelector('.plPieceBarcode')?.value.trim(), unitBarcode=tr.querySelector('.plUnitBarcode')?.value.trim();
- if(!pieceBarcode && !unitBarcode && !tr.querySelector('.plProductId').value){ pieceBarcode=purchaseAutoBarcode('24'); unitBarcode=pieceBarcode; }
+ const rawSearchBarcode=tr.querySelector('.plBarcode').value.trim();
+ const rawPieceBarcode=tr.querySelector('.plPieceBarcode')?.value.trim()||'';
+ const rawUnitBarcode=tr.querySelector('.plUnitBarcode')?.value.trim()||'';
+ let pieceBarcode=rawPieceBarcode, unitBarcode=rawUnitBarcode;
+ if(!pieceBarcode && !unitBarcode && !tr.querySelector('.plProductId').value && (rawSearchBarcode || tr.querySelector('.plProductName')?.value.trim())){ pieceBarcode=purchaseAutoBarcode('24'); unitBarcode=pieceBarcode; }
  if(type==='unit'){ if(!unitBarcode) unitBarcode=purchaseAutoBarcode('25'); if(!pieceBarcode) pieceBarcode=purchaseAutoBarcode('26'); }
- else { if(!pieceBarcode) pieceBarcode=unitBarcode||purchaseAutoBarcode('24'); if(!unitBarcode) unitBarcode=pieceBarcode; }
- return {tr,type,qty,per,purchaseInput,saleInput,stockQty,pieceCost,pieceSale,total,barcode:tr.querySelector('.plBarcode').value.trim()||pieceBarcode||unitBarcode,productId:tr.querySelector('.plProductId').value,category:tr.querySelector('.plCategory').value.trim(),expiryDate:tr.querySelector('.plExpiry').value,productName:tr.querySelector('.plProductName')?.value.trim(),pieceBarcode,unitBarcode,unitName:(customUnit?.unitName||tr.querySelector('.plUnitName')?.value.trim()),pieceName:(customUnit?.pieceName||'قطعة'),customUnitId:(customUnit?.id||''),sellByPiece:tr.querySelector('.plSellByPiece')?.value!=='no'};
+ else { if(!pieceBarcode && (rawSearchBarcode || tr.querySelector('.plProductName')?.value.trim() || tr.querySelector('.plProductId').value)) pieceBarcode=unitBarcode||purchaseAutoBarcode('24'); if(!unitBarcode) unitBarcode=pieceBarcode; }
+ return {tr,type,qty,per,purchaseInput,saleInput,stockQty,pieceCost,pieceSale,total,rawSearchBarcode,rawPieceBarcode,rawUnitBarcode,barcode:rawSearchBarcode||pieceBarcode||unitBarcode,productId:tr.querySelector('.plProductId').value,category:tr.querySelector('.plCategory').value.trim(),expiryDate:tr.querySelector('.plExpiry').value,productName:tr.querySelector('.plProductName')?.value.trim(),pieceBarcode,unitBarcode,unitName:(customUnit?.unitName||tr.querySelector('.plUnitName')?.value.trim()),pieceName:(customUnit?.pieceName||'قطعة'),customUnitId:(customUnit?.id||''),sellByPiece:tr.querySelector('.plSellByPiece')?.value!=='no'};
 }
-function rows(){return [...E('purchaseLinesBody').querySelectorAll('tr')].map(rowData).filter(x=>(x.barcode||x.productName||x.productId)&&x.qty>0&&x.purchaseInput>=0)}
+function rows(){return [...E('purchaseLinesBody').querySelectorAll('tr')].map(rowData).filter(x=>(x.productId||x.productName||x.rawSearchBarcode||x.rawPieceBarcode||x.rawUnitBarcode)&&x.qty>0&&x.purchaseInput>0)}
 function calc(){let total=0; [...E('purchaseLinesBody').querySelectorAll('tr')].forEach(tr=>{toggleSettings(tr);const d=rowData(tr); total+=d.total; tr.querySelector('.plTotal').textContent=money(d.total)}); E('piTotal').textContent=money(total); E('piPaidView').textContent=money(n(E('piPaid').value)); E('piRemaining').textContent=money(Math.max(0,total-n(E('piPaid').value)))}
 function autoPurchaseSaleFromCost(inp){
  const tr=inp.closest('tr'), sale=tr?.querySelector('.plSale'); if(!sale || sale.dataset.manual==='1') return;
@@ -8461,7 +8558,7 @@ function suggest(inp){
  const found=coll('products').filter(p=>[p.name,p.barcode,p.pieceBarcode,p.unitBarcode,p.category,(p.alias||''),(p.code||'')].join(' ').toLowerCase().includes(q)).slice(0,12);
  panel.innerHTML=found.map(p=>`<button type="button" class="suggest-item" data-pid="${esc(p.id)}"><span class="suggest-main"><b>${esc(p.name)}</b><small>${esc(p.barcode||p.pieceBarcode||p.unitBarcode||'بدون باركود')} — ${n(p.piecesPerUnit)>1?'يدعم الوحدة':'قطعة فقط'}</small></span></button>`).join('')||'<div class="empty">منتج جديد: أكمل إعدادات القطعة أو الوحدة</div>'; panel.classList.add('show');
 }
-function fillFromProduct(tr,p){ if(!p)return; configureTypeOptions(tr,p); tr.querySelector('.plProductId').value=p.id; tr.querySelector('.plBarcode').value=p.unitBarcode||p.barcode||p.pieceBarcode||p.name; tr.querySelector('.plCategory').value=p.category||''; const sel=String(tr.querySelector('.plType').value); const unitSel=sel==='unit'||sel.startsWith('custom:'); const per=n(tr.querySelector('.plPerUnit').value)||n(p.piecesPerUnit)||1; if(unitSel){tr.querySelector('.plCost').value=n(p.unitBuy)||n(p.purchasePrice)*per; tr.querySelector('.plSale').value=n(p.unitSale)||n(p.salePrice)*per;} else {tr.querySelector('.plCost').value=n(p.purchasePrice); tr.querySelector('.plSale').value=n(p.salePrice);} if(p.expiryDate) tr.querySelector('.plExpiry').value=p.expiryDate; toast('تم تعبئة إعدادات المنتج حسب نوعه'); calc(); }
+function fillFromProduct(tr,p){ if(!p)return; configureTypeOptions(tr,p); tr.querySelector('.plProductId').value=p.id; tr.querySelector('.plBarcode').value=p.unitBarcode||p.barcode||p.pieceBarcode||p.name; tr.querySelector('.plPieceBarcode').value=p.pieceBarcode||p.barcode||''; tr.querySelector('.plUnitBarcode').value=p.unitBarcode||''; tr.querySelector('.plUnitName').value=p.unitName||tr.querySelector('.plUnitName').value||''; tr.querySelector('.plCategory').value=p.category||''; const sel=String(tr.querySelector('.plType').value); const unitSel=sel==='unit'||sel.startsWith('custom:'); const per=n(tr.querySelector('.plPerUnit').value)||n(p.piecesPerUnit)||1; if(unitSel){tr.querySelector('.plCost').value=n(p.unitBuy)||n(p.purchasePrice)*per; tr.querySelector('.plSale').value=n(p.unitSale)||n(p.salePrice)*per;} else {tr.querySelector('.plCost').value=n(p.purchasePrice); tr.querySelector('.plSale').value=n(p.salePrice);} if(p.expiryDate) tr.querySelector('.plExpiry').value=p.expiryDate; toast('تم تعبئة إعدادات المنتج حسب نوعه'); calc(); }
 function autoFill(inp){const val=inp.value.trim(); if(!val)return; const hit=findBarcode(val); const p=hit?.product || coll('products').find(x=>[x.name,x.barcode,x.pieceBarcode,x.unitBarcode].some(v=>String(v||'').toLowerCase()===val.toLowerCase())); if(p) fillFromProduct(inp.closest('tr'),p); else {const tr=inp.closest('tr'); configureTypeOptions(tr,null); const name=tr?.querySelector('.plProductName'); if(name && !name.value.trim()) name.value=val; calc();}}
 function accountMove(accId, amount, note, refId){const acc=coll('accounts').find(a=>String(a.id)===String(accId)); if(!acc)return; acc.balance=n(acc.balance)+n(amount); acc.movements=acc.movements||[]; acc.movements.unshift({id:uid('mov'),kind:'purchase_payment',amount:n(amount),note,date:nowIso(),refType:'purchaseInvoice',refId}); setItem('accounts',acc,'حركة حساب مشتريات')}
 function supplierPurchase(sid,total,paid,number,refId){const s=coll('suppliers').find(x=>String(x.id)===String(sid)); if(!s)return; const remaining=Math.max(0,total-paid); s.debt=n(s.debt)+remaining; s.movements=s.movements||[]; s.movements.unshift({id:uid('sm'),type:'purchase',amount:n(total),note:`فاتورة مشتريات ${number}`,date:nowIso(),refType:'purchaseInvoice',refId}); if(paid>0)s.movements.unshift({id:uid('sm'),type:'payment',amount:n(paid),note:`دفعة فاتورة مشتريات ${number}`,date:nowIso(),refType:'purchaseInvoice',refId}); setItem('suppliers',s,'تحديث مورد من فاتورة مشتريات')}
@@ -8481,16 +8578,17 @@ function upsertProduct(line,invoiceId,supplierId){
  return item;
 }
 function saveInvoice(){
- const lines=rows(); if(!lines.length){toast('أضف منتج واحد على الأقل','bad');return}
+ const lines=rows(); if(!lines.length){toast('أضف منتج واحد على الأقل بسعر شراء أكبر من صفر','bad');return}
  const supplierId=E('piSupplier').value, accountId=E('piAccount').value, id=uid('pinv'), number=E('piNumber').value||invoiceNo();
- const total=lines.reduce((a,x)=>a+n(x.total),0), paid=Math.min(total,n(E('piPaid').value)), remaining=Math.max(0,total-paid);
+ const total=lines.reduce((a,x)=>a+n(x.total),0); if(total<=0){toast('لا يمكن حفظ فاتورة مشتريات قيمتها صفر','bad');return}
+ const paid=Math.min(total,n(E('piPaid').value)), remaining=Math.max(0,total-paid);
  const items=lines.map(l=>upsertProduct(l,id,supplierId));
  const inv={id,number,supplierId,supplierName:coll('suppliers').find(s=>s.id===supplierId)?.name||'',accountId,date:E('piDate').value||today(),items,total,paid,remaining,status:remaining>0?(paid>0?'partial':'unpaid'):'paid',notes:E('piNotes').value,createdAt:Date.now(),updatedAt:Date.now()};
  setItem('purchaseInvoices',inv,'حفظ فاتورة مشتريات كاملة');
  if(paid>0) accountMove(accountId,-paid,`دفع فاتورة مشتريات ${number}`,id);
  if(supplierId) supplierPurchase(supplierId,total,paid,number,id);
  toast('تم حفظ فاتورة المشتريات وتحديث المخزون والمورد');
- E('piNumber').value=invoiceNo(); E('purchaseLinesBody').innerHTML=''; E('piPaid').value='0'; E('piNotes').value=''; addLine(); calc();
+ E('purchaseLinesBody').innerHTML=''; E('piPaid').value='0'; E('piNotes').value=''; addLine(); E('piNumber').value=String(Number(number.replace(/\D+/g,'')||0)+1 || invoiceNo()); calc();
 }
 window.addEventListener('DOMContentLoaded',()=>{setTimeout(()=>{try{bindPurchaseDelegatedEvents(); renderSelects(); refreshCategoryDatalist(); if(!document.querySelector('#purchaseLinesBody tr')) addLine(); E('piPaid')?.addEventListener('input',calc); E('addPurchaseLineBtn')?.addEventListener('click',e=>{e.preventDefault(); addLine();}); E('savePurchaseInvoiceBtn')?.addEventListener('click',e=>{e.preventDefault(); saveInvoice();}); calc();}catch(err){console.error(err); toast('تعذر تهيئة فاتورة المشتريات: '+(err?.message||err),'bad');}},250)});
 })();

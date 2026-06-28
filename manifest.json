@@ -1,15 +1,10 @@
 {
   "name": "كاش توب",
   "short_name": "كاش توب",
-  "description": "تطبيق كاشير ومخزون كاش توب مع مزامنة Firebase.",
-  "lang": "ar",
-  "dir": "rtl",
   "start_url": "index.html",
-  "scope": "./",
   "display": "standalone",
-  "orientation": "portrait-primary",
-  "background_color": "#eff6ff",
-  "theme_color": "#2563eb",
+  "dir": "rtl",
+  "lang": "ar",
   "icons": [
     {
       "src": "icon-192.png",
@@ -20,28 +15,6 @@
       "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "الكاشير",
-      "url": "cashier.html",
-      "icons": [
-        {
-          "src": "icon-192.png",
-          "sizes": "192x192"
-        }
-      ]
-    },
-    {
-      "name": "المنتجات",
-      "url": "products.html",
-      "icons": [
-        {
-          "src": "icon-192.png",
-          "sizes": "192x192"
-        }
-      ]
     }
   ]
 }

@@ -2439,7 +2439,7 @@ body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
 
 <script id="v172-cache-first-immediate-script">
 (function(){
-  const CACHE_URLS=["./", "DATABASE_STRUCTURE.md", "README-MONGODB-DIRECT.txt", "README.md", "READ_ME_ADMIN_COMPANY_KEYS.txt", "READ_ME_AUTO_LOGIN_KEY_REFRESH.txt", "READ_ME_CASHIER_CUSTOMER_SEARCH.txt", "READ_ME_CLEAN_RECEIPT_SILENT_SYNC.txt", "READ_ME_EMPTY_SEARCH_DROPDOWNS.txt", "READ_ME_FAST_SYNC_QR_CAMERA.txt", "READ_ME_FULL_OFFLINE_LOCAL_FIRST.txt", "READ_ME_ISOLATED_COMPANY_LOCAL_STORE.txt", "READ_ME_KEYBOARD_SAFE_SYNC.txt", "READ_ME_LEGACY_DATA_MERGE_LOGIN_FIX.txt", "READ_ME_LOCAL_CACHE_FAST_V169.txt", "READ_ME_LOCAL_FIRST_DELETE_EDIT.txt", "READ_ME_OFFLINE_DELETE_CLEAR_COMPANY.txt", "READ_ME_OFFLINE_FIRST_SYNC.txt", "READ_ME_REPRESENTATIVES_SYSTEM.txt", "READ_ME_RETENTION_45_DAYS_SYNC_FIX.txt", "READ_ME_ROOT_ACCOUNTING_REPORTS_UNITS.txt", "READ_ME_STABLE_AUTO_LOGIN_NO_KEY_CHECK.txt", "READ_ME_SYNC_FIX.txt", "READ_ME_UNIT_STOCK_BIGCODE_MOBILE.txt", "READ_ME_V171_FIXES.txt", "READ_ME_V172_CACHE_FIRST_IMMEDIATE.txt", "READ_ME_V172_CUSTOMER_CREDIT_SYNC_FIX.txt", "READ_ME_V172_FIXES.txt", "READ_ME_V172_SETTINGS_SYNC_CACHE_FIX.txt", "READ_ME_V174_REP_LOGIN_CASHIER_COMMISSION.txt", "READ_ME_V175_REPRESENTATIVES_FINAL_FIX.txt", "READ_ME_V177_CLEAN_FAST_CACHE_FIX.txt", "READ_ME_V178_HARD_DELETE_CLEAN_CACHE.txt", "READ_ME_V179_PURCHASE_ENTRY_FIX.txt", "accounts.html", "admin.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "customers.html", "dashboard.html", "database.rules.json", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "local-bridge.js", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "offline-update.js", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "representative-dashboard.html", "representatives.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
+  const CACHE_URLS=["./", "DATABASE_STRUCTURE.md", "README.md", "accounts.html", "admin.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "customers.html", "dashboard.html", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "representative-dashboard.html", "representatives.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
   function pageName(){return location.pathname.split('/').pop() || 'index.html'}
   function cacheUrls(){
     const set=new Set(CACHE_URLS);
@@ -2460,7 +2460,7 @@ body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
   async function saveCurrentPageToCache(){
     try{
       if(!('caches' in window)) return;
-      const cache=await caches.open('cashtop-pages-v172-cache-first-immediate-fix');
+      const cache=await caches.open('cashtop-pages-v183-dashboard-chart-cache-first-fast');
       const req=new Request(location.href,{cache:'reload'});
       const res=await fetch(req).catch(()=>null);
       if(res&&res.ok){
@@ -2536,7 +2536,7 @@ function readLocalCompanyStore(companyKey){
 }
 function rawRtdbUrl(base,path){return 'https://cash-top-api-2026.vercel.app/api/rtdb'+'?path='+encodeURIComponent(String(path||'').split('/').map(x=>safePathPart(x)).join('/'))}
 function rtdbUrl(path){return rawRtdbUrl('https://cash-top-api-2026.vercel.app/api/rtdb',path)}
-async function fetchTimeout(url, opts={}, ms=8000){const ctrl=new AbortController(); const timer=setTimeout(()=>ctrl.abort(),ms); try{return await fetch(url,{...opts,signal:ctrl.signal,cache:'no-store',mode:'cors'})} finally{clearTimeout(timer)}}
+async function fetchTimeout(url, opts={}, ms=8000){if(window.__loginCompanyKey && localStorage.getItem('oscarOfflineLock_'+window.__loginCompanyKey)==='1' && /api\/rtdb|vercel\.app\/api\/rtdb|firebaseio\.com/i.test(String(url||''))) throw new Error('OFFLINE_MODE_LOCAL_ONLY'); const ctrl=new AbortController(); const timer=setTimeout(()=>ctrl.abort(),ms); try{return await fetch(url,{...opts,signal:ctrl.signal,cache:'no-store',mode:'cors'})} finally{clearTimeout(timer)}}
 async function pickDatabaseURL(companyKey){
   if(!navigator.onLine) return false;
   try{
@@ -2613,7 +2613,7 @@ function hasUsableSecret(record){
   return !!(record && (record.passwordHash || record.password || record.pass || record.adminPassword || record.plainPassword));
 }
 async function upgradePlainSecretIfNeeded(companyKey, admin, pass){
-  if(!admin || (admin.passwordHash && admin.passwordSalt) || !navigator.onLine) return admin;
+  if(!admin || (admin.passwordHash && admin.passwordSalt) || !navigator.onLine || localStorage.getItem('oscarOfflineLock_'+companyKey)==='1') return admin;
   if(!(await verifySecret(admin, pass))) return admin;
   const salt=admin.passwordSalt || (companyKey+'_admin_'+Date.now());
   const upgraded={...admin,passwordSalt:salt,passwordHash:await sha256(pass+salt),updatedAt:Date.now()};
@@ -2631,6 +2631,11 @@ const LOGIN_PLAN_DEFS={
   diamond:{id:'diamond',name:'الخطة الماسية',price:'',daily:{invoices:Infinity,customers:Infinity,expenses:Infinity},fixed:{products:Infinity,suppliers:Infinity,accounts:Infinity,employees:Infinity}}
 };
 function loginPlanObject(id){return LOGIN_PLAN_DEFS[id]||LOGIN_PLAN_DEFS.diamond;}
+
+function loginOfflineAfterExpiryAllowed(c){return !!(c && (c.offlineAfterExpiry===true || c.allowOfflineAfterExpiry===true || String(c.offlineAfterExpiry)==='true' || String(c.allowOfflineAfterExpiry)==='true' || (String(c.durationUnit)==='year' && Number(c.durationCount||0)>=1)));}
+function loginIsOfflinePlan(c){return !!(c && (c.offlinePlan===true || c.syncMode==='offline' || c.planMode==='offline' || String(c.syncMode).toLowerCase()==='offline'));}
+function setOfflineLock(companyKey,on,reason){try{ if(on){localStorage.setItem('oscarOfflineLock_'+companyKey,'1'); localStorage.setItem('oscarOfflineReason_'+companyKey,reason||'offline');} else {localStorage.removeItem('oscarOfflineLock_'+companyKey); localStorage.removeItem('oscarOfflineReason_'+companyKey);} }catch(e){}}
+
 async function fetchCloudCompany(companyKey){
   if(!navigator.onLine) return {status:'offline',company:null};
   const readErr=Symbol('readErr');
@@ -2643,7 +2648,7 @@ async function fetchCloudCompany(companyKey){
     if(!ok) return {status:'db-error',company:null};
 
     const base=`companies/${safePathPart(companyKey)}`;
-    const [adminRes, employeesRes, representativesRes, activeRes, subscriptionEndRes, expiresAtRes, durationUnitRes, durationCountRes, planIdRes, planRes, deletedAtRes, companyNameRes, storeNameRes, updatedAtRes, createdAtRes, keyProbeRes] = await Promise.all([
+    const [adminRes, employeesRes, representativesRes, activeRes, subscriptionEndRes, expiresAtRes, durationUnitRes, durationCountRes, planIdRes, planRes, deletedAtRes, companyNameRes, storeNameRes, updatedAtRes, createdAtRes, syncModeRes, offlinePlanRes, offlineAfterExpiryRes, allowOfflineAfterExpiryRes, keyProbeRes] = await Promise.all([
       safeRead(`${base}/admin`,4500),
       safeRead(`${base}/employees`,4500),
       safeRead(`${base}/representatives`,4500),
@@ -2659,10 +2664,14 @@ async function fetchCloudCompany(companyKey){
       safeRead(`${base}/storeName`,3500),
       safeRead(`${base}/updatedAt`,3500),
       safeRead(`${base}/createdAt`,3500),
+      safeRead(`${base}/syncMode`,3500),
+      safeRead(`${base}/offlinePlan`,3500),
+      safeRead(`${base}/offlineAfterExpiry`,3500),
+      safeRead(`${base}/allowOfflineAfterExpiry`,3500),
       safeRead(`${base}/companyKey`,3500)
     ]);
 
-    const anyOk=[adminRes,employeesRes,representativesRes,activeRes,subscriptionEndRes,expiresAtRes,durationUnitRes,durationCountRes,planIdRes,planRes,deletedAtRes,companyNameRes,storeNameRes,updatedAtRes,createdAtRes,keyProbeRes].some(x=>x.ok);
+    const anyOk=[adminRes,employeesRes,representativesRes,activeRes,subscriptionEndRes,expiresAtRes,durationUnitRes,durationCountRes,planIdRes,planRes,deletedAtRes,companyNameRes,storeNameRes,updatedAtRes,createdAtRes,syncModeRes,offlinePlanRes,offlineAfterExpiryRes,allowOfflineAfterExpiryRes,keyProbeRes].some(x=>x.ok);
     if(!anyOk) return {status:'error',company:null};
 
     const adminRaw=adminRes.ok?adminRes.value:null;
@@ -2682,6 +2691,10 @@ async function fetchCloudCompany(companyKey){
     const storeName=storeNameRes.ok?(storeNameRes.value||''):'';
     const updatedAt=updatedAtRes.ok?(updatedAtRes.value||0):0;
     const createdAt=createdAtRes.ok?(createdAtRes.value||0):0;
+    const syncMode=syncModeRes.ok?(syncModeRes.value||'online'):'online';
+    const offlinePlan=offlinePlanRes.ok?offlinePlanRes.value:false;
+    const offlineAfterExpiry=offlineAfterExpiryRes.ok?offlineAfterExpiryRes.value:false;
+    const allowOfflineAfterExpiry=allowOfflineAfterExpiryRes.ok?allowOfflineAfterExpiryRes.value:offlineAfterExpiry;
     const keyProbe=keyProbeRes.ok?keyProbeRes.value:undefined;
 
     const remoteMissing=keyProbeRes.ok && keyProbe===null && adminRes.ok && adminRaw===null && employeesRes.ok && employeesRaw===null && representativesRes.ok && representativesRaw===null && (!branchRepresentativesRaw || !Object.keys(branchRepresentativesRaw||{}).length) && activeRes.ok && (active===null || active===undefined) && subscriptionEndRes.ok && (subscriptionEnd===null || subscriptionEnd===undefined) && !companyName && !storeName;
@@ -2694,29 +2707,37 @@ async function fetchCloudCompany(companyKey){
     const hasIdentity=!!(companyName || storeName || updatedAt || createdAt || hasLoginData || active!==undefined || subscriptionEnd || Number(expiresAt||0)>0);
     if(!hasIdentity || !hasLoginData) return {status:'error',company:null};
 
-    return {status:'ok',company:{companyKey,active:active!==false,subscriptionEnd:subscriptionEnd||'2099-12-31',expiresAt:Number(expiresAt||0),durationUnit:durationUnit||'',durationCount:Number(durationCount||0),planId,plan,deletedAt:Number(deletedAt||0),admin:adminVal,employees,representatives,_fromCloud:true,companyName:companyName||storeName||'',storeName:storeName||companyName||'',updatedAt,createdAt}};
+    return {status:'ok',company:{companyKey,active:active!==false,subscriptionEnd:subscriptionEnd||'2099-12-31',expiresAt:Number(expiresAt||0),durationUnit:durationUnit||'',durationCount:Number(durationCount||0),planId,plan,syncMode,offlinePlan:offlinePlan===true || String(offlinePlan)==='true' || syncMode==='offline',offlineAfterExpiry:offlineAfterExpiry===true || String(offlineAfterExpiry)==='true' || allowOfflineAfterExpiry===true || String(allowOfflineAfterExpiry)==='true',allowOfflineAfterExpiry:allowOfflineAfterExpiry===true || String(allowOfflineAfterExpiry)==='true' || offlineAfterExpiry===true || String(offlineAfterExpiry)==='true',deletedAt:Number(deletedAt||0),admin:adminVal,employees,representatives,_fromCloud:true,companyName:companyName||storeName||'',storeName:storeName||companyName||'',updatedAt,createdAt}};
   }catch(e){console.warn('cloud login lightweight read failed',e); return {status:'error',company:null};}
 }
 async function cacheCloudCompany(company){
   if(!company) return;
-  if(company.employees?.length) localStorage.setItem('oscarEmployees_'+company.companyKey,JSON.stringify(company.employees));
-  if(company.representatives?.length) localStorage.setItem('oscarRepresentatives_'+company.companyKey,JSON.stringify(company.representatives));
-  localStorage.setItem('oscarCompany_'+company.companyKey,JSON.stringify({companyKey:company.companyKey,companyName:company.companyName||company.storeName||'',storeName:company.storeName||company.companyName||'',active:company.active,subscriptionEnd:company.subscriptionEnd,expiresAt:Number(company.expiresAt||0),durationUnit:company.durationUnit||'',durationCount:Number(company.durationCount||0),deletedAt:Number(company.deletedAt||0),admin:company.admin,_fromCloud:true,updatedAt:Date.now()}));
+  let emps=Array.isArray(company.employees)?company.employees.slice():[];
+  if(company.representatives?.length){
+    const existing=new Set(emps.map(e=>String(e.id||'')));
+    company.representatives.forEach(r=>{const id=String(r.id||r.representativeId||''); if(id&&!existing.has(id)){emps.push({...r,id,employeeId:id,representativeId:id,role:'representative',employeeType:'representative',isRepresentative:true,permissions:{viewSales:true,addSales:true,print:true}}); existing.add(id);}});
+    localStorage.setItem('oscarRepresentatives_'+company.companyKey,JSON.stringify(company.representatives));
+  }
+  if(emps.length) localStorage.setItem('oscarEmployees_'+company.companyKey,JSON.stringify(emps));
+  localStorage.setItem('oscarCompany_'+company.companyKey,JSON.stringify({companyKey:company.companyKey,companyName:company.companyName||company.storeName||'',storeName:company.storeName||company.companyName||'',active:company.active,subscriptionEnd:company.subscriptionEnd,expiresAt:Number(company.expiresAt||0),durationUnit:company.durationUnit||'',durationCount:Number(company.durationCount||0),deletedAt:Number(company.deletedAt||0),syncMode:company.syncMode||'online',offlinePlan:!!company.offlinePlan,offlineAfterExpiry:!!company.offlineAfterExpiry,allowOfflineAfterExpiry:!!company.allowOfflineAfterExpiry,admin:company.admin,_fromCloud:true,updatedAt:Date.now()}));
 }
 async function login(e){
   e.preventDefault();
   const companyKey=$('#companyKey').value.trim();
+  window.__loginCompanyKey=companyKey;
   const username=$('#username').value.trim();
   const pass=$('#password').value;
   if(!companyKey) return toast('أدخل مفتاح الشركة','bad');
   if(!username||!pass) return toast('أدخل اسم المستخدم وكلمة المرور','bad');
   const btn=$('#loginBtn'); btn.disabled=true; btn.textContent='جاري الدخول...';
   try{
-    const cloudResult=await fetchCloudCompany(companyKey);
+    const cachedBeforeCloud=await getLocalCompany(companyKey);
+    const skipCloudForOffline=cachedBeforeCloud && (loginIsOfflinePlan(cachedBeforeCloud) || localStorage.getItem('oscarOfflineLock_'+companyKey)==='1');
+    const cloudResult=skipCloudForOffline ? {status:'local-offline',company:cachedBeforeCloud} : await fetchCloudCompany(companyKey);
     let company=null;
-    if(cloudResult.status==='ok'){
+    if(cloudResult.status==='ok' || cloudResult.status==='local-offline'){
       company=cloudResult.company;
-      await cacheCloudCompany(company);
+      if(cloudResult.status==='ok') await cacheCloudCompany(company);
     }else if(navigator.onLine && cloudResult.status==='missing'){
       toast('مفتاح الشركة غير موجود أو تم حذفه','bad');
       try{localStorage.removeItem('oscarCompany_'+companyKey); localStorage.removeItem('oscarEmployees_'+companyKey);}catch(e){}
@@ -2736,6 +2757,8 @@ async function login(e){
     }
     const stopReason=expiredAccessReason(company);
     if(stopReason){ toast(stopReason,'bad'); return reset(); }
+    const expiredOffline=!!(accessExpiryMs(company) && accessExpiryMs(company)<Date.now() && loginOfflineAfterExpiryAllowed(company));
+    const companyOfflineMode=loginIsOfflinePlan(company) || expiredOffline;
     let session=null;
     const admin=normalizeAdmin(company.admin);
     if(admin && username===String(admin.username||'').trim()){
@@ -2743,7 +2766,7 @@ async function login(e){
       if(!(await verifySecret(admin,pass))){toast('اسم المستخدم أو كلمة المرور غير صحيحة لهذا المفتاح','bad'); return reset();}
       const cleanAdmin=await upgradePlainSecretIfNeeded(companyKey, admin, pass);
       session={companyKey,userId:'admin',name:'المدير',role:'admin',permissions:fullPermissions,loginAt:Date.now()};
-      const lc=(await getLocalCompany(companyKey))||{companyKey}; lc.admin={...cleanAdmin,lastLogin:Date.now()}; lc.companyName=company.companyName||lc.companyName; lc.storeName=company.storeName||lc.storeName; lc.active=company.active; lc.subscriptionEnd=company.subscriptionEnd; lc.expiresAt=Number(company.expiresAt||0); lc.durationUnit=company.durationUnit||''; lc.durationCount=Number(company.durationCount||0); lc.deletedAt=Number(company.deletedAt||0); lc._fromCloud=lc._fromCloud||company._fromCloud; localStorage.setItem('oscarCompany_'+companyKey,JSON.stringify(lc));
+      const lc=(await getLocalCompany(companyKey))||{companyKey}; lc.admin={...cleanAdmin,lastLogin:Date.now()}; lc.companyName=company.companyName||lc.companyName; lc.storeName=company.storeName||lc.storeName; lc.active=company.active; lc.subscriptionEnd=company.subscriptionEnd; lc.expiresAt=Number(company.expiresAt||0); lc.durationUnit=company.durationUnit||''; lc.durationCount=Number(company.durationCount||0); lc.syncMode=company.syncMode||'online'; lc.offlinePlan=!!company.offlinePlan; lc.offlineAfterExpiry=!!company.offlineAfterExpiry; lc.allowOfflineAfterExpiry=!!company.allowOfflineAfterExpiry; lc.deletedAt=Number(company.deletedAt||0); lc._fromCloud=lc._fromCloud||company._fromCloud; localStorage.setItem('oscarCompany_'+companyKey,JSON.stringify(lc));
     }else{
       let emps=company.employees||[];
       if(!emps.length){try{emps=JSON.parse(localStorage.getItem('oscarEmployees_'+companyKey)) || readLocalCompanyStore(companyKey)?.employees || []}catch(e){emps=[]}}
@@ -2753,10 +2776,17 @@ async function login(e){
         if(!hasUsableSecret(emp)){toast('كلمة مرور الموظف غير مضبوطة. عدّل الموظف وأدخل كلمة مرور','bad'); return reset();}
         if(!(await verifySecret(emp,pass))){toast('اسم المستخدم أو كلمة المرور غير صحيحة لهذا المفتاح','bad'); return reset();}
         emp.lastLogin=Date.now(); localStorage.setItem('oscarEmployees_'+companyKey,JSON.stringify(emps));
-        session={companyKey,userId:emp.id,name:emp.name||emp.username,role:'employee',branchId:emp.branchId||'main',branchName:emp.branchName||'',permissions:emp.permissions||{},loginAt:Date.now()};
+        const isRepEmp=emp.role==='representative' || emp.employeeType==='representative' || emp.isRepresentative || emp.representativeId;
+        if(isRepEmp){
+          session={companyKey,userId:emp.id||emp.representativeId,name:emp.name||emp.username,username:emp.username,role:'representative',representativeId:emp.representativeId||emp.id,area:emp.area||'',branchId:emp.branchId||'main',branchName:emp.branchName||'',permissions:{viewSales:true,addSales:true,print:true},loginAt:Date.now()};
+          try{localStorage.setItem('oscarCurrentRepresentative_'+companyKey,JSON.stringify(emp));}catch(e){}
+        }else{
+          session={companyKey,userId:emp.id,name:emp.name||emp.username,role:'employee',branchId:emp.branchId||'main',branchName:emp.branchName||'',permissions:emp.permissions||{},loginAt:Date.now()};
+        }
       }else{
         let reps=company.representatives||[];
-        if(!reps.length){try{reps=JSON.parse(localStorage.getItem('oscarRepresentatives_'+companyKey)) || []}catch(e){reps=[]}}
+        try{ const localReps=JSON.parse(localStorage.getItem('oscarRepresentatives_'+companyKey)) || []; const repEmps=(emps||[]).filter(e=>e.role==='representative'||e.employeeType==='representative'||e.isRepresentative||e.representativeId); reps=[...reps,...localReps,...repEmps]; }catch(e){}
+        const seen=new Set(); reps=reps.filter(r=>{const id=String(r.id||r.representativeId||r.username||''); if(!id||seen.has(id)) return false; seen.add(id); return true;});
         const rep=reps.find(x=>String(x.username||'').trim().toLowerCase()===username.toLowerCase() || String(x.id||x.representativeId||'').trim()===username);
         if(!rep){toast('اسم المستخدم غير موجود داخل هذا المفتاح','bad'); return reset();}
         const repStatus=String(rep.status||'active').toLowerCase();
@@ -2768,10 +2798,11 @@ async function login(e){
         try{localStorage.setItem('oscarCurrentRepresentative_'+companyKey,JSON.stringify(rep));}catch(e){}
       }
     }
+    if(companyOfflineMode){ session.offlineMode=true; session.syncMode='offline'; session.offlineReason=expiredOffline?'expired-after-subscription':'offline-plan'; setOfflineLock(companyKey,true,session.offlineReason); } else { setOfflineLock(companyKey,false,''); }
     localStorage.setItem('oscarSession',JSON.stringify(session));
-    localStorage.setItem('oscarRunLoginSync','1');
+    if(!companyOfflineMode) localStorage.setItem('oscarRunLoginSync','1'); else localStorage.removeItem('oscarRunLoginSync');
     toast('تم تسجيل الدخول');
-    setTimeout(()=>location.replace(session.role==='representative'?'representative-dashboard.html':(navigator.onLine?'sync-loading.html':'dashboard.html')),120);
+    setTimeout(()=>location.replace(session.role==='representative'?'representative-dashboard.html':(companyOfflineMode?'dashboard.html':(navigator.onLine?'sync-loading.html':'dashboard.html'))),120);
   }catch(err){console.error(err); toast('تعذر تسجيل الدخول: '+(err.message||err),'bad'); reset();}
 }
 function reset(){const btn=$('#loginBtn'); btn.disabled=false; btn.textContent='تسجيل الدخول'}
@@ -2789,13 +2820,13 @@ function isExpiredAccess(c){
   if(!c) return false;
   if(c.active===false) return true;
   const ts=accessExpiryMs(c);
-  return !!(ts && ts<Date.now());
+  return !!(ts && ts<Date.now() && !loginOfflineAfterExpiryAllowed(c));
 }
 function expiredAccessReason(c){
   if(c?.deletedAt) return 'تم حذف مفتاح الشركة';
   if(c?.active===false) return 'تم إيقاف مفتاح الشركة';
   const ts=accessExpiryMs(c);
-  if(ts && ts<Date.now()) return 'انتهى اشتراكك';
+  if(ts && ts<Date.now()){ if(loginOfflineAfterExpiryAllowed(c)) return ''; return 'انتهى اشتراكك'; }
   return '';
 }
 function savedSessionCanAutoEnter(s){
@@ -2805,6 +2836,7 @@ function savedSessionCanAutoEnter(s){
     localStorage.removeItem('oscarSession');
     return false;
   }
+  if(s && s.companyKey && c && accessExpiryMs(c) && accessExpiryMs(c)<Date.now() && loginOfflineAfterExpiryAllowed(c)){ s.offlineMode=true; s.syncMode='offline'; s.offlineReason='expired-after-subscription'; localStorage.setItem('oscarSession',JSON.stringify(s)); setOfflineLock(s.companyKey,true,'expired-after-subscription'); }
   return !!(s && s.companyKey);
 }
 document.addEventListener('DOMContentLoaded',()=>{
@@ -2908,7 +2940,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 (function(){
   const PAGE_CACHE='cashtop-local-pages-v157-permanent';
   const ASSET_CACHE='cashtop-local-assets-v157-permanent';
-  const extraPages=["./", "DATABASE_STRUCTURE.md", "README-MONGODB-DIRECT.txt", "README.md", "READ_ME_ADMIN_COMPANY_KEYS.txt", "READ_ME_AUTO_LOGIN_KEY_REFRESH.txt", "READ_ME_CASHIER_CUSTOMER_SEARCH.txt", "READ_ME_CLEAN_RECEIPT_SILENT_SYNC.txt", "READ_ME_EMPTY_SEARCH_DROPDOWNS.txt", "READ_ME_FAST_SYNC_QR_CAMERA.txt", "READ_ME_FULL_OFFLINE_LOCAL_FIRST.txt", "READ_ME_ISOLATED_COMPANY_LOCAL_STORE.txt", "READ_ME_KEYBOARD_SAFE_SYNC.txt", "READ_ME_LEGACY_DATA_MERGE_LOGIN_FIX.txt", "READ_ME_LOCAL_CACHE_FAST_V169.txt", "READ_ME_LOCAL_FIRST_DELETE_EDIT.txt", "READ_ME_OFFLINE_DELETE_CLEAR_COMPANY.txt", "READ_ME_OFFLINE_FIRST_SYNC.txt", "READ_ME_REPRESENTATIVES_SYSTEM.txt", "READ_ME_RETENTION_45_DAYS_SYNC_FIX.txt", "READ_ME_ROOT_ACCOUNTING_REPORTS_UNITS.txt", "READ_ME_STABLE_AUTO_LOGIN_NO_KEY_CHECK.txt", "READ_ME_SYNC_FIX.txt", "READ_ME_UNIT_STOCK_BIGCODE_MOBILE.txt", "READ_ME_V171_FIXES.txt", "READ_ME_V172_CACHE_FIRST_IMMEDIATE.txt", "READ_ME_V172_CUSTOMER_CREDIT_SYNC_FIX.txt", "READ_ME_V172_FIXES.txt", "READ_ME_V172_SETTINGS_SYNC_CACHE_FIX.txt", "READ_ME_V174_REP_LOGIN_CASHIER_COMMISSION.txt", "READ_ME_V175_REPRESENTATIVES_FINAL_FIX.txt", "READ_ME_V177_CLEAN_FAST_CACHE_FIX.txt", "READ_ME_V178_HARD_DELETE_CLEAN_CACHE.txt", "READ_ME_V179_PURCHASE_ENTRY_FIX.txt", "accounts.html", "admin.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "customers.html", "dashboard.html", "database.rules.json", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "local-bridge.js", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "offline-update.js", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "representative-dashboard.html", "representatives.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
+  const extraPages=["./", "DATABASE_STRUCTURE.md", "README.md", "accounts.html", "admin.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "customers.html", "dashboard.html", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "representative-dashboard.html", "representatives.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
   function sameOriginUrl(href){try{const u=new URL(href,location.href); return u.origin===location.origin?u:null}catch(e){return null}}
   function internalUrls(){
     const set=new Set(extraPages.map(x=>new URL(x,location.href).href));
@@ -2979,5 +3011,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   }).observe(document.documentElement,{childList:true,subtree:true});
 })();
 </script>
+
 
 </body></html>

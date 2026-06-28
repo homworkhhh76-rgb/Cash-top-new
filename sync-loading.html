@@ -825,7 +825,7 @@ body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
 
 <script id="v172-cache-first-immediate-script">
 (function(){
-  const CACHE_URLS=["./", "DATABASE_STRUCTURE.md", "README-MONGODB-DIRECT.txt", "README.md", "READ_ME_ADMIN_COMPANY_KEYS.txt", "READ_ME_AUTO_LOGIN_KEY_REFRESH.txt", "READ_ME_CASHIER_CUSTOMER_SEARCH.txt", "READ_ME_CLEAN_RECEIPT_SILENT_SYNC.txt", "READ_ME_EMPTY_SEARCH_DROPDOWNS.txt", "READ_ME_FAST_SYNC_QR_CAMERA.txt", "READ_ME_FULL_OFFLINE_LOCAL_FIRST.txt", "READ_ME_ISOLATED_COMPANY_LOCAL_STORE.txt", "READ_ME_KEYBOARD_SAFE_SYNC.txt", "READ_ME_LEGACY_DATA_MERGE_LOGIN_FIX.txt", "READ_ME_LOCAL_CACHE_FAST_V169.txt", "READ_ME_LOCAL_FIRST_DELETE_EDIT.txt", "READ_ME_OFFLINE_DELETE_CLEAR_COMPANY.txt", "READ_ME_OFFLINE_FIRST_SYNC.txt", "READ_ME_REPRESENTATIVES_SYSTEM.txt", "READ_ME_RETENTION_45_DAYS_SYNC_FIX.txt", "READ_ME_ROOT_ACCOUNTING_REPORTS_UNITS.txt", "READ_ME_STABLE_AUTO_LOGIN_NO_KEY_CHECK.txt", "READ_ME_SYNC_FIX.txt", "READ_ME_UNIT_STOCK_BIGCODE_MOBILE.txt", "READ_ME_V171_FIXES.txt", "READ_ME_V172_CACHE_FIRST_IMMEDIATE.txt", "READ_ME_V172_CUSTOMER_CREDIT_SYNC_FIX.txt", "READ_ME_V172_FIXES.txt", "READ_ME_V172_SETTINGS_SYNC_CACHE_FIX.txt", "READ_ME_V174_REP_LOGIN_CASHIER_COMMISSION.txt", "READ_ME_V175_REPRESENTATIVES_FINAL_FIX.txt", "READ_ME_V177_CLEAN_FAST_CACHE_FIX.txt", "READ_ME_V178_HARD_DELETE_CLEAN_CACHE.txt", "READ_ME_V179_PURCHASE_ENTRY_FIX.txt", "accounts.html", "admin.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "customers.html", "dashboard.html", "database.rules.json", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "local-bridge.js", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "offline-update.js", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "representative-dashboard.html", "representatives.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
+  const CACHE_URLS=["./", "DATABASE_STRUCTURE.md", "README.md", "accounts.html", "admin.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "customers.html", "dashboard.html", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "representative-dashboard.html", "representatives.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
   function pageName(){return location.pathname.split('/').pop() || 'index.html'}
   function cacheUrls(){
     const set=new Set(CACHE_URLS);
@@ -846,7 +846,7 @@ body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
   async function saveCurrentPageToCache(){
     try{
       if(!('caches' in window)) return;
-      const cache=await caches.open('cashtop-pages-v172-cache-first-immediate-fix');
+      const cache=await caches.open('cashtop-pages-v183-dashboard-chart-cache-first-fast');
       const req=new Request(location.href,{cache:'reload'});
       const res=await fetch(req).catch(()=>null);
       if(res&&res.ok){
@@ -906,6 +906,7 @@ const firebaseConfig = {
 };
 const session=JSON.parse(localStorage.getItem('oscarSession')||'null');
 if(!session){ location.replace('login.html'); return; }
+if(session.offlineMode || localStorage.getItem('oscarOfflineLock_'+(session.companyKey||''))==='1'){ location.replace('dashboard.html'); return; }
 const companyKey=session.companyKey||'COMPANY001';
 const activeBranchStorageKey=`oscarActiveBranch_${encodeURIComponent(companyKey)}`;
 const branchId=session.role==='employee' ? (session.branchId||'main') : (localStorage.getItem(activeBranchStorageKey)||session.branchId||'main');

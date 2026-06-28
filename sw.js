@@ -1,133 +1,68 @@
-const CACHE_VERSION = 'v179-purchase-entry-redesign-delete-reverse-cache';
-const PAGE_CACHE = 'cashtop-pages-' + CACHE_VERSION;
-const ASSET_CACHE = 'cashtop-assets-' + CACHE_VERSION;
-const FONT_CACHE = 'cashtop-fonts-' + CACHE_VERSION;
-const LEGACY_PREFIXES = ['cashtop-pwa-', 'cashtop-local-pages-', 'cashtop-local-assets-', 'cashtop-font-cache-', 'cashtop-pages-', 'cashtop-assets-', 'cashtop-fonts-'];
-const PRECACHE = ["./", "DATABASE_STRUCTURE.md", "README-MONGODB-DIRECT.txt", "README.md", "READ_ME_ADMIN_COMPANY_KEYS.txt", "READ_ME_AUTO_LOGIN_KEY_REFRESH.txt", "READ_ME_CASHIER_CUSTOMER_SEARCH.txt", "READ_ME_CLEAN_RECEIPT_SILENT_SYNC.txt", "READ_ME_EMPTY_SEARCH_DROPDOWNS.txt", "READ_ME_FAST_SYNC_QR_CAMERA.txt", "READ_ME_FULL_OFFLINE_LOCAL_FIRST.txt", "READ_ME_ISOLATED_COMPANY_LOCAL_STORE.txt", "READ_ME_KEYBOARD_SAFE_SYNC.txt", "READ_ME_LEGACY_DATA_MERGE_LOGIN_FIX.txt", "READ_ME_LOCAL_CACHE_FAST_V169.txt", "READ_ME_LOCAL_FIRST_DELETE_EDIT.txt", "READ_ME_OFFLINE_DELETE_CLEAR_COMPANY.txt", "READ_ME_OFFLINE_FIRST_SYNC.txt", "READ_ME_REPRESENTATIVES_SYSTEM.txt", "READ_ME_RETENTION_45_DAYS_SYNC_FIX.txt", "READ_ME_ROOT_ACCOUNTING_REPORTS_UNITS.txt", "READ_ME_STABLE_AUTO_LOGIN_NO_KEY_CHECK.txt", "READ_ME_SYNC_FIX.txt", "READ_ME_UNIT_STOCK_BIGCODE_MOBILE.txt", "READ_ME_V171_FIXES.txt", "READ_ME_V172_CACHE_FIRST_IMMEDIATE.txt", "READ_ME_V172_CUSTOMER_CREDIT_SYNC_FIX.txt", "READ_ME_V172_FIXES.txt", "READ_ME_V172_SETTINGS_SYNC_CACHE_FIX.txt", "READ_ME_V174_REP_LOGIN_CASHIER_COMMISSION.txt", "READ_ME_V175_REPRESENTATIVES_FINAL_FIX.txt", "READ_ME_V177_CLEAN_FAST_CACHE_FIX.txt", "READ_ME_V178_HARD_DELETE_CLEAN_CACHE.txt", "READ_ME_V179_PURCHASE_ENTRY_FIX.txt", "accounts.html", "admin.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "customers.html", "dashboard.html", "database.rules.json", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "firestore.rules", "firestore.secure.rules", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "local-bridge.js", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "offline-update.js", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "representative-dashboard.html", "representatives.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
-const PAGE_RE = /(?:^|\/)[^/?#]*\.html?$/i;
-const STATIC_RE = /\.(?:js|css|json|png|jpg|jpeg|svg|webp|ico|woff2?|ttf|map|md|txt)$/i;
-function isPageUrl(u){ return u.pathname.endsWith('/') || PAGE_RE.test(u.pathname) || u.pathname.split('/').pop()===''; }
-function isSameOrigin(u){ return u.origin === self.location.origin; }
-function isExternalApi(u){
-  const h = u.hostname;
-  return !isSameOrigin(u) || /firebaseio\.com$|googleapis\.com$|gstatic\.com$|vercel\.app$|mongodb|cloudfunctions|firestore|googleusercontent/i.test(h + u.pathname);
-}
-async function cacheNameForUrl(u){ return isPageUrl(u) ? PAGE_CACHE : ASSET_CACHE; }
-async function matchAny(req, opts={}){
-  const page = await caches.open(PAGE_CACHE);
-  const asset = await caches.open(ASSET_CACHE);
-  const font = await caches.open(FONT_CACHE);
-  const u = new URL(req.url, self.location.href);
-  const pageName = u.pathname.split('/').pop() || 'index.html';
-  const candidates = [
-    req,
-    u.href,
-    u.origin + u.pathname,
-    pageName,
-    './' + pageName,
-    u.pathname,
-    u.pathname.replace(/^\//,'')
-  ];
+const CACHE_VERSION='v183-dashboard-chart-cache-first-fast';
+const CACHE_NAME='cashtop-pages-'+CACHE_VERSION;
+const PRECACHE=["./", "DATABASE_STRUCTURE.md", "README.md", "accounts.html", "admin.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "customers.html", "dashboard.html", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "representative-dashboard.html", "representatives.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
+const API_BLOCK=['/api/rtdb','vercel.app/api/rtdb','firebaseio.com','googleapis.com','gstatic.com','firestore.googleapis.com','googleusercontent.com','cloudfunctions.net'];
+function isApi(url){const s=String(url||'');return API_BLOCK.some(x=>s.includes(x));}
+function sameOrigin(req){try{return new URL(req.url).origin===self.location.origin;}catch(e){return false;}}
+async function putSafe(cache,req,res){try{if(res&&res.ok) await cache.put(req,res.clone());}catch(e){}}
+async function cacheFirst(req){
+  const cache=await caches.open(CACHE_NAME);
+  const url=new URL(req.url);
+  const candidates=[req,url.pathname.slice(1)||'./','./'+(url.pathname.split('/').pop()||'index.html'),'index.html','./'];
   for(const c of candidates){
-    const hit = await page.match(c, {ignoreSearch:true}) || await asset.match(c, {ignoreSearch:true}) || await font.match(c, {ignoreSearch:true});
-    if(hit) return hit;
+    const hit=await caches.match(c,{ignoreSearch:true}).catch(()=>null);
+    if(hit){
+      fetch(req).then(res=>putSafe(cache,req,res)).catch(()=>null);
+      return hit;
+    }
   }
-  if(opts.navigation){
-    return await page.match(pageName, {ignoreSearch:true}) || await page.match('index.html', {ignoreSearch:true}) || await page.match('./', {ignoreSearch:true}) || null;
-  }
-  return null;
-}
-async function putCache(urlOrReq){
   try{
-    const req = typeof urlOrReq === 'string' ? new Request(urlOrReq, {cache:'reload'}) : urlOrReq;
-    const u = new URL(req.url, self.location.href);
-    if(isExternalApi(u)) return false;
-    const hit = await matchAny(req);
-    if(hit) return true;
-    const res = await fetch(req, {cache:'reload'});
-    if(!res || !res.ok) return false;
-    const cache = await caches.open(await cacheNameForUrl(u));
-    await cache.put(req, res.clone());
-    if(isPageUrl(u)){
-      const pageName = u.pathname.split('/').pop() || 'index.html';
-      await cache.put(pageName, res.clone()).catch(()=>{});
-      await cache.put('./' + pageName, res.clone()).catch(()=>{});
-    }
-    return true;
-  }catch(e){ return false; }
+    const fresh=await fetch(req);
+    await putSafe(cache,req,fresh);
+    return fresh;
+  }catch(e){
+    return (await caches.match('index.html')) || (await caches.match('./')) || new Response('Offline',{status:503,statusText:'Offline'});
+  }
 }
-async function warmCache(list){
-  const queue = [...new Set(list || [])];
-  let i = 0;
-  const worker = async()=>{
-    while(i < queue.length){
-      const item = queue[i++];
-      await putCache(item);
-      await new Promise(r=>setTimeout(r, 2));
-    }
-  };
-  await Promise.all([worker(), worker(), worker(), worker()]);
-}
-self.addEventListener('install', event=>{
+self.addEventListener('install',event=>{
   self.skipWaiting();
-  event.waitUntil(warmCache(PRECACHE));
-});
-self.addEventListener('activate', event=>{
   event.waitUntil((async()=>{
-    const keep = new Set([PAGE_CACHE, ASSET_CACHE, FONT_CACHE]);
-    const names = await caches.keys();
-    await Promise.all(names.map(n => (LEGACY_PREFIXES.some(p=>n.startsWith(p)) && !keep.has(n)) ? caches.delete(n) : Promise.resolve(false)));
-    if(self.registration.navigationPreload){ try{ await self.registration.navigationPreload.disable(); }catch(e){} }
+    const cache=await caches.open(CACHE_NAME);
+    await Promise.allSettled(PRECACHE.filter(Boolean).filter(u=>!isApi(u)).map(u=>cache.add(new Request(u,{cache:'no-cache'}))));
+  })());
+});
+self.addEventListener('activate',event=>{
+  event.waitUntil((async()=>{
+    const cache=await caches.open(CACHE_NAME);
+    const keys=await caches.keys();
+    for(const k of keys.filter(k=>k.startsWith('cashtop-pages-')&&k!==CACHE_NAME)){
+      try{
+        const old=await caches.open(k);
+        const reqs=await old.keys();
+        for(const req of reqs){
+          if(await cache.match(req)) continue;
+          const res=await old.match(req);
+          if(res) await cache.put(req,res.clone());
+        }
+      }catch(e){}
+    }
+    await Promise.allSettled(keys.filter(k=>k.startsWith('cashtop-pages-')&&k!==CACHE_NAME).map(k=>caches.delete(k)));
     await self.clients.claim();
   })());
 });
-self.addEventListener('fetch', event=>{
-  const req = event.request;
-  if(req.method !== 'GET') return;
-  const u = new URL(req.url);
-  if(u.hostname === 'fonts.googleapis.com' || u.hostname === 'fonts.gstatic.com'){
-    event.respondWith((async()=>{
-      const cache = await caches.open(FONT_CACHE);
-      const hit = await cache.match(req, {ignoreSearch:false});
-      if(hit) return hit;
-      const res = await fetch(req).catch(()=>null);
-      if(res && res.ok) cache.put(req, res.clone()).catch(()=>{});
-      return res || Response.error();
+self.addEventListener('message',event=>{
+  const data=event.data||{};
+  if(data.type==='CACHE_URLS'&&Array.isArray(data.urls)){
+    event.waitUntil((async()=>{
+      const cache=await caches.open(CACHE_NAME);
+      await Promise.allSettled(data.urls.filter(Boolean).filter(u=>!isApi(u)).map(u=>cache.add(new Request(u,{cache:'no-cache'}))));
     })());
-    return;
   }
-  if(isExternalApi(u)) return;
-  const isNav = req.mode === 'navigate' || (req.headers.get('accept')||'').includes('text/html');
-  const cacheable = isNav || isPageUrl(u) || STATIC_RE.test(u.pathname);
-  if(!cacheable) return;
-  event.respondWith((async()=>{
-    const hit = await matchAny(req, {navigation:isNav});
-    if(hit) return hit;
-    try{
-      const res = await fetch(req, {cache:'reload'});
-      if(res && res.ok){
-        const cache = await caches.open(await cacheNameForUrl(u));
-        cache.put(req, res.clone()).catch(()=>{});
-        if(isPageUrl(u)){
-          const pageName = u.pathname.split('/').pop() || 'index.html';
-          cache.put(pageName, res.clone()).catch(()=>{});
-          cache.put('./' + pageName, res.clone()).catch(()=>{});
-        }
-      }
-      return res;
-    }catch(e){
-      return (await matchAny(new Request('index.html'), {navigation:true})) || new Response('Offline', {status:503, headers:{'Content-Type':'text/plain;charset=utf-8'}});
-    }
-  })());
 });
-self.addEventListener('message', event=>{
-  const data = event.data || {};
-  if(data.type === 'SKIP_WAITING') self.skipWaiting();
-  if(data.type === 'CACHE_URLS' || data.type === 'CACHE_NOW'){
-    const urls = Array.isArray(data.urls) ? data.urls : [];
-    event.waitUntil(warmCache(urls));
-  }
-  if(data.type === 'CACHE_ALL'){
-    event.waitUntil(warmCache(PRECACHE));
-  }
+self.addEventListener('fetch',event=>{
+  const req=event.request;
+  if(req.method!=='GET') return;
+  if(isApi(req.url)){event.respondWith(fetch(req));return;}
+  if(!sameOrigin(req)){event.respondWith(fetch(req).catch(()=>caches.match(req)));return;}
+  event.respondWith(cacheFirst(req));
 });

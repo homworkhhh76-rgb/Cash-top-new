@@ -1,9 +1,6 @@
 {
-  "version": "v179-purchase-entry-redesign-delete-reverse-cache",
-  "date": "2026-06-28",
-  "notes": "تصميم جديد لفاتورة المشتريات، اقتراحات مباشرة تحت الحقل، باركود قطعة/وحدة، حذف فاتورة مشتريات مع عكس المخزون والحساب والمورد، وتحديث الكاش.",
-  "build": "purchase-entry-redesign-delete-reverse-cache",
-  "updatedAt": 1782604200000,
-  "name": "كاش توب",
-  "cacheVersion": "v179"
+  "version": "v183-dashboard-chart-cache-first-fast",
+  "build": "restore-sales-profit-chart-first-slider-cache-first-mobile-desktop",
+  "cacheVersion": "v183",
+  "updatedAt": "2026-06-28"
 }
