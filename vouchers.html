@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="كاش توب POS">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon-192.png">
-  <title>نقاط الولاء - كاش توب</title><script>try{if(!localStorage.getItem('oscarSession')){document.documentElement.style.visibility='hidden';location.replace('index.html');}}catch(e){location.replace('index.html')}</script>
+  <title>المصروفات - كاش توب</title><script>try{if(!localStorage.getItem('oscarSession')){document.documentElement.style.visibility='hidden';location.replace('index.html');}}catch(e){location.replace('index.html')}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -2528,7 +2528,7 @@ body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
 })();
 </script>
 </head>
-<body data-page="loyaltyPoints">
+<body data-page="vouchers">
   <div id="toast" class="toast"></div>
   <div class="app">
     <aside id="sidebar" class="sidebar">
@@ -2578,10 +2578,15 @@ body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
     <div id="sideOverlay" class="overlay"></div>
     <main class="main">
       <header class="top-card no-print">
-        <div class="brand"><button id="menuBtn" class="icon-btn">☰</button><div><h1>نقاط الولاء</h1><small>إدارة نقاط العملاء وتحويلها لسداد الديون.</small></div></div>
+        <div class="brand"><button id="menuBtn" class="icon-btn">☰</button><div><h1>المصروفات</h1><small>إضافة المصروفات وخصمها من الحسابات.</small></div></div>
         <div class="top-actions"><button id="syncBtn" class="icon-btn sync-dot-btn" title="المزامنة"><span id="netDot" class="dot"></span><small id="pendingCount" class="hidden"></small></button><button id="notificationBtn" class="icon-btn notification-top-btn" title="التنبيهات" aria-label="التنبيهات" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/></svg><span id="topNotificationBadge" class="top-notification-badge hidden">0</span></button></div></header>
-      <section class="page-head"><div><h2 class="page-title">نقاط الولاء</h2><p class="page-sub">إدارة نقاط الولاء وتحويلها لسداد الديون عند الحاجة.</p></div></section><section id="pageRoot"><div class="empty">يتم تحميل الصفحة...</div></section>
-    </main>
+      <section class="page-head"><div><h2 class="page-title">المصروفات</h2><p class="page-sub">إضافة المصروفات وخصمها من الحسابات.</p></div></section>
+      <section id="pageRoot">
+<div class="card"><div class="toolbar"><button class="primary-btn" id="newVoucherBtn" type="button">سند جديد</button><div class="searchbar"><input class="input" id="voucherSearch" placeholder="بحث في السندات"></div><select id="voucherFilter" style="max-width:180px"><option value="all">كل السندات</option><option value="receipt">قبض</option><option value="payment">صرف</option></select></div></div>
+<div class="card" style="margin-top:16px"><h3 class="section-title">سند قبض / صرف</h3><div class="form-grid"><div class="field"><label>نوع السند</label><select id="vType"><option value="receipt">سند قبض</option><option value="payment">سند صرف</option></select></div><div class="field"><label>التاريخ</label><input class="input" id="vDate" type="datetime-local"></div><div class="field"><label>الحساب</label><select id="vAccount"></select></div><div class="field"><label>مرتبط بـ</label><select id="vPartyType"><option value="customer">عميل</option><option value="supplier">مورد</option><option value="other">أخرى</option></select></div><div class="field"><label>العميل / المورد</label><select id="vParty"></select></div><div class="field"><label>المبلغ</label><input class="input" id="vAmount" inputmode="decimal" data-number="1"></div><div class="field"><label>طريقة الدفع</label><select id="vMethod"><option value="cash">نقدي</option><option value="bank">تحويل بنكي</option><option value="card">بطاقة</option><option value="other">أخرى</option></select></div><div class="field"><label>رقم مرجعي</label><input class="input" id="vRef"></div><div class="field full"><label>السبب / البيان</label><input class="input" id="vReason"></div><div class="field full"><label>ملاحظات</label><textarea class="input" id="vNote"></textarea></div></div><div class="toolbar" style="margin-top:14px"><button class="primary-btn" id="saveVoucherBtn" type="button">حفظ السند</button><button class="ghost-btn" id="clearVoucherBtn" type="button">إلغاء</button></div></div>
+<div class="card" style="margin-top:16px"><h3 class="section-title">سجل السندات</h3><div class="table-wrap"><table><thead><tr><th>رقم السند</th><th>النوع</th><th>التاريخ</th><th>الحساب</th><th>العميل / المورد</th><th>المبلغ</th><th>الحالة</th></tr></thead><tbody id="voucherRows"></tbody></table></div></div>
+</section>
+</main>
     <nav class="bottom-nav no-print"><a href="dashboard.html" class="nav-link" data-page="dashboard"><span class="nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5v8a1.5 1.5 0 0 1-1.5 1.5H15v-6H9v6H4.5A1.5 1.5 0 0 1 3 19.5v-8Z"/></svg></span><small>الرئيسية</small></a><a href="cashier.html" class="nav-link" data-page="cashier" data-permission="viewSales"><span class="nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-3-1.5-3 1.5-3-1.5L7 21V4a1 1 0 0 1 1-1Zm3 5h6M9 12h6M9 16h4"/></svg></span><small>الكاشير</small></a><a href="products.html" class="nav-link" data-page="products" data-permission="viewProducts"><span class="nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Zm0 0v9m8-4.5-8 4.5-8-4.5"/></svg></span><small>المنتجات</small></a><a href="customers.html" class="nav-link" data-page="customers" data-permission="viewCustomers"><span class="nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0ZM4 21a8 8 0 0 1 16 0M18 8a3 3 0 0 1 3 3M21 21a6 6 0 0 0-4-5.66"/></svg></span><small>العملاء</small></a><a href="accounts.html" class="nav-link" data-page="accounts" data-permission="manageAccounts"><span class="nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h13A2.5 2.5 0 0 1 21 7.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 16.5v-9Zm0 3h18M7 15h4"/></svg></span><small>الحسابات</small></a><a href="invoices.html" class="nav-link" data-page="invoices" data-permission="viewSales"><span class="nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-2-1-2 1-2-1-2 1-2-1-2 1V3Zm4 5h6M8 12h8M8 16h5"/></svg></span><small>الفواتير</small></a></nav>
   </div>
   <script type="module">
@@ -2632,7 +2637,7 @@ const App = (() => {
   const legacyCompanyStoreKey = () => `oscarStoreV2__company__${companyLocalPart}`;
   const legacyStoreKey = () => 'oscarStoreV2_' + companyKey;
   const DB_PATH = ['companies', companyKey, 'branchesData', initialBranchId, 'data'];
-  const collections = ['products','customers','suppliers','accounts','invoices','expenses','activity','inventory','notifications','settings','customUnits','scannerSessions','scannerEvents','employees','representatives','representativeInventory','representativeMovements','representativeTransactions','representativeOrders','representativeNotifications','representativeReturns','branches','workers','warehouseMoves','journalEntries','stockMoves','coupons','taxSettings','printSettings','purchaseRecords','productOffers','invoicePaymentSettings','purchaseInvoices','purchaseReturns','wasteRecords','archiveStats','manufacturingRecipes','manufacturingRuns','expenseTypes','warehouses','vouchers'];
+  const collections = ['products','customers','suppliers','accounts','invoices','expenses','activity','inventory','notifications','settings','customUnits','scannerSessions','scannerEvents','employees','representatives','representativeInventory','representativeMovements','representativeTransactions','representativeOrders','representativeNotifications','representativeReturns','branches','workers','warehouseMoves','journalEntries','stockMoves','coupons','taxSettings','printSettings','purchaseRecords','productOffers','invoicePaymentSettings','categories','purchaseInvoices','purchaseReturns','wasteRecords','archiveStats','manufacturingRecipes','manufacturingRuns','expenseTypes','warehouses','vouchers'];
 
   function isBranchScopedCollectionName(name){
     return ['products','customers','suppliers','accounts','invoices','expenses','activity','inventory','notifications','settings','customUnits','scannerSessions','scannerEvents','employees','representatives','representativeInventory','representativeMovements','representativeTransactions','representativeOrders','representativeNotifications','representativeReturns','workers','warehouseMoves','journalEntries','stockMoves','coupons','taxSettings','printSettings','purchaseRecords','productOffers','invoicePaymentSettings','purchaseInvoices','purchaseReturns','wasteRecords','archiveStats','manufacturingRecipes','manufacturingRuns','categories','expenseTypes','warehouses','vouchers'].includes(name);
@@ -6058,7 +6063,21 @@ function validateProductBarcodes(item, editingId=''){ const codes=[]; const add=
     const cart=getCart();
     if(cart[i]){
       if(k==='sellMode') cart[i]=normalizeCartLine({...cart[i],sellMode:v,manualPrice:false,manualCost:false});
-      else if(k==='lineTotal'){ const q=Math.max(0.000001,n(cart[i].qty)||1); cart[i].price=n(v)/q; cart[i].manualPrice=true; cart[i]=normalizeCartLine(cart[i]); }
+      else if(k==='lineTotal'){
+        const desiredTotal=Math.max(0,n(v));
+        const qtyByPrice=(settings().quantityByPrice===true || String(settings().quantityByPrice)==='true');
+        if(qtyByPrice){
+          const base=normalizeCartLine({...cart[i],manualPrice:false});
+          const unitPrice=Math.max(0.000001,n(base.price)||n(cart[i].price)||1);
+          const qty=Math.max(0.001,desiredTotal/unitPrice);
+          cart[i]=normalizeCartLine({...cart[i],qty,manualPrice:false});
+        }else{
+          const q=Math.max(0.000001,n(cart[i].qty)||1);
+          cart[i].price=desiredTotal/q;
+          cart[i].manualPrice=true;
+          cart[i]=normalizeCartLine(cart[i]);
+        }
+      }
       else if(k==='variantId') cart[i]=normalizeCartLine({...cart[i],variantId:v,variantLocked:false,sellMode:'piece',manualPrice:false,manualCost:false});
       else if(k==='clothingColor'){ const {data}=cartLineProduct(cart[i]); if(data && !clothingColorAvailable(data,v) && !allowNegative()) toast('هذا اللون غير متوفر','bad'); cart[i]=normalizeCartLine({...cart[i],clothingColor:v,clothingSize:firstAvailableSizeForColor(data,v),manualPrice:false,manualCost:false}); }
       else if(k==='clothingSize'){ const {data}=cartLineProduct(cart[i]); const test={...cart[i],clothingSize:v}; if(data && n(clothingAvailableStock(data,test))<=0 && !allowNegative()) toast('هذا المقاس غير متوفر','bad'); cart[i]=normalizeCartLine({...cart[i],clothingSize:v,manualPrice:false,manualCost:false}); }
@@ -7146,7 +7165,8 @@ ${pc.showCustomer!==false?`<div>الزبون: ${esc(receiptCustomerName(inv))}</
 <table class="items"><thead><tr><th>الصنف</th><th>كمية</th><th>سعر</th><th>قيمة</th></tr></thead><tbody>${items}</tbody></table>
 <div class="totals"><div class="row"><span>المجموع</span><b>${receiptMoney(inv.subTotal||inv.total)}</b></div><div class="row"><span>الخصم</span><b>${receiptMoney(inv.discountAmount||0)}</b></div>${n(inv.taxAmount)?`<div class="row"><span>${esc(inv.taxName||'VAT')}</span><b>${receiptMoney(inv.taxAmount)}</b></div>`:''}${n(inv.couponDiscount)?`<div class="row"><span>خصم الكوبون</span><b>${receiptMoney(inv.couponDiscount)}</b></div>`:''}<div class="row total"><strong>الإجمالي</strong><strong>${receiptMoney(inv.total)}</strong></div><div class="row"><span>المتبقي</span><b>${receiptMoney(receiptRemaining(inv))}</b></div></div>
 <div class="dash"></div><div class="center footer">${esc(pc.footerText||'شكراً لتعاملك معنا')}</div>${bBlock}
-</div><script>setTimeout(()=>{${autoPrint?'window.print();':''}},250)<\/script></body></html>`;
+</div><script>setTimeout(()=>{${autoPrint?'window.print();':''}},250)<\/script>
+</body></html>`;
   }
   function printInvoice(id){ try{ const inv=coll('invoices').find(x=>String(x.id)===String(id)); if(!inv){toast('الفاتورة غير موجودة','bad');return;} const html=invoicePrintableHtml(inv,true); const w=window.open('','_blank'); if(!w){ const href=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'})); triggerFileDownload(href,(inv.number||'invoice')+'.html',true); toast('تم تنزيل ملف الفاتورة لأن المتصفح منع نافذة الطباعة','warn'); return;} w.document.open(); w.document.write(html); w.document.close(); setTimeout(()=>{try{w.focus(); w.print();}catch(e){console.warn(e); toast('تعذر فتح نافذة الطباعة','bad');}},450); }catch(e){console.error(e); toast('تعذر طباعة الفاتورة','bad');} }
   async function downloadInvoicePdf(id){ try{ const inv=coll('invoices').find(x=>String(x.id)===String(id)); if(!inv){toast('الفاتورة غير موجودة','bad');return;} const canvas=await buildInvoiceCanvas(inv); downloadCanvasPdf(canvas,(inv.number||'invoice')+'.pdf'); toast('تم تنزيل PDF الفاتورة'); }catch(e){console.error(e); toast('تعذر تنزيل PDF الفاتورة','bad');} }
@@ -7544,7 +7564,7 @@ ${pc.showCustomer!==false?`<div>الزبون: ${esc(receiptCustomerName(inv))}</
     downloadCanvasPdf(canvas,'التنبؤ-بالتدفقات-النقدية.pdf');
   }
 
-  function renderAnalytics(){const root=$('#analyticsChart'); if(!root)return; const workersPaid=coll('workers').reduce((a,w)=>a+(Array.isArray(w.payments)?w.payments.reduce((s,p)=>s+n(p.amount),0):0),0); setText('workerSalaryTotal',money(workersPaid)); const m=reportMetrics(); setText('finInvoiceCount',String(m.count)); setText('finSales',money(m.sales)); setText('finExpenses',money(m.exp)); setText('finNet',money(m.profit)); setText('finSalesCost',money(m.cost)); setText('finGrossProfit',money(m.sales-m.cost)); setText('finPaid',money(m.paid)); setText('finDebt',money(m.debts)); const byDay={}; m.invoices.forEach(i=>{const d=(i.date||'').slice(0,10); byDay[d]=(byDay[d]||0)+n(i.total)}); const rows=Object.entries(byDay).slice(-14); const max=Math.max(1,...rows.map(x=>x[1])); root.innerHTML=rows.length?rows.map(([d,v])=>`<div class="bar-row"><b>${d.slice(5)}</b><div class="bar-track"><div class="bar-fill" style="width:${Math.max(4,v/max*100)}%"></div></div><span>${money(v)}</span></div>`).join(''):'<div class="empty">لا توجد بيانات كافية للرسم ضمن الفلترة</div>'; renderReportTables(m); }
+  function renderAnalytics(){const root=$('#analyticsChart'); if(!root)return; const m=reportMetrics(); setText('finInvoiceCount',String(m.count)); setText('finSales',money(m.sales)); setText('finExpenses',money(m.exp)); setText('finNet',money(m.profit)); setText('finSalesCost',money(m.cost)); setText('finGrossProfit',money(m.sales-m.cost)); setText('finPaid',money(m.paid)); setText('finDebt',money(m.debts)); const byDay={}; m.invoices.forEach(i=>{const d=(i.date||'').slice(0,10); byDay[d]=(byDay[d]||0)+n(i.total)}); const rows=Object.entries(byDay).slice(-14); const max=Math.max(1,...rows.map(x=>x[1])); root.innerHTML=rows.length?rows.map(([d,v])=>`<div class="bar-row"><b>${d.slice(5)}</b><div class="bar-track"><div class="bar-fill" style="width:${Math.max(4,v/max*100)}%"></div></div><span>${money(v)}</span></div>`).join(''):'<div class="empty">لا توجد بيانات كافية للرسم ضمن الفلترة</div>'; renderReportTables(m); }
   function renderNotifications(){const root=$('#notificationsList'); if(!root)return; const lows=coll('products').filter(p=>n(productTotalStock(p))<=n(settings().lowStock)).map(p=>({id:'low'+p.id,text:`المنتج ${p.name} ناقص في المخزون (${productTotalStock(p)})`,type:'low'})); const debts=coll('customers').filter(c=>n(c.debt)>0).slice(0,20).map(c=>({id:'debt'+c.id,text:`دين مفتوح على ${c.name}: ${money(c.debt)}`,type:'debt'})); const now=Date.now(); const workersDue=coll('workers').filter(w=>w.active!==false && w.nextPayAt).map(w=>{const due=Date.parse(w.nextPayAt); const left=due-now; if(w.type==='monthly' && left>0 && left<=2*86400000) return {id:'wrk'+w.id,text:`راتب شهري حان قريباً للعامل ${w.name}`,type:'worker',date:w.nextPayAt}; if(w.type==='daily' && left>0 && left<=2*3600000) return {id:'wrk'+w.id,text:`راتب يومي حان قريباً للعامل ${w.name}`,type:'worker',date:w.nextPayAt}; return null;}).filter(Boolean); const rows=[...workersDue,...lows,...debts,...coll('notifications')].slice(0,100); root.innerHTML=rows.length?rows.map(x=>`<div class="activity-item"><div class="bullet">${x.type==='low'?'<svg viewBox="0 0 24 24"><path d="M12 3 2.8 20h18.4L12 3Zm0 6v5m0 3h.01"/></svg>':'<svg viewBox="0 0 24 24"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4"/></svg>'}</div><div><b>${esc(x.text)}</b><small>${x.date?new Date(x.date).toLocaleString('ar'):'تنبيه ذكي'}</small></div></div>`).join(''):'<div class="empty">لا توجد تنبيهات حالياً</div>'}
   
   function triggerFileDownload(href,name,revoke=false){
@@ -8100,9 +8120,61 @@ ${pc.showCustomer!==false?`<div>الزبون: ${esc(receiptCustomerName(inv))}</
   }
 
   window.addEventListener('DOMContentLoaded',()=>{ if(!ensureSession()) return; loadStore(); processWorkerWagesAuto(); initUI(); if(!guardPage()) return; render(); setTimeout(()=>initFirebase(),450);});
-  return {addProductToCart,updateCart,changeCartQty,removeCart,addProductVariantRow,removeProductVariantRow,scanVariantBarcode,toggleVariantMode,cancelCashierInvoiceEdit,openBarcodeModal,renderCashier,mobileUseRtcOffer,sendMobileBarcode:(code)=>window.sendMobileBarcode?.(code),sendMobileProduct:(id)=>window.sendMobileProduct?.(id),renderMobileProducts,exportBackup,importBackup,syncQueue,pullAllRemote,runFullSync,coll,setItem,deleteItem,queue,saveStore,toast,money,n,uid,nowIso,settings,productVariants,variantLabel,productTotalStock,findBarcodeProduct,lineSaleTotal,openModal,openCustomer,openAccount,openProduct,openRepresentative,renderRepresentatives,renderUnits,saveCustomUnitFromPage,deleteCustomUnit,addClothingColorBlock,addClothingSizeRow,syncClothingStockPreview,downloadCashFlowForecastPdf,renderLoyaltyPoints,saveLoyaltySettings,adjustCustomerLoyalty,redeemLoyaltyToDebt,render};
+  return {addProductToCart,updateCart,changeCartQty,removeCart,addProductVariantRow,removeProductVariantRow,scanVariantBarcode,toggleVariantMode,cancelCashierInvoiceEdit,openBarcodeModal,renderCashier,mobileUseRtcOffer,sendMobileBarcode:(code)=>window.sendMobileBarcode?.(code),sendMobileProduct:(id)=>window.sendMobileProduct?.(id),renderMobileProducts,exportBackup,importBackup,syncQueue,pullAllRemote,runFullSync,coll,setItem,deleteItem,queue,saveStore,toast,money,n,uid,nowIso,settings,productVariants,variantLabel,productTotalStock,findBarcodeProduct,lineSaleTotal,openModal,openCustomer,openAccount,openProduct,openRepresentative,renderRepresentatives,renderUnits,saveCustomUnitFromPage,deleteCustomUnit,getCustomUnits,findCustomUnit,customUnitFromMode,addClothingColorBlock,addClothingSizeRow,syncClothingStockPreview,downloadCashFlowForecastPdf,renderLoyaltyPoints,saveLoyaltySettings,adjustCustomerLoyalty,redeemLoyaltyToDebt,render};
 })();
 window.App = App;
+</script>
+
+
+<script>
+(function(){
+function A(){return window.App||{}}
+const $=(s,r=document)=>r.querySelector(s);
+const n=v=>A().n?A().n(v):Number(String(v||0).replace(/,/g,'.')||0);
+const esc=v=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const uid=p=>A().uid?A().uid(p):p+'_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8);
+const nowIso=()=>A().nowIso?A().nowIso():new Date().toISOString();
+const money=v=>A().money?A().money(v):'₪ '+Number(v||0).toFixed(2);
+const toast=(m,t='ok')=>A().toast?A().toast(m,t):alert(m);
+const coll=name=>A().coll?A().coll(name):[];
+const setItem=(c,item,msg)=>A().setItem?A().setItem(c,item,msg):item;
+function toLocal(dt){try{const d=new Date(dt||Date.now()); d.setMinutes(d.getMinutes()-d.getTimezoneOffset()); return d.toISOString().slice(0,16)}catch(e){return ''}}
+function fillSelects(){
+  const acc=$('#vAccount'); if(acc) acc.innerHTML=coll('accounts').map(a=>`<option value="${esc(a.id)}">${esc(a.name||a.id)} - ${money(a.balance)}</option>`).join('');
+  updateParty();
+}
+function updateParty(){
+  const type=$('#vPartyType')?.value||'customer'; const p=$('#vParty'); if(!p)return;
+  if(type==='customer') p.innerHTML=coll('customers').map(x=>`<option value="${esc(x.id)}">${esc(x.name||x.phone||x.id)}</option>`).join('');
+  else if(type==='supplier') p.innerHTML=coll('suppliers').map(x=>`<option value="${esc(x.id)}">${esc(x.name||x.phone||x.id)}</option>`).join('');
+  else p.innerHTML='<option value="">أخرى</option>';
+}
+function nextNo(type){const prefix=type==='receipt'?'RV':'PV'; const count=coll('vouchers').filter(x=>x.type===type).length+1; return prefix+'-'+String(count).padStart(6,'0')}
+function selectedParty(){const type=$('#vPartyType').value; if(type==='other') return {type,id:'',name:'أخرى',row:null}; const arr=type==='customer'?coll('customers'):coll('suppliers'); const row=arr.find(x=>String(x.id)===String($('#vParty').value)); return {type,id:row?.id||'',name:row?.name||'',row};}
+function saveVoucher(){
+  const type=$('#vType').value; const amount=n($('#vAmount').value); const accId=$('#vAccount').value;
+  if(!amount||amount<=0){toast('أدخل مبلغ صحيح','bad');return false} if(!accId){toast('اختر الحساب','bad');return false}
+  const p=selectedParty(); const id=uid('vou'); const date=$('#vDate').value?new Date($('#vDate').value).toISOString():nowIso();
+  const acc=coll('accounts').find(a=>String(a.id)===String(accId));
+  const v={id,type,number:nextNo(type),date,accountId:accId,accountName:acc?.name||'',partyType:p.type,partyId:p.id,partyName:p.name,amount,note:$('#vNote').value||'',method:$('#vMethod').value,reference:$('#vRef').value||'',reason:$('#vReason').value||'',status:'posted',createdAt:Date.now(),updatedAt:Date.now()};
+  if(acc){acc.balance=n(acc.balance)+(type==='receipt'?amount:-amount); acc.movements=Array.isArray(acc.movements)?acc.movements:[]; acc.movements.unshift({id:uid('mov'),kind:type==='receipt'?'سند قبض':'سند صرف',amount:type==='receipt'?amount:-amount,note:v.reason||v.note||v.number,date:v.date,refType:'voucher',refId:id}); setItem('accounts',acc,'حركة حساب سند');}
+  if(p.row){
+    if(p.type==='customer'){p.row.debt=n(p.row.debt)+(type==='receipt'?-amount:amount); p.row.movements=Array.isArray(p.row.movements)?p.row.movements:[]; p.row.movements.unshift({id:uid('cm'),type:type==='receipt'?'payment':'debt',amount,date:v.date,note:v.reason||v.number,refType:'voucher',refId:id}); setItem('customers',p.row,'تحديث عميل من سند');}
+    if(p.type==='supplier'){p.row.debt=n(p.row.debt)+(type==='payment'?-amount:amount); p.row.movements=Array.isArray(p.row.movements)?p.row.movements:[]; p.row.movements.unshift({id:uid('sm'),type:type==='payment'?'payment':'debt',amount,date:v.date,note:v.reason||v.number,refType:'voucher',refId:id}); setItem('suppliers',p.row,'تحديث مورد من سند');}
+  }
+  setItem('vouchers',v,type==='receipt'?'إضافة سند قبض':'إضافة سند صرف');
+  reset(); render(); toast('تم حفظ السند ومزامنته'); return true;
+}
+function render(){
+  fillSelects();
+  const q=($('#voucherSearch')?.value||'').trim(); const f=$('#voucherFilter')?.value||'all';
+  const rows=coll('vouchers').filter(v=>(f==='all'||v.type===f)&&(!q||[v.number,v.partyName,v.accountName,v.reason,v.note,v.reference].join(' ').includes(q))).sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
+  const body=$('#voucherRows'); if(!body)return;
+  body.innerHTML=rows.length?rows.map(v=>`<tr><td>${esc(v.number)}</td><td><span class="badge ${v.type==='receipt'?'ok':'warn'}">${v.type==='receipt'?'قبض':'صرف'}</span></td><td>${new Date(v.date).toLocaleString('ar')}</td><td>${esc(v.accountName)}</td><td>${esc(v.partyName||'—')}</td><td>${money(v.amount)}</td><td><span class="badge ok">مقيد</span></td></tr>`).join(''):'<tr><td colspan="7"><div class="empty">لا توجد سندات</div></td></tr>';
+}
+function reset(){ $('#vType').value='receipt'; $('#vDate').value=toLocal(Date.now()); $('#vAmount').value=''; $('#vNote').value=''; $('#vRef').value=''; $('#vReason').value=''; fillSelects();}
+window.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{reset(); render(); $('#vPartyType')?.addEventListener('change',updateParty); $('#saveVoucherBtn')?.addEventListener('click',saveVoucher); $('#clearVoucherBtn')?.addEventListener('click',reset); $('#newVoucherBtn')?.addEventListener('click',reset); $('#voucherSearch')?.addEventListener('input',render); $('#voucherFilter')?.addEventListener('change',render);},600));
+})();
 </script>
 
 <script>
@@ -8256,41 +8328,5 @@ window.App = App;
 })();
 </script>
 
-
-<script>
-(function(){
-function A(){return window.App||{}}
-function n(v){return A().n?A().n(v):Number(String(v??0).replace(/[^\d.\-]/g,'')||0)}
-function money(v){return A().money?A().money(v):`₪ ${Number(v||0).toFixed(2)}`}
-function coll(x){return A().coll?A().coll(x):[]}
-function esc(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
-function reportValues(){
- const invoices=coll('invoices'), expenses=coll('expenses'), prs=coll('purchaseReturns'), pinv=coll('purchaseInvoices'), waste=coll('wasteRecords');
- const sales=invoices.reduce((a,b)=>a+n(b.total),0), profit=invoices.reduce((a,b)=>a+n(b.profit),0)-waste.reduce((a,b)=>a+n(b.total),0);
- return [
-  ['المبيعات',sales],['الأرباح الصافية',profit],['المصروفات',expenses.reduce((a,b)=>a+n(b.amount),0)],['المشتريات',pinv.reduce((a,b)=>a+n(b.total),0)],
-  ['مرتجع المشتريات',prs.reduce((a,b)=>a+n(b.total),0)],['العملاء والديون',coll('customers').reduce((a,b)=>a+n(b.debt),0)],['الموردون',coll('suppliers').reduce((a,b)=>a+n(b.debt),0)],
-  ['قيمة المخزون',coll('products').reduce((a,b)=>a+n(b.stock)*n(b.purchasePrice),0)],['الهالك',waste.reduce((a,b)=>a+n(b.total),0)],['الضرائب',invoices.reduce((a,b)=>a+n(b.taxAmount),0)],
-  ['الكوبونات',invoices.reduce((a,b)=>a+n(b.couponDiscount),0)],['عروض المنتجات',invoices.reduce((a,b)=>a+n(b.offerDiscount),0)],['الصندوق والحسابات',coll('accounts').reduce((a,b)=>a+n(b.balance),0)]
- ];
-}
-function downloadReport(type){
- const rows=reportValues();
- const html=`<html dir="rtl"><meta charset="utf-8"><body><h2>تقرير التحليلات</h2><table border="1" cellspacing="0" cellpadding="8" style="width:100%;border-collapse:collapse">${rows.map(r=>`<tr><th>${esc(r[0])}</th><td>${money(r[1])}</td></tr>`).join('')}</table></body></html>`;
- if(type==='pdf'){
-   const blob=new Blob([html],{type:'application/pdf'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='analytics-report.pdf'; a.click(); return;
- }
- const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d'); canvas.width=1100; canvas.height=220+rows.length*58; ctx.fillStyle='#fff'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle='#142033'; ctx.font='bold 34px Arial'; ctx.textAlign='right'; ctx.fillText('تقرير التحليلات',1050,60); ctx.font='bold 24px Arial'; rows.forEach((r,i)=>{const y=120+i*58; ctx.fillStyle=i%2?'#f8fafc':'#eef6ff'; ctx.fillRect(40,y-36,1020,48); ctx.fillStyle='#142033'; ctx.fillText(r[0],1020,y); ctx.textAlign='left'; ctx.fillText(money(r[1]),80,y); ctx.textAlign='right';}); const a=document.createElement('a'); a.href=canvas.toDataURL('image/png'); a.download='analytics-report.png'; a.click();
-}
-function renderExtraAnalytics(){
- const root=document.getElementById('pageRoot'); if(!root || document.getElementById('v101ReportsGrid'))return;
- const rows=reportValues();
- const totalWaste=coll('wasteRecords').reduce((a,b)=>a+n(b.total),0), wasteCount=coll('wasteRecords').length;
- root.insertAdjacentHTML('beforeend',`<div class="card"><div class="toolbar"><h3 class="section-title">كل تقارير الموقع</h3><div><button class="ghost-btn" data-report-pdf>PDF</button><button class="ghost-btn" data-report-img>صورة</button></div></div><div class="report-card-grid" id="v101ReportsGrid">${rows.map(r=>`<div class="report-card"><div class="value">${money(r[1])}</div><div class="label">${esc(r[0])}</div><div class="actions" style="margin-top:10px"><button class="mini-btn" data-report-pdf>PDF</button><button class="mini-btn gray" data-report-img>صورة</button></div></div>`).join('')}</div></div>`);
-}
-document.addEventListener('click',e=>{if(e.target.closest('[data-report-pdf]')) downloadReport('pdf'); if(e.target.closest('[data-report-img]')) downloadReport('img');});
-window.addEventListener('DOMContentLoaded',()=>setTimeout(renderExtraAnalytics,700));
-})();
-</script>
 </body>
 </html>

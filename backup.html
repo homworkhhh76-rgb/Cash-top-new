@@ -2606,7 +2606,7 @@ body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
   async function saveCurrentPageToCache(){
     try{
       if(!('caches' in window)) return;
-      const cache=await caches.open('cashtop-pages-v183-dashboard-chart-cache-first-fast');
+      const cache=await caches.open('cashtop-pages-v187-branch-isolation-all-items-invoice-date-cache');
       const req=new Request(location.href,{cache:'reload'});
       const res=await fetch(req).catch(()=>null);
       if(res&&res.ok){
@@ -2645,7 +2645,7 @@ body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
   </div>
   <div class="side-group" data-side-group="billing">
     <button class="side-group-toggle" type="button"><span class="nav-ico"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-2-1-2 1-2-1-2 1-2-1-2 1V3Z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></span><span>الفوترة والمدفوعات</span><span class="chev"><svg viewBox="0 0 24 24"><path d="m8 10 4 4 4-4"/></svg></span></button>
-    <div class="side-sub"><a href="invoices.html" class="nav-link" data-page="invoices"><span class="sub-svg-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-2-1-2 1-2-1-2 1-2-1-2 1V3Z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></span><span>الفواتير</span></a><a href="accounts.html" class="nav-link" data-page="accounts"><span class="sub-svg-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h13A2.5 2.5 0 0 1 21 7.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 16.5v-9Z"/><path d="M3 10h18M7 15h4"/></svg></span><span>الحسابات</span></a><a href="coupons.html" class="nav-link" data-page="coupons"><span class="sub-svg-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2 2 0 1 0 0 4v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2a2 2 0 1 0 0-4V8Z"/><path d="M9 9h.01M15 15h.01M16 8l-8 8"/></svg></span><span>الكوبونات</span></a><a href="invoice-payment-settings.html" class="nav-link" data-page="invoicePaymentSettings"><span class="sub-svg-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16v10H4V7Z"/><path d="M7 11h5M16 13h1"/><path d="M6 20h12"/></svg></span><span>إعدادات دفع الفواتير</span></a><a href="expenses.html" class="nav-link" data-page="expenses"><span class="sub-svg-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M17 6H9.5a3 3 0 0 0 0 6H14a3 3 0 0 1 0 6H6"/></svg></span><span>المصروفات</span></a><a href="backup.html?section=billing" class="nav-link" data-page="backup"><span class="sub-svg-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg></span><span>تصدير واستيراد البيانات</span></a></div>
+    <div class="side-sub"><a href="invoices.html" class="nav-link" data-page="invoices"><span class="sub-svg-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-2-1-2 1-2-1-2 1-2-1-2 1V3Z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></span><span>الفواتير</span></a><a href="accounts.html" class="nav-link" data-page="accounts"><span class="sub-svg-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h13A2.5 2.5 0 0 1 21 7.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 16.5v-9Z"/><path d="M3 10h18M7 15h4"/></svg></span><span>الحسابات</span></a><a href="vouchers.html" class="nav-link" data-page="vouchers"><span class="sub-svg-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-1.5-3 1.5-3-1.5L6 21V3Z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></span><span>سندات القبض والصرف</span></a><a href="coupons.html" class="nav-link" data-page="coupons"><span class="sub-svg-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2 2 0 1 0 0 4v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2a2 2 0 1 0 0-4V8Z"/><path d="M9 9h.01M15 15h.01M16 8l-8 8"/></svg></span><span>الكوبونات</span></a><a href="invoice-payment-settings.html" class="nav-link" data-page="invoicePaymentSettings"><span class="sub-svg-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16v10H4V7Z"/><path d="M7 11h5M16 13h1"/><path d="M6 20h12"/></svg></span><span>إعدادات دفع الفواتير</span></a><a href="expenses.html" class="nav-link" data-page="expenses"><span class="sub-svg-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M17 6H9.5a3 3 0 0 0 0 6H14a3 3 0 0 1 0 6H6"/></svg></span><span>المصروفات</span></a><a href="backup.html?section=billing" class="nav-link" data-page="backup"><span class="sub-svg-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg></span><span>تصدير واستيراد البيانات</span></a></div>
   </div>
   <div class="side-group" data-side-group="sales">
     <button class="side-group-toggle" type="button"><span class="nav-ico"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-1.5-3 1.5-3-1.5L6 21V3Zm3 5h6M9 12h6M9 16h4"/></svg></span><span>المبيعات</span><span class="chev"><svg viewBox="0 0 24 24"><path d="m8 10 4 4 4-4"/></svg></span></button>
@@ -2780,12 +2780,27 @@ const App = (() => {
   const legacyCompanyStoreKey = () => `oscarStoreV2__company__${companyLocalPart}`;
   const legacyStoreKey = () => 'oscarStoreV2_' + companyKey;
   const DB_PATH = ['companies', companyKey, 'branchesData', initialBranchId, 'data'];
-  const collections = ['products','customers','suppliers','accounts','invoices','expenses','activity','inventory','notifications','settings','customUnits','scannerSessions','scannerEvents','employees','representatives','representativeInventory','representativeMovements','representativeTransactions','representativeOrders','representativeNotifications','representativeReturns','branches','workers','warehouseMoves','journalEntries','stockMoves','coupons','taxSettings','printSettings','purchaseRecords','productOffers','invoicePaymentSettings','purchaseInvoices','purchaseReturns','wasteRecords','archiveStats','manufacturingRecipes','manufacturingRuns'];
+  const collections = ['products','customers','suppliers','accounts','invoices','expenses','activity','inventory','notifications','settings','customUnits','scannerSessions','scannerEvents','employees','representatives','representativeInventory','representativeMovements','representativeTransactions','representativeOrders','representativeNotifications','representativeReturns','branches','workers','warehouseMoves','journalEntries','stockMoves','coupons','taxSettings','printSettings','purchaseRecords','productOffers','invoicePaymentSettings','purchaseInvoices','purchaseReturns','wasteRecords','archiveStats','manufacturingRecipes','manufacturingRuns','expenseTypes','warehouses','vouchers'];
+
+  function isBranchScopedCollectionName(name){
+    return ['products','customers','suppliers','accounts','invoices','expenses','activity','inventory','notifications','settings','customUnits','scannerSessions','scannerEvents','employees','representatives','representativeInventory','representativeMovements','representativeTransactions','representativeOrders','representativeNotifications','representativeReturns','workers','warehouseMoves','journalEntries','stockMoves','coupons','taxSettings','printSettings','purchaseRecords','productOffers','invoicePaymentSettings','purchaseInvoices','purchaseReturns','wasteRecords','archiveStats','manufacturingRecipes','manufacturingRuns','categories','expenseTypes','warehouses','vouchers'].includes(name);
+  }
+  function itemBelongsToActiveBranch(item, collectionName=''){
+    if(!isBranchScopedCollectionName(collectionName)) return true;
+    const active=String(initialBranchId||'main');
+    const b = item && (item.branchId || item._branch || item.branch || '');
+    if(b) return String(b)===active;
+    return active==='main';
+  }
+  function stampBranch(item, collectionName=''){
+    if(item && isBranchScopedCollectionName(collectionName)) item.branchId = item.branchId || initialBranchId || 'main';
+    return item;
+  }
   const defaultStore = () => ({
-    products: [], customers: [], suppliers: [], invoices: [], expenses: [], activity: [], inventory: [], notifications: [], customUnits: [], scannerSessions: [], scannerEvents: [], employees: [], representatives: [], representativeInventory: [], representativeMovements: [], representativeTransactions: [], representativeOrders: [], representativeNotifications: [], representativeReturns: [], workers: [], warehouseMoves: [], journalEntries: [], stockMoves: [], coupons: [], taxSettings: [], printSettings: [], purchaseRecords: [], productOffers: [], invoicePaymentSettings: [], purchaseInvoices: [], purchaseReturns: [], wasteRecords: [], archiveStats: [], manufacturingRecipes: [], manufacturingRuns: [], categories: [], branches: [{id:'main',name:'الفرع الرئيسي',location:'الرئيسي',main:true,createdAt:Date.now(),updatedAt:Date.now()}],
+    products: [], customers: [], suppliers: [], invoices: [], expenses: [], activity: [], inventory: [], notifications: [], customUnits: [], scannerSessions: [], scannerEvents: [], employees: [], representatives: [], representativeInventory: [], representativeMovements: [], representativeTransactions: [], representativeOrders: [], representativeNotifications: [], representativeReturns: [], workers: [], warehouseMoves: [], journalEntries: [], stockMoves: [], coupons: [], taxSettings: [], printSettings: [], purchaseRecords: [], productOffers: [], invoicePaymentSettings: [], purchaseInvoices: [], purchaseReturns: [], wasteRecords: [], archiveStats: [], manufacturingRecipes: [], manufacturingRuns: [], categories: [], expenseTypes: [], warehouses: [], vouchers: [], branches: [{id:'main',name:'الفرع الرئيسي',location:'الرئيسي',main:true,createdAt:Date.now(),updatedAt:Date.now()}],
     accounts: [{id:'cash',name:'صندوق الكاش',balance:0,opening:0,type:'cash',movements:[{id:'m-open',kind:'opening',amount:0,note:'رصيد افتتاحي',date:new Date().toISOString()}],createdAt:Date.now()}],
     settings: [{id:'main',storeName:'كاش توب',currency:'₪',lowStock:5,profitRate:25,printWidth:'58mm',autoPrintInvoice:false,quantityByPrice:false}],
-    _pendingSync: [], _deleted: {}, _lastLocalChange: Date.now()
+    _pendingSync: [], _deleted: {}, _lastLocalChange: Date.now(), _company: companyKey, _branch: initialBranchId
   });
   const state = {store:null,page:document.body.dataset.page||'dashboard',online:navigator.onLine,db:null,auth:null,user:null,firebaseReady:false,unsubs:[],deferredPrompt:null,activityShown:5,scannerStream:null,scanLast:{code:'',time:0},cashierSession:null,bc:null,rtcPc:null,rtcChannel:null,localBridge:null,localBridgeReady:false,bridgeTried:false,didEnsureRemote:false,didSnapshotPush:localStorage.getItem(localKey('snapshotPushed'))==='1',backupSync:null};
   const $ = (s, r=document) => r.querySelector(s);
@@ -3101,6 +3116,40 @@ const App = (() => {
     return changed;
   }
 
+  
+  function repairAccountingIntegrity(){
+    if(!state.store) return false;
+    let changed=false;
+    try{
+      ['accounts'].forEach(name=>{
+        if(!Array.isArray(state.store[name])) return;
+        state.store[name]=state.store[name].filter(Boolean).map(a=>{
+          const before=JSON.stringify(a);
+          const out=recalcAccountBalance({...a,movements:Array.isArray(a.movements)?a.movements:[]});
+          if(before!==JSON.stringify(out)) changed=true;
+          return out;
+        });
+      });
+      ['customers','suppliers'].forEach(name=>{
+        if(!Array.isArray(state.store[name])) return;
+        state.store[name]=state.store[name].filter(Boolean).map(x=>{
+          const before=JSON.stringify(x);
+          const out=recalcDebtEntity({...x,movements:Array.isArray(x.movements)?x.movements:[]});
+          if(before!==JSON.stringify(out)) changed=true;
+          return out;
+        });
+      });
+      collections.forEach(name=>{
+        if(!Array.isArray(state.store[name]) || !isBranchScopedCollectionName(name)) return;
+        const active=String(initialBranchId||'main');
+        const before=state.store[name].length;
+        state.store[name]=state.store[name].filter(row=>itemBelongsToActiveBranch(row,name)).map(row=>row.branchId?row:{...row,branchId:active});
+        if(before!==state.store[name].length) changed=true;
+      });
+    }catch(e){ console.warn('accounting integrity repair skipped',e); }
+    return changed;
+  }
+
   function normalizeStoreShape(){
     const d=defaultStore();
     collections.forEach(c=>{ if(!Array.isArray(state.store[c])) state.store[c]=d[c] || [] });
@@ -3108,6 +3157,7 @@ const App = (() => {
     if(!state.store._deleted || typeof state.store._deleted!=='object') state.store._deleted={};
     if(state.store.settings && state.store.settings[0] && state.store.settings[0].autoPrintInvoice===undefined) state.store.settings[0].autoPrintInvoice=false;
     scrubDeletedRowsFromStore();
+    repairAccountingIntegrity();
   }
   
   async function bigStoreAll(){
@@ -3134,7 +3184,7 @@ const App = (() => {
     if(localStorage.getItem(marker)==='1') return false;
     let changed=false;
     try{
-      const keys=[...sameCompanyLegacyKeys(),...allLegacyLocalStoreKeys()];
+      const keys=[...sameCompanyLegacyKeys()];
       for(const k of [...new Set(keys)]){
         if(!k || k===storeKey() || k===storeKey()+'_backup') continue;
         const legacy=parseLocalStoreKey(k);
@@ -3162,6 +3212,9 @@ const App = (() => {
     try{
       const saved=await bigStoreGet(storeKey()) || await bigStoreGet(storeKey()+'_backup');
       if(saved && typeof saved==='object'){
+        const branchNow=String(initialBranchId||'main');
+        if(branchNow!=='main' && String(saved._branch||'')!==branchNow) return false;
+        if(saved._company && String(saved._company)!==String(companyKey)) return false;
         const currentTs=Number(state.store?._lastLocalChange||localStorage.getItem(storeKey()+'_lastSaved')||0);
         const savedTs=Number(saved._lastLocalChange||0);
         const currentPending=(state.store?._pendingSync||[]).length;
@@ -3220,12 +3273,17 @@ const App = (() => {
     const currentKey=storeKey();
     const add=(key,priority=0)=>{
       const val=parseLocalStoreKey(key);
-      if(val) candidates.push({key,val,count:storeBusinessCount(val),priority,ts:Number(val._lastLocalChange||localStorage.getItem(key+'_lastSaved')||0)});
+      if(val){
+        const branchNow=String(initialBranchId||'main');
+        const rowBranch=String(val._branch||'');
+        if(branchNow!=='main' && rowBranch!==branchNow) return;
+        if(val._company && String(val._company)!==String(companyKey)) return;
+        candidates.push({key,val,count:storeBusinessCount(val),priority,ts:Number(val._lastLocalChange||localStorage.getItem(key+'_lastSaved')||0)});
+      }
     };
     add(currentKey,10000);
     add(currentKey+'_backup',9000);
     sameCompanyLegacyKeys().forEach(k=>add(k,1000));
-    allLegacyLocalStoreKeys().forEach(k=>add(k,100));
     if(!candidates.length) return null;
     candidates.sort((a,b)=>(b.priority-a.priority)||(b.ts-a.ts)||(b.count-a.count));
     return candidates[0].val;
@@ -3272,6 +3330,11 @@ const App = (() => {
   }
   function mergeStoreObjectIntoCurrent(src, sourceName='legacy'){
     if(!src || !storeBusinessCount(src)) return false;
+    // legacy branch guard v188: لا تستورد بيانات فرع آخر إلى الفرع الحالي
+    const activeBranchForMerge=String(initialBranchId||'main');
+    const srcBranch=String(src._branch||src.branchId||'');
+    if(activeBranchForMerge!=='main' && srcBranch!==activeBranchForMerge) return false;
+    if(activeBranchForMerge==='main' && srcBranch && srcBranch!=='main') return false;
     let changed=false;
     collections.forEach(name=>{
       const srcRows=Array.isArray(src[name]) ? src[name].filter(Boolean) : [];
@@ -3313,23 +3376,23 @@ const App = (() => {
     const map={
       dashboard:['settings','branches','accounts','products','customers','invoices','expenses','activity','notifications'],
       cashier:['settings','branches','products','customUnits','customers','accounts','invoices','coupons','productOffers'],
-      products:['settings','branches','products','categories','suppliers','customUnits'],
+      products:['settings','branches','products','categories','suppliers','customUnits','warehouses'],
       customers:['settings','branches','customers','accounts','invoices'],
       invoices:['settings','branches','invoices','customers','accounts','products'],
-      accounts:['settings','branches','accounts','customers','suppliers','invoices','expenses'],
+      accounts:['settings','branches','accounts','customers','suppliers','invoices','expenses','vouchers'],
       suppliers:['settings','branches','suppliers','accounts','products','purchaseInvoices','purchaseReturns'],
       purchases:['settings','branches','purchaseInvoices','purchaseRecords','purchaseReturns','suppliers','products','accounts'],
-      purchaseEntry:['settings','branches','products','customUnits','suppliers','accounts','categories','purchaseInvoices'],
+      purchaseEntry:['settings','branches','products','customUnits','suppliers','accounts','categories','purchaseInvoices','warehouses'],
       purchaseData:['settings','branches','purchaseInvoices','purchaseRecords','purchaseReturns','suppliers','products'],
       inventory:['settings','branches','products','inventory','warehouseMoves','stockMoves'],
-      finance:['settings','branches','invoices','expenses','accounts','customers','suppliers'],
+      finance:['settings','branches','invoices','expenses','accounts','customers','suppliers','vouchers'],
       analytics:['settings','branches','invoices','expenses','products','accounts','customers','suppliers'],
       notifications:['settings','branches','notifications','activity','products','customers'],
       settings:['settings','branches','customUnits','employees','printSettings','taxSettings'],
       employees:['settings','branches','employees'], representatives:['settings','branches','products','representatives','representativeInventory','representativeMovements','representativeTransactions','representativeOrders','representativeNotifications'],
       workers:['settings','branches','workers','accounts'],
-      expenses:['settings','branches','expenses','accounts'],
-      warehouse:['settings','branches','products','warehouseMoves'],
+      expenses:['settings','branches','expenses','accounts','expenseTypes'],
+      warehouse:['settings','branches','products','warehouseMoves','warehouses'],
       coupons:['settings','branches','coupons'],
       productOffers:['settings','branches','productOffers','products','customers']
     };
@@ -3337,7 +3400,7 @@ const App = (() => {
   }
   function compactFastRows(name, rows){
     rows=Array.isArray(rows)?rows.filter(Boolean):[];
-    const caps={activity:120,notifications:120,scannerEvents:80,invoices:450,expenses:450,purchaseInvoices:350,purchaseRecords:350,purchaseReturns:250,warehouseMoves:250,stockMoves:250,products:1200,customers:1200,suppliers:800,accounts:400,workers:400,employees:300};
+    const caps={activity:120,notifications:120,scannerEvents:80,invoices:450,expenses:450,expenseTypes:200,warehouses:120,vouchers:250,purchaseInvoices:350,purchaseRecords:350,purchaseReturns:250,warehouseMoves:250,stockMoves:250,products:1200,customers:1200,suppliers:800,accounts:400,workers:400,employees:300};
     const cap=caps[name]||600;
     return rows.slice().sort((a,b)=>(remoteTs(b)||Date.parse(b?.date||b?.createdAt||0)||0)-(remoteTs(a)||Date.parse(a?.date||a?.createdAt||0)||0)).slice(0,cap);
   }
@@ -3345,7 +3408,7 @@ const App = (() => {
     try{
       if(!state.store) return;
       const names=[...new Set(fastDataCollections().concat(extraNames||[]).filter(x=>collections.includes(x)))];
-      const out={_page:state.page,_company:companyKey,_ts:Date.now(),_storage:'local-first-fast-cache'};
+      const out={_page:state.page,_company:companyKey,_branch:initialBranchId,_ts:Date.now(),_storage:'local-first-fast-cache-v188'};
       names.forEach(name=>{ out[name]=compactFastRows(name,state.store[name]); });
       localStorage.setItem(fastDataCacheKey(), JSON.stringify(out));
       localStorage.setItem(storeKey()+'_lastFastDataPage', state.page);
@@ -3353,7 +3416,7 @@ const App = (() => {
       try{ cleanupLocalStorageQuota(); }catch(_e){}
       try{
         const names=fastDataCollections().slice(0,5);
-        const out={_page:state.page,_company:companyKey,_ts:Date.now(),_storage:'local-first-fast-cache-small'};
+        const out={_page:state.page,_company:companyKey,_branch:initialBranchId,_ts:Date.now(),_storage:'local-first-fast-cache-small'};
         names.forEach(name=>{ out[name]=compactFastRows(name,state.store[name]).slice(0,250); });
         localStorage.setItem(fastDataCacheKey(), JSON.stringify(out));
       }catch(_e){}
@@ -3369,7 +3432,7 @@ const App = (() => {
       let changed=false;
       [...new Set(keys)].forEach(k=>{
         const raw=localStorage.getItem(k); if(!raw) return;
-        const src=JSON.parse(raw); if(!src || src._company!==companyKey) return;
+        const src=JSON.parse(raw); if(!src || src._company!==companyKey) return; if(src._branch && String(src._branch)!==String(initialBranchId||'main')) return; if(!src._branch && String(initialBranchId||'main')!=='main') return;
         collections.forEach(name=>{
           const rows=Array.isArray(src[name])?src[name].filter(Boolean):[]; if(!rows.length) return;
           if(!Array.isArray(state.store[name])) state.store[name]=[];
@@ -3420,6 +3483,8 @@ const App = (() => {
     if(!state.store) return;
     scrubDeletedRowsFromStore();
     state.store._lastLocalChange=Date.now();
+    state.store._company=companyKey;
+    state.store._branch=initialBranchId;
     requestPersistentDeviceStorage();
     bigStoreSet(storeKey(),state.store);
     bigStoreSet(storeKey()+'_backup',state.store);
@@ -3501,13 +3566,13 @@ const App = (() => {
     ['manageEmployees','إدارة الموظفين'],['manageRepresentatives','إدارة المناديب'],['manageBranches','إدارة الفروع'],['manageWorkers','إدارة العمال والأجور'],
     ['export','تصدير واستيراد'],['sync','مزامنة'],['viewPurchases','عرض المشتريات'],['addPurchases','إضافة مشتريات'],['returnPurchases','مرتجع مشتريات'],['viewWaste','عرض الهالك'],['addWaste','إضافة هالك'],['downloadReports','تحميل التقارير'],['manageExpiry','إدارة تواريخ الانتهاء']];
   const fullPermissions = Object.fromEntries(permissionCatalog.map(([k])=>[k,true]));
-  const pagePermission = {dashboard:'viewDashboard',cashier:'viewSales',products:'viewProducts',categories:'viewCategories',barcodeLabels:'viewBarcodeLabels',productOffers:'manageOffers',customers:'viewCustomers',accounts:'manageAccounts',suppliers:'manageSuppliers',invoices:'viewInvoices',inventory:'viewInventory',expenses:'manageExpenses',finance:'viewReports',analytics:'viewReports',loyaltyPoints:'viewCustomers',notifications:'viewReports',employees:'manageEmployees',representatives:'manageRepresentatives',workers:'manageWorkers',settings:'manageSettings',units:'manageSettings',taxSettings:'manageTax',printSettings:'managePrinters',invoicePaymentSettings:'manageInvoicePayments',branches:'manageBranches',backup:'export',shortcuts:null,scanner:null,purchaseEntry:'addPurchases',purchases:'viewPurchases',purchaseReference:'viewPurchases',purchaseData:'export',waste:'viewWaste'};
+  const pagePermission = {dashboard:'viewDashboard',cashier:'viewSales',products:'viewProducts',categories:'viewCategories',barcodeLabels:'viewBarcodeLabels',productOffers:'manageOffers',customers:'viewCustomers',accounts:'manageAccounts',vouchers:'manageAccounts',suppliers:'manageSuppliers',invoices:'viewInvoices',inventory:'viewInventory',expenses:'manageExpenses',finance:'viewReports',analytics:'viewReports',loyaltyPoints:'viewCustomers',notifications:'viewReports',employees:'manageEmployees',representatives:'manageRepresentatives',workers:'manageWorkers',settings:'manageSettings',units:'manageSettings',taxSettings:'manageTax',printSettings:'managePrinters',invoicePaymentSettings:'manageInvoicePayments',branches:'manageBranches',backup:'export',shortcuts:null,scanner:null,purchaseEntry:'addPurchases',purchases:'viewPurchases',purchaseReference:'viewPurchases',purchaseData:'export',waste:'viewWaste'};
   function perms(){ return session?.role==='admin' ? fullPermissions : (session?.permissions || {}); }
   function hasPerm(k){ return !k || session?.role==='admin' || !!perms()[k]; }
   function permissionForHref(href){
     href=String(href||'').split('?')[0].split('#')[0];
     const map={
-      'dashboard.html':'viewDashboard','cashier.html':'viewSales','invoices.html':'viewInvoices','accounts.html':'manageAccounts','coupons.html':'viewSales',
+      'dashboard.html':'viewDashboard','cashier.html':'viewSales','invoices.html':'viewInvoices','accounts.html':'manageAccounts','vouchers.html':'manageAccounts','coupons.html':'viewSales',
       'invoice-payment-settings.html':'manageInvoicePayments','expenses.html':'manageExpenses','products.html':'viewProducts','categories.html':'viewCategories',
       'inventory.html':'viewInventory','suppliers.html':'manageSuppliers','purchases.html':'viewPurchases','purchase-entry.html':'addPurchases','purchase-reference.html':'viewPurchases','purchase-data.html':'export','waste.html':'viewWaste','warehouse.html':'viewProducts',
       'barcode-labels.html':'viewBarcodeLabels','product-offers.html':'manageOffers','customers.html':'viewCustomers','employees.html':'manageEmployees','representatives.html':'manageRepresentatives',
@@ -3855,7 +3920,8 @@ const App = (() => {
     item.id=String(item.id);
     if(state.store._deleted?.[collectionName]) delete state.store._deleted[collectionName][item.id];
     const arr=coll(collectionName); const i=arr.findIndex(x=>String(x.id)===item.id);
-    const stamped={...item,createdAt:item.createdAt||Date.now(),updatedAt:Date.now(),_localTs:Date.now()};
+    const branchScoped = isBranchScopedCollectionName(collectionName);
+    const stamped={...item,companyKey,branchId: branchScoped ? (item.branchId||initialBranchId||'main') : item.branchId, createdAt:item.createdAt||Date.now(),updatedAt:Date.now(),_localTs:Date.now()};
     if(collectionName==='invoices' || collectionName==='purchaseInvoices') prepareInvoiceForRetention(stamped);
     if(i>=0) arr[i]={...arr[i],...stamped}; else arr.unshift(stamped);
     return stamped;
@@ -3901,7 +3967,9 @@ const App = (() => {
       if(collectionName==='invoices' || collectionName==='purchaseInvoices') toast('تم منع حفظ فاتورة فارغة أو بدون مفتاح','bad');
       return null;
     }
-    if(collectionName==='branches') saveBranchesLocalSnapshot();
+    if(collectionName==='branches'){ saveBranchesLocalSnapshot(); try{syncBranchRoot(saved,false)}catch(e){} }
+    if(collectionName==='employees'){ try{saveEmployeesLocalSnapshot(); syncEmployeeRoot(saved,false);}catch(e){} }
+    // direct root sync v188
     if(collectionName==='customUnits') writeCustomUnitsLocalOnly(state.store.customUnits||[]);
     queue('set',collectionName,saved.id,saved,false);
     if(activityText) logActivity(activityText,'set',{collectionName,id:saved.id});
@@ -3912,7 +3980,9 @@ const App = (() => {
     const sid=String(id||'');
     if(!sid){ toast('تعذر تحديد العنصر للحذف','bad'); return false; }
     removeLocal(collectionName,sid);
-    if(collectionName==='branches') saveBranchesLocalSnapshot();
+    if(collectionName==='branches'){ saveBranchesLocalSnapshot(); try{syncBranchRoot({id:sid},true)}catch(e){} }
+    if(collectionName==='employees'){ try{saveEmployeesLocalSnapshot(); syncEmployeeRoot({id:sid,branchId:initialBranchId||'main'},true);}catch(e){} }
+    // direct root delete v188
     queue('delete',collectionName,sid,null,false);
     try{ saveStore(false); }catch(e){}
     try{ forceLocalRender(); }catch(e){ scheduleRender(true); }
@@ -3924,7 +3994,7 @@ const App = (() => {
           if(!ok) return;
           const ts=state.store._deleted?.[collectionName]?.[sid]||Date.now();
           return Promise.allSettled([
-            rtdbSet(`companies/${safePathPart(companyKey)}/deleted/${safePathPart(collectionName)}/${safePathPart(sid)}`,{ts,collectionName,id:sid,by:session?.username||session?.userId||'',companyKey}),
+            rtdbSet(`companies/${safePathPart(companyKey)}/deleted/${safePathPart(collectionName)}/${safePathPart(sid)}`,{ts,collectionName,id:sid,branchId:isBranchScopedCollectionName(collectionName)?(initialBranchId||'main'):'',by:session?.username||session?.userId||'',companyKey}),
             rtdbRemove(docPath(collectionName,sid))
           ]).then(()=>syncQueue().catch(()=>null));
         }).catch(()=>null),0);
@@ -3941,6 +4011,9 @@ const App = (() => {
     if(collectionName==='invoices' || collectionName==='purchaseInvoices') prepareInvoiceForRetention(out);
     out.updatedAt=Number(out.updatedAt||out.createdAt||Date.now());
     out.companyKey=companyKey;
+    if(isBranchScopedCollectionName(collectionName)){
+      out.branchId=out.branchId||initialBranchId||'main';
+    }
     return out;
   }
   function remoteTs(x){ return Number(x?.updatedAt || x?.createdAt || 0); }
@@ -3952,6 +4025,8 @@ const App = (() => {
       if(!r || invalidRemoteId(r.id)) return;
       if((collectionName==='invoices' || collectionName==='purchaseInvoices') && isInvalidInvoiceRow(r)) return;
       if(collectionName==='invoices' || collectionName==='purchaseInvoices') prepareInvoiceForRetention(r);
+      // remote branch filter v188: لا تخلط بيانات فرع مع فرع آخر
+      if(!itemBelongsToActiveBranch(r, collectionName)) return;
       const id=String(r.id);
       // Local-First: أي حذف محلي أو عملية حذف معلقة تربح على قاعدة البيانات حتى تتم مزامنتها.
       if(deleted[id] || hasPendingOp(collectionName,id,'delete')) return;
@@ -4094,6 +4169,7 @@ const App = (() => {
   }
 
   async function importLegacyRemoteData(){
+    if(String(initialBranchId||'main')!=='main') return false;
     const marker=localKey('legacyRemoteImportedV118');
     if(localStorage.getItem(marker)==='1') return false;
     if(!navigator.onLine || !state.firebaseReady) return false;
@@ -4267,6 +4343,13 @@ const App = (() => {
       Object.entries(ids).forEach(([id, rec])=>{
         const ts=remoteDeleteTs(rec);
         if(!ts) return;
+        // remote delete branch guard v188
+        if(isBranchScopedCollectionName(collectionName)){
+          const rb=rec && typeof rec==='object' ? String(rec.branchId||'') : '';
+          const active=String(initialBranchId||'main');
+          if(rb && rb!==active) return;
+          if(!rb && active!=='main') return;
+        }
         const local=coll(collectionName).find(x=>String(x.id)===String(id));
         if(local && remoteTs(local) <= ts){
           markDeleted(collectionName,id);
@@ -4292,18 +4375,18 @@ const App = (() => {
     const byPage={
       dashboard:['activity','notifications','settings','accounts','invoices','products','customers'],
       cashier:['products','customUnits','customers','accounts','settings','scannerEvents','scannerSessions','invoices','activity','notifications'],
-      products:['products','customUnits','settings','suppliers','accounts','activity'],
+      products:['products','customUnits','settings','suppliers','accounts','warehouses','activity'],
       customers:['customers','accounts','invoices','activity'],
       invoices:['invoices','customers','accounts','products','activity'],
-      accounts:['accounts','customers','suppliers','invoices','expenses','activity'],
-      finance:['invoices','expenses','accounts','customers','suppliers','activity'],
+      accounts:['accounts','customers','suppliers','invoices','expenses','vouchers','activity'],
+      finance:['invoices','expenses','accounts','customers','suppliers','vouchers','activity'],
       analytics:['invoices','expenses','products','accounts','activity'],
-      expenses:['expenses','accounts','activity'],
+      expenses:['expenses','accounts','expenseTypes','activity'],
       suppliers:['suppliers','accounts','products','activity'],
       inventory:['inventory','products','activity'],
       notifications:['notifications','activity'],
-      employees:['employees','settings'],
-      settings:['settings','customUnits','employees']
+      employees:['branches','employees','settings'],
+      settings:['settings','branches','customUnits','employees']
     };
     const first=byPage[state.page] || ['activity','notifications','settings','products','customers','accounts','invoices'];
     return [...new Set(first.filter(x=>collections.includes(x)).concat(collections))];
@@ -4335,7 +4418,7 @@ const App = (() => {
     const map={
       dashboard:['activity','notifications','settings','customUnits','accounts','invoices','products','customers','expenses'],
       cashier:['products','customers','accounts','settings','coupons','productOffers','scannerEvents','scannerSessions','invoices'],
-      products:['products','categories','suppliers','settings','activity'],
+      products:['products','categories','suppliers','settings','warehouses','activity'],
       categories:['categories','products','settings','activity'],
       barcodeLabels:['products','settings','printSettings'],
       customers:['customers','accounts','invoices','settings','activity'],
@@ -4347,7 +4430,7 @@ const App = (() => {
       purchaseReference:['purchaseReturns','products','suppliers','accounts','settings','activity'],
       purchaseData:['purchaseInvoices','purchaseRecords','purchaseReturns','suppliers','products','settings','activity'],
       inventory:['inventory','products','warehouseMoves','stockMoves','settings','activity'],
-      warehouse:['products','warehouseMoves','settings','activity'],
+      warehouse:['products','warehouseMoves','warehouses','settings','activity'],
       workers:['workers','accounts','settings','activity'],
       expenses:['expenses','accounts','settings','activity'],
       finance:['invoices','expenses','accounts','customers','suppliers','settings','activity'],
@@ -4360,7 +4443,7 @@ const App = (() => {
       productOffers:['productOffers','products','customers','settings','activity']
     };
     const first=map[state.page] || syncPriorityCollections().slice(0,8);
-    return [...new Set(first.filter(x=>collections.includes(x)).concat(['settings','activity'].filter(x=>collections.includes(x))))];
+    return [...new Set(first.filter(x=>collections.includes(x)).concat(['settings','branches','activity'].filter(x=>collections.includes(x))))];
   }
   function collectionRealtimeSignature(name){
     const rows=Array.isArray(state.store?.[name])?state.store[name]:[];
@@ -4514,7 +4597,7 @@ const App = (() => {
         if(!name || !id || !collections.includes(name)){ markSyncJobDoneNow(job, done); if(isBackupSyncJob(job)) noteBackupSyncProgress(1); continue; }
         if(job.op==='delete'){
           const ts=Number(job.ts||state.store._deleted?.[name]?.[id]||Date.now());
-          await rtdbSet(`companies/${safePathPart(companyKey)}/deleted/${safePathPart(name)}/${safePathPart(id)}`,{ts,collectionName:name,id,by:session?.username||session?.userId||'',companyKey});
+          await rtdbSet(`companies/${safePathPart(companyKey)}/deleted/${safePathPart(name)}/${safePathPart(id)}`,{ts,collectionName:name,id,branchId:isBranchScopedCollectionName(name)?(initialBranchId||'main'):'',by:session?.username||session?.userId||'',companyKey});
           await rtdbRemove(docPath(name,id));
         }else{
           const localItem=coll(name).find(x=>String(x.id)===id);
@@ -5295,7 +5378,7 @@ const App = (() => {
       addAccount:()=>openAccount(), editAccount:()=>openAccount(id), deleteAccount:()=>confirmDelete('accounts',id,'تم حذف الحساب'), accountMove:()=>openAccountMove(id), viewAccount:()=>viewAccount(id), accountStatementPdf:()=>downloadAccountPdf(id), transfer:()=>openTransfer(),
       addSupplier:()=>openSupplier(), editSupplier:()=>openSupplier(id), deleteSupplier:()=>confirmDelete('suppliers',id,'تم حذف المورد'), viewSupplier:()=>viewSupplier(id), viewSupplierPurchases:()=>viewSupplierPurchases(id), supplierPurchaseApply:()=>renderSupplierPurchasesPanel(id), supplierPurchasesPdf:()=>downloadSupplierPurchasesPdf(id), supplierPurchasesImage:()=>downloadSupplierPurchasesImage(id), supplierPurchasesExcel:()=>downloadSupplierPurchasesExcel(id), supplierPay:()=>openSupplierPay(id), supplierDebt:()=>openSupplierDebt(id), printSupplier:()=>downloadEntityPdf('suppliers',id), csvSupplier:()=>downloadEntityCSV('suppliers',id), imageSupplier:()=>downloadEntityImage('suppliers',id),
       addProduct:()=>openProduct(), editProduct:()=>openProduct(id), deleteProduct:()=>deleteProduct(id), moveProductToWarehouse:()=>openMoveProductToWarehouse(id), scanProductBarcode:()=>openBarcodeModal(code=>{$('#productBarcode').value=code; toast('تم تسجيل باركود الوحدة')}, false), scanProductPieceBarcode:()=>openBarcodeModal(code=>{$('#productPieceBarcode').value=code; toast('تم تسجيل باركود القطعة')}, false),
-      addExpense:()=>openExpense(), editExpense:()=>openExpense(id), deleteExpense:()=>deleteExpense(id),
+      addExpense:()=>openExpense(), addExpenseType:()=>openExpenseType(), editExpense:()=>openExpense(id), deleteExpense:()=>deleteExpense(id),
       addInvoice:()=>location.href='cashier.html', viewSavedInvoice:()=>showSavedInvoice(id), printInvoice:()=>printInvoice(id), invoicePdf:()=>downloadInvoicePdf(id), invoiceImage:()=>downloadInvoiceImage(id), editInvoice:()=>openEditInvoice(id), issueInvoice:()=>issueInvoice(id), deleteInvoice:()=>deleteInvoice(id), showMoreInvoices:()=>{localStorage.setItem(invoiceDisplayLimitKey(),String(invoiceDisplayLimit(coll('invoices').length)+20)); renderInvoices();}, showAllInvoices:async()=>{await loadAllInvoicesRemote(); localStorage.setItem(invoiceDisplayLimitKey(),String(coll('invoices').length)); renderInvoices();}, showLessInvoices:()=>{localStorage.setItem(invoiceDisplayLimitKey(),'50'); renderInvoices();}, showMoreCustomers:()=>{localStorage.setItem(displayLimitKey('customers'),String(customerDisplayLimit(coll('customers').length)+50)); renderCustomers();}, showAllCustomers:async()=>{await loadAllCollectionRemote('customers'); localStorage.setItem(displayLimitKey('customers'),String(coll('customers').length)); renderCustomers();}, showLessCustomers:()=>{localStorage.setItem(displayLimitKey('customers'),'50'); renderCustomers();}, showMoreExpenses:()=>{localStorage.setItem(displayLimitKey('expenses'),String(expenseDisplayLimit(coll('expenses').length)+50)); renderExpenses();}, showAllExpenses:async()=>{await loadAllCollectionRemote('expenses'); localStorage.setItem(displayLimitKey('expenses'),String(coll('expenses').length)); renderExpenses();}, showLessExpenses:()=>{localStorage.setItem(displayLimitKey('expenses'),'50'); renderExpenses();}, showMoreAccountMoves:()=>{localStorage.setItem(displayLimitKey('accountMovements'),String(accountMoveDisplayLimit(999999)+50)); viewAccount(localStorage.getItem(localKey('activeAccountMovesId')));}, showAllAccountMoves:()=>{localStorage.setItem(displayLimitKey('accountMovements'),'999999'); viewAccount(localStorage.getItem(localKey('activeAccountMovesId')));}, showLessAccountMoves:()=>{localStorage.setItem(displayLimitKey('accountMovements'),'50'); viewAccount(localStorage.getItem(localKey('activeAccountMovesId')));},
       addInventory:()=>openInventoryAdjust(), editInventoryPrice:()=>openInventoryPriceEdit(id),
       showMoreActivity:()=>{state.activityShown+=5; renderDashboard()}, openCashierCamera:()=>openBarcodeModal(code=>addBarcodeToCashier(code,'كاميرا الكاشير'), true), pairPhone:()=>createCashierSession(true), copyPair:()=>copyPairLink(), showPairBarcode:()=>openPairCodeModal(), openMobileScannerCamera:()=>openBarcodeModal(code=>window.sendMobileBarcode?.(code), true), addCustomLine:()=>openCustomLine(), applyCoupon:()=>{setCashierCouponCode($('#couponCode')?.value||''); renderCashierTotalsOnly(); toast(getCashierTotals().couponResult.valid?'تم تطبيق الكوبون':getCashierTotals().couponResult.message,'warn');}, openDiscountModal:()=>openDiscountModal(), saveDraftInvoice:()=>saveInvoice('draft'), saveInvoice:()=>saveInvoice(), clearCart:()=>{resetCashierSale(); renderCashier();}, cancelInvoiceEdit:()=>cancelCashierInvoiceEdit(), exportBackup:()=>exportBackup(), exportProductsExcel:()=>exportProductsExcel(), exportFinanceExcel:()=>exportFinanceExcel(), exportFinancePdf:()=>exportFinancePdf(), exportFinanceImage:()=>exportFinanceImage(), importBackup:()=>$('#backupFile')?.click(), clearAllCompanyData:()=>openClearAllDataModal(), clearNotifications:()=>{state.store.notifications=[]; saveStore(); toast('تم مسح التنبيهات')}
@@ -5645,7 +5728,7 @@ const App = (() => {
     const exp=$('#reportExpensesTable'); if(exp){ exp.innerHTML=m.expenses.length?m.expenses.map(x=>`<tr><td>${new Date(x.date).toLocaleString('ar')}</td><td>${esc(x.name)}</td><td>${money(x.amount)}</td><td>${esc(coll('accounts').find(a=>a.id===x.accountId)?.name||'')}</td></tr>`).join(''):`<tr><td colspan="4"><div class="empty">لا توجد مصروفات ضمن الفلترة</div></td></tr>`; }
   }
   function filtered(rows, keys){ const q=($('#globalSearch')?.value||'').trim(); if(!normSearch(q)) return rows; return rows.filter(x=>keys.some(k=>textMatches(x[k],q))) }
-  function render(){ updateStatus(); const map={dashboard:renderDashboard,cashier:renderCashier,customers:renderCustomers,accounts:renderAccounts,suppliers:renderSuppliers,products:renderProducts,invoices:renderInvoices,expenses:renderExpenses,inventory:renderInventory,finance:renderFinance,analytics:renderAnalytics,loyaltyPoints:renderLoyaltyPoints,notifications:renderNotifications,employees:renderEmployees,representatives:renderRepresentatives,settings:renderSettings,units:renderUnits,branches:renderBranches,scanner:renderMobileScanner,barcodeLabels:(typeof renderBarcodeLabels==='function'?renderBarcodeLabels:()=>{}),coupons:()=>{},taxSettings:()=>{},printSettings:()=>{},invoicePaymentSettings:()=>{},productOffers:()=>{},backup:()=>{},categories:()=>{},manufacturing:()=>window.renderManufacturing?.(),menuSettings:()=>{},invoicePaymentSettings:()=>{},purchaseEntry:()=>{},purchases:()=>{},purchaseReference:()=>{},purchaseData:()=>{},waste:()=>{}}; (map[state.page]||renderDashboard)(); }
+  function render(){ updateStatus(); const map={dashboard:renderDashboard,cashier:renderCashier,customers:renderCustomers,accounts:renderAccounts,vouchers:()=>{},suppliers:renderSuppliers,products:renderProducts,invoices:renderInvoices,expenses:renderExpenses,inventory:renderInventory,finance:renderFinance,analytics:renderAnalytics,loyaltyPoints:renderLoyaltyPoints,notifications:renderNotifications,employees:renderEmployees,representatives:renderRepresentatives,settings:renderSettings,units:renderUnits,branches:renderBranches,scanner:renderMobileScanner,barcodeLabels:(typeof renderBarcodeLabels==='function'?renderBarcodeLabels:()=>{}),coupons:()=>{},taxSettings:()=>{},printSettings:()=>{},invoicePaymentSettings:()=>{},productOffers:()=>{},backup:()=>{},categories:()=>{},manufacturing:()=>window.renderManufacturing?.(),menuSettings:()=>{},invoicePaymentSettings:()=>{},purchaseEntry:()=>{},purchases:()=>{},purchaseReference:()=>{},purchaseData:()=>{},waste:()=>{}}; (map[state.page]||renderDashboard)(); }
   function renderDashboard(){
     const today=new Date().toISOString().slice(0,10);
     const inv=coll('invoices');
@@ -6899,10 +6982,32 @@ const App = (() => {
   }
 
   function toggleProductMode(){ const sel=$('#productAddMode'); let raw=sel?.value||'piece'; if(clothesModeEnabled()){ raw='piece'; if(sel){sel.value='piece'; sel.disabled=true;} } else if(sel){sel.disabled=false;} const isCustom=isCustomUnitMode(raw); const mode=isCustom?'unit':raw; if(isCustom) applyCustomUnitToProductForm(); $$('.piece-fields').forEach(e=>e.classList.toggle('hidden',mode!=='piece')); $$('.unit-fields').forEach(e=>e.classList.toggle('hidden',clothesModeEnabled()||mode!=='unit')); $('#clothingProductBox')?.classList.toggle('hidden',!clothesModeEnabled()); $$('.add-variant-field,#productVariantsBox').forEach(e=>e.classList.toggle('hidden',clothesModeEnabled())); syncClothingStockPreview(); }
+
+  function warehousesList(){
+    const rows=Array.isArray(coll('warehouses'))?coll('warehouses'):[];
+    if(!rows.length) return [{id:'default',name:'المخزن الرئيسي',type:'رئيسي',virtual:true}];
+    return rows;
+  }
+  function warehouseName(id){
+    const w=warehousesList().find(x=>String(x.id)===String(id));
+    return w?.name || (id?'مخزن':'المخزن الرئيسي');
+  }
+  function warehouseSelectOptions(selected='', includeDefault=true){
+    const rows=warehousesList();
+    return rows.map(w=>`<option value="${esc(w.id)}" ${String(w.id)===String(selected||'default')?'selected':''}>${esc(w.name||'مخزن')}</option>`).join('');
+  }
+  function warehouseLocationOptions(p={}){
+    const current=String(p.location||'shop');
+    const wid=String(p.warehouseId||'');
+    const rows=warehousesList();
+    let html=`<option value="shop" ${current!=='warehouse'?'selected':''}>المحل</option>`;
+    html+=rows.map((w,i)=>`<option value="warehouse:${esc(w.id)}" ${(current==='warehouse'&&(wid?String(w.id)===wid:i===0))?'selected':''}>${esc(w.name||'مخزن')}</option>`).join('');
+    return html;
+  }
   function openProduct(id=''){ const existingProduct=coll('products').find(x=>String(x.id)===String(id)); if(id && existingProduct && existingProduct.isManufactured){ toast('المنتج المصنع لا يعدل من المنتجات، عدله من إدارة التصنيع','warn'); location.href='manufacturing.html'; return; } const p=existingProduct||{name:'',image:'',barcode:'',pieceBarcode:'',supplierId:'',accountId:'cash',mode:'piece',stock:0,purchasePrice:0,salePrice:0,category:'',unitName:'',piecesPerUnit:1,unitBuy:0,unitSale:0,purchasePaid:0,purchaseDebt:0,variants:[]};
     const variantsHtml=productVariants(p).map(v=>productFormVariantHtml(v)).join('') || '<div class="empty">لا يوجد أصناف إضافية بعد</div>';
     const barcodeSvg='<span class="nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5v14M8 5v14M11 5v14M15 5v14M20 5v14"/><path d="M3 3h4M17 3h4M3 21h4M17 21h4"/></svg></span>'; const productUnitOptions=customUnitOptionsHtml(p); const clothingHtml=clothingFormHtml(p);
-    const html=`<div class="form-grid"><div class="field"><label>اسم المنتج</label><input class="input" id="pName" value="${esc(p.name)}"></div><div class="field"><label>رابط صورة المنتج</label><input class="input" id="pImage" value="${esc(p.image)}"></div><div class="field"><label>طريقة الإضافة</label><select id="productAddMode">${productUnitOptions}</select></div><div class="field piece-fields"><label>عدد القطع للمخزون الرئيسي</label><input class="input" type="text" inputmode="decimal" data-number="1" step="0.001" id="pPieces" value="${n(p.stock)}"></div><div class="field piece-fields"><label>سعر الشراء للقطعة</label><input class="input" type="text" inputmode="decimal" data-number="1" step="0.01" id="pBuyPiece" value="${n(p.purchasePrice)}"></div><div class="field piece-fields"><label>سعر البيع للقطعة</label><input class="input" type="text" inputmode="decimal" data-number="1" step="0.01" id="pSalePiece" value="${n(p.salePrice)}"></div><div class="field unit-fields hidden"><label>اسم الوحدة</label><input class="input" id="pUnitName" value="${esc(p.unitName||'كرتونة')}"></div><div class="field unit-fields hidden"><label>اسم القطعة داخل الوحدة</label><input class="input" id="pPieceName" value="${esc(p.pieceName||'قطعة')}" placeholder="مثال: سم"></div><div class="field unit-fields hidden"><label>عدد الوحدات</label><input class="input" type="text" inputmode="decimal" data-number="1" step="0.001" id="pUnits" value="${n(p.units||0)}"></div><div class="field unit-fields hidden"><label>كم قطعة في الوحدة</label><input class="input" type="text" inputmode="decimal" data-number="1" step="0.001" id="pPerUnit" value="${n(p.piecesPerUnit||1)}"></div><div class="field unit-fields hidden"><label>سعر الوحدة جملة</label><input class="input" type="text" inputmode="decimal" data-number="1" step="0.01" id="pUnitBuy" value="${n(p.unitBuy)}"></div><div class="field unit-fields hidden"><label>سعر الوحدة بيع</label><input class="input" type="text" inputmode="decimal" data-number="1" step="0.01" id="pUnitSale" value="${n(p.unitSale)}"></div><div class="field unit-fields hidden"><label>باركود الوحدة</label><div style="display:flex;gap:8px"><input class="input" id="productBarcode" value="${esc(p.barcode)}" placeholder="باركود الكرتونة / الوحدة"><button class="icon-btn" data-action="scanProductBarcode" type="button" title="مسح باركود الوحدة">${barcodeSvg}</button></div></div><div class="field"><label>باركود القطعة</label><div style="display:flex;gap:8px"><input class="input" id="productPieceBarcode" value="${esc(p.pieceBarcode||'')}" placeholder="ادخل باركود القطعة"><button class="icon-btn" data-action="scanProductPieceBarcode" type="button" title="مسح باركود القطعة">${barcodeSvg}</button></div></div><div class="field full add-variant-field"><label>&nbsp;</label><button class="primary-btn product-add-variant-btn" type="button" onclick="App.addProductVariantRow()"><span class="nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span> إضافة&nbsp;صنف&nbsp;/&nbsp;طعم&nbsp;/&nbsp;حجم</button></div></div><div class="card" style="margin-top:12px"><b>الأصناف الإضافية لنفس الاسم والصورة:</b><div id="productVariantsBox" class="variant-list">${variantsHtml}</div></div><div class="form-grid product-tail-grid">${selectWithSearch('pSupplier','المورد',coll('suppliers'),p.supplierId)}${selectWithSearch('pAccount','الحساب المخصوم منه',coll('accounts'),p.accountId||defaultAccountId())}<div class="field"><label>التصنيف</label><input class="input" id="pCat" value="${esc(p.category)}"></div><div class="field"><label>وجهة الإضافة</label><select id="pLocation" ${id?'disabled':''}><option value="shop" ${String(p.location||'shop')!=='warehouse'?'selected':''}>المحل</option><option value="warehouse" ${String(p.location||'shop')==='warehouse'?'selected':''}>المخزن</option></select></div><div class="field"><label>المدفوع من المبلغ</label><input class="input" type="text" inputmode="decimal" data-number="1" step="0.01" id="pPaid" value="${id?n(p.purchasePaid):''}"></div></div>${clothingHtml}<div class="card" style="margin-top:12px"><b>الحساب التلقائي:</b> <span id="productCalc">—</span></div>`;
+    const html=`<div class="form-grid"><div class="field"><label>اسم المنتج</label><input class="input" id="pName" value="${esc(p.name)}"></div><div class="field"><label>رابط صورة المنتج</label><input class="input" id="pImage" value="${esc(p.image)}"></div><div class="field"><label>طريقة الإضافة</label><select id="productAddMode">${productUnitOptions}</select></div><div class="field piece-fields"><label>عدد القطع للمخزون الرئيسي</label><input class="input" type="text" inputmode="decimal" data-number="1" step="0.001" id="pPieces" value="${n(p.stock)}"></div><div class="field piece-fields"><label>سعر الشراء للقطعة</label><input class="input" type="text" inputmode="decimal" data-number="1" step="0.01" id="pBuyPiece" value="${n(p.purchasePrice)}"></div><div class="field piece-fields"><label>سعر البيع للقطعة</label><input class="input" type="text" inputmode="decimal" data-number="1" step="0.01" id="pSalePiece" value="${n(p.salePrice)}"></div><div class="field unit-fields hidden"><label>اسم الوحدة</label><input class="input" id="pUnitName" value="${esc(p.unitName||'كرتونة')}"></div><div class="field unit-fields hidden"><label>اسم القطعة داخل الوحدة</label><input class="input" id="pPieceName" value="${esc(p.pieceName||'قطعة')}" placeholder="مثال: سم"></div><div class="field unit-fields hidden"><label>عدد الوحدات</label><input class="input" type="text" inputmode="decimal" data-number="1" step="0.001" id="pUnits" value="${n(p.units||0)}"></div><div class="field unit-fields hidden"><label>كم قطعة في الوحدة</label><input class="input" type="text" inputmode="decimal" data-number="1" step="0.001" id="pPerUnit" value="${n(p.piecesPerUnit||1)}"></div><div class="field unit-fields hidden"><label>سعر الوحدة جملة</label><input class="input" type="text" inputmode="decimal" data-number="1" step="0.01" id="pUnitBuy" value="${n(p.unitBuy)}"></div><div class="field unit-fields hidden"><label>سعر الوحدة بيع</label><input class="input" type="text" inputmode="decimal" data-number="1" step="0.01" id="pUnitSale" value="${n(p.unitSale)}"></div><div class="field unit-fields hidden"><label>باركود الوحدة</label><div style="display:flex;gap:8px"><input class="input" id="productBarcode" value="${esc(p.barcode)}" placeholder="باركود الكرتونة / الوحدة"><button class="icon-btn" data-action="scanProductBarcode" type="button" title="مسح باركود الوحدة">${barcodeSvg}</button></div></div><div class="field"><label>باركود القطعة</label><div style="display:flex;gap:8px"><input class="input" id="productPieceBarcode" value="${esc(p.pieceBarcode||'')}" placeholder="ادخل باركود القطعة"><button class="icon-btn" data-action="scanProductPieceBarcode" type="button" title="مسح باركود القطعة">${barcodeSvg}</button></div></div><div class="field full add-variant-field"><label>&nbsp;</label><button class="primary-btn product-add-variant-btn" type="button" onclick="App.addProductVariantRow()"><span class="nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span> إضافة&nbsp;صنف&nbsp;/&nbsp;طعم&nbsp;/&nbsp;حجم</button></div></div><div class="card" style="margin-top:12px"><b>الأصناف الإضافية لنفس الاسم والصورة:</b><div id="productVariantsBox" class="variant-list">${variantsHtml}</div></div><div class="form-grid product-tail-grid">${selectWithSearch('pSupplier','المورد',coll('suppliers'),p.supplierId)}${selectWithSearch('pAccount','الحساب المخصوم منه',coll('accounts'),p.accountId||defaultAccountId())}<div class="field"><label>التصنيف</label><input class="input" id="pCat" value="${esc(p.category)}"></div><div class="field"><label>وجهة الإضافة</label><select id="pLocation" ${id?'disabled':''}>${warehouseLocationOptions(p)}</select></div><div class="field"><label>المدفوع من المبلغ</label><input class="input" type="text" inputmode="decimal" data-number="1" step="0.01" id="pPaid" value="${id?n(p.purchasePaid):''}"></div></div>${clothingHtml}<div class="card" style="margin-top:12px"><b>الحساب التلقائي:</b> <span id="productCalc">—</span></div>`;
     const box=openModal(id?'تعديل منتج':'إضافة منتج',html,'حفظ المنتج',()=>{
       const rawMode=clothesModeEnabled()?'piece':$('#productAddMode').value; const customUnit=customUnitFromMode(rawMode); const mode=rawMode==='piece'?'piece':'unit'; let stock=n($('#pPieces')?.value), buy=n($('#pBuyPiece')?.value), sale=n($('#pSalePiece')?.value), units=0, per=1, unitBuy=0, unitSale=0;
       if(mode==='unit'){units=n($('#pUnits').value); per=n($('#pPerUnit').value)||1; unitBuy=n($('#pUnitBuy').value); unitSale=n($('#pUnitSale').value); stock=units*per; buy=per?unitBuy/per:0; sale=per?unitSale/per:0;}
@@ -6912,7 +7017,7 @@ const App = (() => {
       if(!unitBarcode && !pieceBarcode){ pieceBarcode=generateAutoBarcode('20'); unitBarcode=pieceBarcode; }
       if(mode==='unit'){ if(!unitBarcode) unitBarcode=generateAutoBarcode('21'); if(!pieceBarcode) pieceBarcode=generateAutoBarcode('22'); } else { if(!pieceBarcode) pieceBarcode=unitBarcode||generateAutoBarcode('20'); if(!unitBarcode) unitBarcode=pieceBarcode; }
       const variants=collectProductVariants(); const item={...p,id:id||uid('prd'),name:$('#pName').value.trim(),image:$('#pImage').value.trim(),barcode:unitBarcode,pieceBarcode,supplierId:$('#pSupplier').value,accountId:$('#pAccount').value,mode:clothesModeEnabled()?'piece':mode,stock,purchasePrice:buy,salePrice:sale,category:$('#pCat').value.trim(),unitName:$('#pUnitName')?.value||'',pieceName:$('#pPieceName')?.value||'قطعة',customUnitId:customUnit?.id||'',clothingVariants,clothesEnabled:clothesModeEnabled()&&clothingVariants.length>0,units,piecesPerUnit:per,unitBuy,unitSale,variants,purchaseDate:p.purchaseDate||p.createdAt||Date.now(),updatedAt:Date.now()};
-      const destination=id ? (p.location||'shop') : ($('#pLocation')?.value||'shop'); item.location=destination;
+      const rawDestination=id ? ((p.location==='warehouse'&&p.warehouseId)?('warehouse:'+p.warehouseId):(p.location||'shop')) : ($('#pLocation')?.value||'shop'); const destination=String(rawDestination).startsWith('warehouse')?'warehouse':'shop'; const destinationWarehouseId=String(rawDestination).startsWith('warehouse:')?String(rawDestination).split(':')[1]:''; item.location=destination; item.warehouseId=destinationWarehouseId||item.warehouseId||'';
       if(destination==='warehouse' && !id){
         item.warehouseStock=n(item.stock);
         item.stock=0;
@@ -6950,9 +7055,9 @@ const App = (() => {
     const p=coll('products').find(x=>String(x.id)===String(id)); if(!p) return;
     const variants=productVariants(p);
     const options=['<option value="">المخزون الرئيسي</option>',...variants.map(v=>`<option value="${esc(v.id)}">${esc(variantLabel(v))}</option>`)].join('');
-    openModal('نقل إلى المخزن',`<div class="form-grid"><div class="field"><label>المنتج</label><input class="input" value="${esc(p.name)}" disabled></div><div class="field"><label>الصنف</label><select id="whVariant">${options}</select></div><div class="field"><label>طريقة النقل</label><select id="whMode"><option value="piece">قطعة</option><option value="unit">وحدة / كرتونة</option></select></div><div class="field"><label>العدد</label><input class="input" id="whQty" inputmode="decimal" value="1"></div></div>`,'نقل للمخزن',()=>{
+    openModal('نقل إلى المخزن',`<div class="form-grid"><div class="field"><label>المنتج</label><input class="input" value="${esc(p.name)}" disabled></div><div class="field"><label>المخزن</label><select id="whWarehouse">${warehouseSelectOptions(p.warehouseId||'default')}</select></div><div class="field"><label>الصنف</label><select id="whVariant">${options}</select></div><div class="field"><label>طريقة النقل</label><select id="whMode"><option value="piece">قطعة</option><option value="unit">وحدة / كرتونة</option></select></div><div class="field"><label>العدد</label><input class="input" id="whQty" inputmode="decimal" value="1"></div></div>`,'نقل للمخزن',()=>{
       const qty=n($('#whQty').value); if(qty<=0){toast('أدخل عدد صحيح','bad'); return false;}
-      const vid=$('#whVariant').value; const mode=$('#whMode').value; const per=Math.max(1,n(p.piecesPerUnit)||1); const pieces=mode==='unit'?qty*per:qty;
+      const warehouseId=$('#whWarehouse')?.value||'default'; p.warehouseId=warehouseId; const vid=$('#whVariant').value; const mode=$('#whMode').value; const per=Math.max(1,n(p.piecesPerUnit)||1); const pieces=mode==='unit'?qty*per:qty;
       if(vid){
         const vs=productVariants(p); const v=vs.find(x=>String(x.id)===String(vid)); if(!v) return false;
         if(n(v.stock)<pieces){toast('الكمية غير متوفرة في المحل','bad'); return false;}
@@ -6963,7 +7068,7 @@ const App = (() => {
       }
       p.updatedAt=Date.now();
       setItem('products',p,'نقل إلى المخزن');
-      const whMove={id:uid('wh'),productId:p.id,variantId:vid,kind:'to_warehouse',qty:pieces,date:nowIso(),note:'نقل من المحل إلى المخزن'};
+      const whMove={id:uid('wh'),productId:p.id,warehouseId:p.warehouseId||'default',variantId:vid,kind:'to_warehouse',qty:pieces,date:nowIso(),note:'نقل من المحل إلى المخزن'};
       setItem('warehouseMoves',whMove,'نقل إلى المخزن');
       toast('تم النقل إلى المخزن');
       return true;
@@ -6971,18 +7076,54 @@ const App = (() => {
   }
 
   function deleteProduct(id){ const p=coll('products').find(x=>String(x.id)===String(id)); if(!p) return; if(confirm('حذف المنتج؟ سيتم عكس مبلغ الشراء/دين المورد المرتبط به وتحديث الحسابات.')){ reverseProductPurchase(p); deleteItem('products',id,'حذف منتج'); toast('تم حذف المنتج وإعادة الحسابات'); render(); } }
+
+  function expenseTypesList(){
+    const saved=Array.isArray(coll('expenseTypes'))?coll('expenseTypes'):[];
+    const fromExpenses=coll('expenses').map(x=>String(x.typeName||x.category||'').trim()).filter(Boolean).map(name=>({id:'name:'+name,name}));
+    const by=new Map();
+    [...saved,...fromExpenses].forEach(x=>{const key=String(x.id||x.name||'').trim(); if(key&&!by.has(key)) by.set(key,{...x,id:String(x.id||key),name:String(x.name||key)});});
+    return [...by.values()].filter(x=>x.name).sort((a,b)=>String(a.name).localeCompare(String(b.name),'ar'));
+  }
+  function expenseTypeName(id){
+    if(!id || id==='all') return '';
+    const row=expenseTypesList().find(x=>String(x.id)===String(id));
+    return row?.name || String(id).replace(/^name:/,'');
+  }
+  function expenseTypeOptions(selected=''){
+    const rows=expenseTypesList();
+    return '<option value="">بدون نوع</option>'+rows.map(t=>`<option value="${esc(t.id)}" ${String(t.id)===String(selected)?'selected':''}>${esc(t.name)}</option>`).join('');
+  }
+  function renderExpenseTypeFilter(){
+    const sel=$('#expenseTypeFilter'); if(!sel) return;
+    const current=sel.value||'all';
+    sel.innerHTML='<option value="all">الكل</option>'+expenseTypesList().map(t=>`<option value="${esc(t.id)}" ${String(t.id)===String(current)?'selected':''}>${esc(t.name)}</option>`).join('');
+  }
+  function openExpenseType(id=''){
+    const row=coll('expenseTypes').find(x=>String(x.id)===String(id))||{id:'',name:'',note:''};
+    openModal(row.id?'تعديل نوع مصروف':'إضافة نوع مصروف',`<div class="form-grid"><div class="field full"><label>نوع المصروف</label><input class="input" id="expenseTypeName" value="${esc(row.name||'')}" placeholder="مثال: إيجار، رواتب، مواصلات"></div><div class="field full"><label>ملاحظات</label><input class="input" id="expenseTypeNote" value="${esc(row.note||'')}"></div></div>`,'حفظ',()=>{
+      const name=$('#expenseTypeName').value.trim();
+      if(!name){toast('اكتب نوع المصروف','bad');return false;}
+      const item={...row,id:row.id||uid('ext'),name,note:$('#expenseTypeNote').value.trim(),createdAt:row.createdAt||Date.now(),updatedAt:Date.now()};
+      setItem('expenseTypes',item,row.id?'تعديل نوع مصروف':'إضافة نوع مصروف');
+      toast('تم حفظ نوع المصروف'); renderExpenseTypeFilter(); renderExpenses(); return true;
+    });
+  }
+
   function openExpense(id=''){
-    const ex=coll('expenses').find(x=>x.id===id)||{name:'',amount:0,accountId:'cash',note:'',date:nowIso()};
-    openModal(id?'تعديل مصروف':'إضافة مصروف',`<div class="form-grid"><div class="field"><label>اسم المصروف</label><input class="input" id="exName" value="${esc(ex.name)}"></div><div class="field"><label>المبلغ</label><input class="input" type="text" inputmode="decimal" data-number="1" step="0.01" id="exAmount" value="${n(ex.amount)}"></div>${selectWithSearch('exAccount','من أي حساب',coll('accounts'),ex.accountId||defaultAccountId())}<div class="field"><label>ملاحظات</label><input class="input" id="exNote" value="${esc(ex.note)}"></div><div class="field"><label>التاريخ والوقت</label><input class="input" id="exDate" value="${esc(ex.date||nowIso())}"></div></div>`,'حفظ المصروف',()=>{
-      const item={...ex,id:id||uid('exp'),name:$('#exName').value,amount:n($('#exAmount').value),accountId:$('#exAccount').value,note:$('#exNote').value,date:id?(($('#exDate').value)||ex.date):nowIso(),updatedAt:Date.now()};
+    const ex=coll('expenses').find(x=>x.id===id)||{name:'',amount:0,accountId:'cash',typeId:'',typeName:'',note:'',date:nowIso()};
+    openModal(id?'تعديل مصروف':'إضافة مصروف',`<div class="form-grid"><div class="field"><label>اسم المصروف</label><input class="input" id="exName" value="${esc(ex.name)}"></div><div class="field"><label>نوع المصروف</label><select id="exType">${expenseTypeOptions(ex.typeId||'')}</select></div><div class="field"><label>المبلغ</label><input class="input" type="text" inputmode="decimal" data-number="1" step="0.01" id="exAmount" value="${n(ex.amount)}"></div>${selectWithSearch('exAccount','من أي حساب',coll('accounts'),ex.accountId||defaultAccountId())}<div class="field"><label>ملاحظات</label><input class="input" id="exNote" value="${esc(ex.note)}"></div><div class="field"><label>التاريخ والوقت</label><input class="input" id="exDate" value="${esc(ex.date||nowIso())}"></div></div>`,'حفظ المصروف',()=>{
+      const typeId=$('#exType')?.value||''; const item={...ex,id:id||uid('exp'),name:$('#exName').value,amount:n($('#exAmount').value),accountId:$('#exAccount').value,typeId,typeName:expenseTypeName(typeId),note:$('#exNote').value,date:id?(($('#exDate').value)||ex.date):nowIso(),updatedAt:Date.now()};
       if(n(item.amount)>0 && !allowNegative()){ const acc=coll('accounts').find(a=>String(a.id)===String(item.accountId)); const available=n(acc?.balance)+(id && ex.accountId===item.accountId?n(ex.amount):0); if(acc && available<n(item.amount)){toast('رصيد الحساب غير كافي للمصروف','bad'); return false;} } if(id) reverseExpenseEffect(ex); setItem('expenses',item,id?'تعديل مصروف':'إضافة مصروف'); if(applyExpenseEffect(item)===false) return false; toast('تم حفظ المصروف وإعادة الحسابات');
     })
   }
-  function renderExpenses(){const root=$('#expensesTable'); if(!root)return; const all=filtered(coll('expenses'),['name','note']); const remoteLimited=!!state.store._expensesRemoteLimited; const shown=remoteLimited?expenseDisplayLimit(all.length):all.length; const rows=remoteLimited?all.slice(0,shown):all; root.innerHTML=rows.length?rows.map(x=>`<tr><td><b>${esc(x.name)}</b></td><td>${money(x.amount)}</td><td>${esc(coll('accounts').find(a=>a.id===x.accountId)?.name||'')}</td><td>${new Date(x.date).toLocaleString('ar')}</td><td>${esc(x.note)}</td><td class="actions"><button class="mini-btn" data-action="editExpense" data-id="${x.id}">تعديل</button><button class="mini-btn red" data-action="deleteExpense" data-id="${x.id}">حذف</button></td></tr>`).join('')+(remoteLimited?pagingControlsHtml('expenses',Math.max(all.length,Number(state.store._expensesRemoteCount||0)),shown,6):''):`<tr><td colspan="6"><div class="empty">لا توجد مصروفات</div></td></tr>`}
+
+  function renderExpenses(){const root=$('#expensesTable'); if(!root)return; renderExpenseTypeFilter(); const typeFilter=$('#expenseTypeFilter')?.value||'all'; const all=filtered(coll('expenses'),['name','note','typeName']).filter(x=>typeFilter==='all'||String(x.typeId||'')===String(typeFilter)||(!x.typeId&&String('name:'+(x.typeName||x.category||''))===String(typeFilter))); const remoteLimited=!!state.store._expensesRemoteLimited; const shown=remoteLimited?expenseDisplayLimit(all.length):all.length; const rows=remoteLimited?all.slice(0,shown):all; root.innerHTML=rows.length?rows.map(x=>`<tr><td><b>${esc(x.name)}</b></td><td>${esc(x.typeName||expenseTypeName(x.typeId)||'بدون نوع')}</td><td>${money(x.amount)}</td><td>${esc(coll('accounts').find(a=>a.id===x.accountId)?.name||'')}</td><td>${new Date(x.date).toLocaleString('ar')}</td><td>${esc(x.note)}</td><td class="actions"><button class="mini-btn" data-action="editExpense" data-id="${x.id}">تعديل</button><button class="mini-btn red" data-action="deleteExpense" data-id="${x.id}">حذف</button></td></tr>`).join('')+(remoteLimited?pagingControlsHtml('expenses',Math.max(all.length,Number(state.store._expensesRemoteCount||0)),shown,7):''):`<tr><td colspan="7"><div class="empty">لا توجد مصروفات</div></td></tr>`}
+
+  document.addEventListener('change',e=>{ if(e.target&&e.target.id==='expenseTypeFilter') renderExpenses(); });
 
   function showSavedInvoice(id){
     const inv=coll('invoices').find(x=>String(x.id)===String(id)); if(!inv){ toast('الفاتورة غير موجودة','bad'); return; }
-    const rows=(inv.items||[]).map(l=>`<div class="invoice-preview-item"><div><b>${esc(lineDisplayName(l))}</b><small>${esc(l.unitLabel||'قطعة')}${l.sellMode==='unit'&&n(l.unitMultiplier)>1?' = '+n(l.unitMultiplier)+' قطعة':''}</small></div><span class="invoice-preview-qty">x${n(l.qty)}</span><span class="invoice-preview-money">${money(lineSaleTotal(l))}</span></div>`).join('') || '<div class="empty">لا توجد منتجات</div>';
+    const rows=(inv.items||[]).map(l=>`<div class="invoice-preview-item"><div><b>${esc(lineDisplayName(l))}</b><small>${esc(l.unitLabel||'قطعة')}${l.sellMode==='unit'&&n(l.unitMultiplier)>1?' = '+n(l.unitMultiplier)+' قطعة':''}</small></div><span class="invoice-preview-qty">x${n(l.qty)}</span><span class="invoice-preview-price">سعر: ${money(l.price)}</span><span class="invoice-preview-money">الإجمالي: ${money(lineSaleTotal(l))}</span></div>`).join('') || '<div class="empty">لا توجد منتجات</div>';
     const html=`<div class="invoice-preview-grid">
       <div class="invoice-preview-head">
         <div class="invoice-preview-pill"><small>رقم الفاتورة</small><b>${esc(inv.number||'')}</b><small style="margin-top:6px">${new Date(inv.date).toLocaleString('ar')}</small></div>
@@ -7357,7 +7498,7 @@ ${pc.showCustomer!==false?`<div>الزبون: ${esc(receiptCustomerName(inv))}</
     const st=exactExportStoreInfo(), cur=st.currency;
     const customer=exactCustomerForInvoice(inv);
     const dt=exactExportDateParts(inv.date||Date.now());
-    const rows=(inv.items||[]).slice(0,15);
+    const rows=(inv.items||[]).filter(Boolean);
     const qtySum=(inv.items||[]).reduce((a,l)=>a+n(l.qty),0);
     const remaining=receiptRemaining(inv);
     const after=n(customer.debt||0) || remaining;
@@ -7367,13 +7508,15 @@ ${pc.showCustomer!==false?`<div>الزبون: ${esc(receiptCustomerName(inv))}</
     const employee=String(inv.createdByName||inv.updatedByName||(session?.role==='admin'?'المدير':(session?.name||session?.username||'موظف'))||'المدير');
     const branch=typeof branchName==='function' ? branchName(inv.branchId||activeBranchId?.()||'main') : 'Main Branch';
     const logoImg=exactCachedLogoImg() || await exactPreloadHeaderLogo() || await exactLoadImageFast(st.logo,2200);
-    const productImgs=await Promise.all(rows.map(l=>exactLoadImageFast(exactLineImageUrl(l),220)));
+    const productImgs=await Promise.all(rows.map((l,i)=> i<80 ? exactLoadImageFast(exactLineImageUrl(l),220) : Promise.resolve(null)));
 
-    const EXPORT_SCALE=2;
-    const canvas=document.createElement('canvas'); canvas.width=794*EXPORT_SCALE; canvas.height=1123*EXPORT_SCALE;
+    const itemRowsCount=Math.max(1,rows.length);
+    const canvasH=Math.max(1123, 720 + (itemRowsCount*28) + 360);
+    const EXPORT_SCALE=itemRowsCount>650?1:(itemRowsCount>300?1.25:2);
+    const canvas=document.createElement('canvas'); canvas.width=Math.round(794*EXPORT_SCALE); canvas.height=Math.round(canvasH*EXPORT_SCALE);
     const ctx=canvas.getContext('2d'); ctx.scale(EXPORT_SCALE,EXPORT_SCALE);
     const blue='#e8f3fb', blueText='#1d3972', black='#111', line='#8d8d8d';
-    ctx.fillStyle='#fff'; ctx.fillRect(0,0,794,1123); ctx.direction='rtl';
+    ctx.fillStyle='#fff'; ctx.fillRect(0,0,794,canvasH); ctx.direction='rtl';
 
     // Header: left store, center logo, right meta exactly like the reference
     const leftX=32, leftW=205, topY=42, rowH=25;
@@ -7433,9 +7576,6 @@ ${pc.showCustomer!==false?`<div>الزبون: ${esc(receiptCustomerName(inv))}</
       });
       y+=28;
     });
-    if((inv.items||[]).length>rows.length){
-      x=tableX; ctx.strokeStyle='#000'; ctx.strokeRect(tableX,y,730,25); exactCanvasText(ctx,`تم عرض ${rows.length} من ${(inv.items||[]).length} صنف`,397,y+17,10,blueText,'center'); y+=25;
-    }
 
     // Summary blocks
     const sumY=y+14, valueW=130, rowGap=26;
@@ -7465,8 +7605,8 @@ ${pc.showCustomer!==false?`<div>الزبون: ${esc(receiptCustomerName(inv))}</
     exactCanvasText(ctx,footerBranch,690,sigY+26,12,blueText,'right');
     exactCanvasText(ctx,'Signature [ '+employee+' ]',690,sigY+52,12,blueText,'right');
 
-    exactCanvasText(ctx,[st.address,st.phone].filter(Boolean).join(' '),397,1054,11,black,'center');
-    exactCanvasText(ctx,'تاريخ الطباعة '+new Date().toLocaleString('ar'),397,1076,11,black,'center');
+    exactCanvasText(ctx,[st.address,st.phone].filter(Boolean).join(' '),397,canvasH-69,11,black,'center');
+    exactCanvasText(ctx,'تاريخ الطباعة '+new Date().toLocaleString('ar'),397,canvasH-47,11,black,'center');
     return canvas;
   }
   async function buildInvoiceCanvas(inv){ return exactDrawInvoiceCanvas(inv); }
@@ -7717,6 +7857,49 @@ ${pc.showCustomer!==false?`<div>الزبون: ${esc(receiptCustomerName(inv))}</
   async function exportFinanceImage(){ const m=reportMetrics(); await exactPreloadHeaderLogo(); const canvas=drawReportCanvas('تقرير المالية','حسب الفلترة الحالية',['الفاتورة','التاريخ','العميل','البيع','الجملة','الربح','مدفوع','دين'],financeInvoiceRows(m),financeSummaryRows(m)); const href=URL.createObjectURL(await canvasBlob(canvas,'image/png')); triggerFileDownload(href,'finance-report.png',true); toast('تم تنزيل صورة التقرير'); }
   function applyStoreName(){ const name=settings().storeName || 'كاش توب'; const s=$('#sideStoreName'); if(s) s.textContent=name; document.querySelector('meta[name="apple-mobile-web-app-title"]')?.setAttribute('content', name); }
   
+
+  function mergeRowsById(oldRows=[], newRows=[]){
+    const map=new Map();
+    [...(Array.isArray(oldRows)?oldRows:[]), ...(Array.isArray(newRows)?newRows:[])].filter(Boolean).forEach(x=>{ if(x.id) map.set(String(x.id), {...(map.get(String(x.id))||{}), ...x}); });
+    return [...map.values()].sort((a,b)=>(remoteTs(b)||0)-(remoteTs(a)||0));
+  }
+  function readEmployeesLocalSnapshot(){ try{ const rows=JSON.parse(localStorage.getItem('oscarEmployees_'+companyKey)||'[]'); return Array.isArray(rows)?rows:[]; }catch(e){ return []; } }
+  function saveEmployeesLocalSnapshot(){ try{ localStorage.setItem('oscarEmployees_'+companyKey, JSON.stringify(mergeRowsById(readEmployeesLocalSnapshot(), coll('employees')))); }catch(e){} }
+  async function syncBranchRoot(branch, remove=false){
+    if(isLocalOfflineMode() || !navigator.onLine || !branch || !branch.id) return false;
+    try{
+      await pickDatabaseURL(false);
+      if(remove){
+        const ts=Date.now();
+        await Promise.allSettled([
+          rtdbSet(`companies/${safePathPart(companyKey)}/deleted/branches/${safePathPart(branch.id)}`,{ts,collectionName:'branches',id:String(branch.id),by:session?.username||session?.userId||'',companyKey}),
+          rtdbRemove(`companies/${safePathPart(companyKey)}/branches/${safePathPart(branch.id)}`),
+          rtdbRemove(`companies/${safePathPart(companyKey)}/branchesData/${safePathPart(branch.id)}`)
+        ]);
+      }else{
+        await rtdbSet(`companies/${safePathPart(companyKey)}/branches/${safePathPart(branch.id)}`, normalizeItemForRemote(branch,'branches')||branch);
+      }
+      return true;
+    }catch(e){ console.warn('branch direct sync skipped',e); return false; }
+  }
+  async function syncEmployeeRoot(emp, remove=false){
+    if(isLocalOfflineMode() || !navigator.onLine || !emp || !emp.id) return false;
+    try{
+      await pickDatabaseURL(false);
+      if(remove){
+        const ts=Date.now();
+        await Promise.allSettled([
+          rtdbSet(`companies/${safePathPart(companyKey)}/deleted/employees/${safePathPart(emp.id)}`,{ts,collectionName:'employees',id:String(emp.id),branchId:emp.branchId||initialBranchId||'main',by:session?.username||session?.userId||'',companyKey}),
+          rtdbRemove(`companies/${safePathPart(companyKey)}/employees/${safePathPart(emp.id)}`)
+        ]);
+      }else{
+        const data=normalizeItemForRemote({...emp,branchId:emp.branchId||initialBranchId||'main'},'employees')||emp;
+        await rtdbSet(`companies/${safePathPart(companyKey)}/employees/${safePathPart(emp.id)}`, data);
+      }
+      return true;
+    }catch(e){ console.warn('employee direct sync skipped',e); return false; }
+  }
+
   function branchIcon(){return '<span class="branch-icon-svg"><svg viewBox="0 0 24 24"><path d="M4 21V8l8-5 8 5v13M9 21v-7h6v7M8 10h.01M12 10h.01M16 10h.01"/></svg></span>'}
   function readBranchesLocalSnapshot(){ try{ const rows=JSON.parse(localStorage.getItem(branchListKey)||'[]'); return Array.isArray(rows)?rows:[]; }catch(e){ return []; } }
   function saveBranchesLocalSnapshot(){ try{ localStorage.setItem(branchListKey, JSON.stringify(coll('branches'))); }catch(e){} }
@@ -7740,25 +7923,70 @@ ${pc.showCustomer!==false?`<div>الزبون: ${esc(receiptCustomerName(inv))}</
   function openBranch(id=''){
     ensureMainBranch();
     const b=coll('branches').find(x=>String(x.id)===String(id))||{name:'',location:'',main:false};
-    openModal(id?'تعديل فرع':'إضافة فرع',`<div class="form-grid"><div class="field"><label>اسم الفرع</label><input class="input" id="branchName" value="${esc(b.name||'')}"></div><div class="field"><label>موقع الفرع</label><input class="input" id="branchLocation" value="${esc(b.location||'')}"></div></div>`,'حفظ الفرع',()=>{const name=$('#branchName').value.trim(); if(!name){toast('أدخل اسم الفرع','bad');return false} const item={...b,id:id||uid('br'),name,location:$('#branchLocation').value.trim(),main:b.main||false,createdAt:b.createdAt||Date.now(),updatedAt:Date.now()}; setItem('branches',item,id?'تعديل فرع':'إضافة فرع'); toast('تم حفظ الفرع')});
+    openModal(id?'تعديل فرع':'إضافة فرع',`<div class="form-grid"><div class="field"><label>اسم الفرع</label><input class="input" id="branchName" value="${esc(b.name||'')}"></div><div class="field"><label>موقع الفرع</label><input class="input" id="branchLocation" value="${esc(b.location||'')}"></div></div>`,'حفظ الفرع',()=>{
+      const name=$('#branchName').value.trim();
+      if(!name){toast('أدخل اسم الفرع','bad');return false}
+      const item={...b,id:id||uid('br'),companyKey,name,location:$('#branchLocation').value.trim(),main:b.main||false,createdAt:b.createdAt||Date.now(),updatedAt:Date.now()};
+      const saved=setItem('branches',item,id?'تعديل فرع':'إضافة فرع');
+      saveBranchesLocalSnapshot();
+      if(saved) syncBranchRoot(saved,false);
+      toast('تم حفظ الفرع ومزامنته');
+    });
   }
   function enterBranch(id){ ensureMainBranch(); const b=coll('branches').find(x=>String(x.id)===String(id)); if(!b)return; saveBranchesLocalSnapshot(); localStorage.setItem(activeBranchStorageKey,String(id)); toast('تم الدخول إلى '+b.name); setTimeout(()=>location.href='dashboard.html',350); }
-  function deleteBranch(id){ if(String(id)==='main') return toast('لا يمكن حذف الفرع الرئيسي','bad'); if(!confirm('تأكيد حذف الفرع؟')) return; deleteItem('branches',id,'حذف فرع'); toast('تم حذف الفرع'); }
+  function deleteBranch(id){
+    if(String(id)==='main') return toast('لا يمكن حذف الفرع الرئيسي','bad');
+    if(!confirm('تأكيد حذف الفرع؟ سيتم حذف بياناته المحلية والمرتبطة من قاعدة البيانات.')) return;
+    const b=coll('branches').find(x=>String(x.id)===String(id))||{id};
+    deleteItem('branches',id,'حذف فرع');
+    saveBranchesLocalSnapshot();
+    syncBranchRoot(b,true);
+    toast('تم حذف الفرع');
+  }
 
-  function renderEmployees(){ const root=$('#employeesTable'); if(!root) return; const rows=filtered(coll('employees'),['name','username','id']); root.innerHTML=rows.length?rows.map(e=>`<tr><td><b>${esc(e.name||'')}</b><small style="display:block;color:var(--muted)">${esc(e.id||'')}</small></td><td>${esc(e.username||'')}</td><td>${e.active===false?'<span class="badge red">موقوف</span>':'<span class="badge green">مفعل</span>'}<small style="display:block;color:var(--muted)">${esc(branchName(e.branchId||'main'))}</small></td><td>${e.lastLogin?new Date(e.lastLogin).toLocaleString('ar'):'—'}</td><td class="actions"><button class="mini-btn" data-action="editEmployee" data-id="${e.id}">تعديل</button><button class="mini-btn ${e.active===false?'green':'gray'}" data-action="toggleEmployee" data-id="${e.id}">${e.active===false?'تفعيل':'إيقاف'}</button><button class="mini-btn red" data-action="deleteEmployee" data-id="${e.id}">حذف</button></td></tr>`).join(''):`<tr><td colspan="5"><div class="empty">لا يوجد موظفين</div></td></tr>`; }
-  function openEmployee(id=''){ const e=coll('employees').find(x=>x.id===id)||{id:'employee_'+String(Date.now()).slice(-4),name:'',username:'',active:true,permissions:{}}; const checks=permissionCatalog.map(([k,l])=>`<label class="perm-item"><input type="checkbox" data-perm="${k}" ${e.permissions?.[k]?'checked':''}>${l}</label>`).join(''); openModal(id?'تعديل موظف':'إضافة موظف',`<div class="form-grid"><div class="field"><label>الاسم</label><input class="input" id="empName" value="${esc(e.name||'')}"></div><div class="field"><label>اسم المستخدم</label><input class="input" id="empUsername" value="${esc(e.username||'')}"></div><div class="field"><label>كلمة المرور ${id?'(اتركها فارغة بدون تغيير)':''}</label><input class="input" type="password" id="empPassword"></div><div class="field"><label>رقم الموظف</label><input class="input" id="empId" value="${esc(e.id||'')}"></div><div class="field"><label>الفرع</label><select id="empBranch">${coll('branches').length?coll('branches').map(b=>`<option value="${esc(b.id)}" ${String(e.branchId||activeBranchId())===String(b.id)?'selected':''}>${esc(b.name)}</option>`).join(''):'<option value="main">الفرع الرئيسي</option>'}</select></div><div class="field"><label>حالة الحساب</label><select id="empActive"><option value="true" ${e.active!==false?'selected':''}>مفعل</option><option value="false" ${e.active===false?'selected':''}>موقوف</option></select></div><div class="field full"><label>الصلاحيات</label><div class="perm-grid">${checks}</div></div></div>`,'حفظ الموظف',async(box)=>{const empId=$('#empId').value.trim(); if(!empId||!$('#empUsername').value.trim()){toast('أدخل رقم الموظف واسم المستخدم','bad');return false} const old=coll('employees').find(x=>x.id===empId)||e; const salt=old.passwordSalt || (companyKey+'_'+empId+'_'+Date.now()); const pass=$('#empPassword').value; const permissions={}; box.querySelectorAll('[data-perm]').forEach(ch=>permissions[ch.dataset.perm]=ch.checked); const item={...old,id:empId,name:$('#empName').value.trim(),username:$('#empUsername').value.trim(),active:$('#empActive').value==='true',branchId:$('#empBranch')?.value||'main',branchName:branchName($('#empBranch')?.value||'main'),permissions,passwordSalt:salt,createdAt:old.createdAt||Date.now(),updatedAt:Date.now(),lastLogin:old.lastLogin||null}; if(pass) item.passwordHash=await sha256(pass+salt); setItem('employees',item,`${id?'تعديل':'إضافة'} موظف ${item.name}`); localStorage.setItem('oscarEmployees_'+companyKey, JSON.stringify(coll('employees'))); toast('تم حفظ الموظف'); }); }
+  function renderEmployees(){
+    const root=$('#employeesTable'); if(!root) return;
+    const active=String(activeBranchId()||'main');
+    const rows=filtered(coll('employees'),['name','username','id']).filter(e=>String(e.branchId||'main')===active);
+    root.innerHTML=rows.length?rows.map(e=>`<tr><td><b>${esc(e.name||'')}</b><small style="display:block;color:var(--muted)">${esc(e.id||'')}</small></td><td>${esc(e.username||'')}</td><td>${e.active===false?'<span class="badge red">موقوف</span>':'<span class="badge green">مفعل</span>'}<small style="display:block;color:var(--muted)">${esc(branchName(e.branchId||'main'))}</small></td><td>${e.lastLogin?new Date(e.lastLogin).toLocaleString('ar'):'—'}</td><td class="actions"><button class="mini-btn" data-action="editEmployee" data-id="${e.id}">تعديل</button><button class="mini-btn ${e.active===false?'green':'gray'}" data-action="toggleEmployee" data-id="${e.id}">${e.active===false?'تفعيل':'إيقاف'}</button><button class="mini-btn red" data-action="deleteEmployee" data-id="${e.id}">حذف</button></td></tr>`).join(''):`<tr><td colspan="5"><div class="empty">لا يوجد موظفين في هذا الفرع</div></td></tr>`;
+  }
+  function openEmployee(id=''){
+    const e=coll('employees').find(x=>String(x.id)===String(id))||{id:'employee_'+String(Date.now()).slice(-4),name:'',username:'',active:true,permissions:{},branchId:activeBranchId()};
+    const checks=permissionCatalog.map(([k,l])=>`<label class="perm-item"><input type="checkbox" data-perm="${k}" ${e.permissions?.[k]?'checked':''}>${l}</label>`).join('');
+    openModal(id?'تعديل موظف':'إضافة موظف',`<div class="form-grid"><div class="field"><label>الاسم</label><input class="input" id="empName" value="${esc(e.name||'')}"></div><div class="field"><label>اسم المستخدم</label><input class="input" id="empUsername" value="${esc(e.username||'')}"></div><div class="field"><label>كلمة المرور ${id?'(اتركها فارغة بدون تغيير)':''}</label><input class="input" type="password" id="empPassword"></div><div class="field"><label>رقم الموظف</label><input class="input" id="empId" value="${esc(e.id||'')}"></div><div class="field"><label>الفرع</label><select id="empBranch">${coll('branches').length?coll('branches').map(b=>`<option value="${esc(b.id)}" ${String(e.branchId||activeBranchId())===String(b.id)?'selected':''}>${esc(b.name)}</option>`).join(''):'<option value="main">الفرع الرئيسي</option>'}</select></div><div class="field"><label>حالة الحساب</label><select id="empActive"><option value="true" ${e.active!==false?'selected':''}>مفعل</option><option value="false" ${e.active===false?'selected':''}>موقوف</option></select></div><div class="field full"><label>الصلاحيات</label><div class="perm-grid">${checks}</div></div></div>`,'حفظ الموظف',async(box)=>{
+      const empId=$('#empId').value.trim();
+      if(!empId||!$('#empUsername').value.trim()){toast('أدخل رقم الموظف واسم المستخدم','bad');return false}
+      const old=coll('employees').find(x=>String(x.id)===String(empId))||e;
+      const salt=old.passwordSalt || (companyKey+'_'+empId+'_'+Date.now());
+      const pass=$('#empPassword').value;
+      const permissions={}; box.querySelectorAll('[data-perm]').forEach(ch=>permissions[ch.dataset.perm]=ch.checked);
+      const branchId=$('#empBranch')?.value||activeBranchId()||'main';
+      const item={...old,id:empId,companyKey,name:$('#empName').value.trim(),username:$('#empUsername').value.trim(),active:$('#empActive').value==='true',branchId,branchName:branchName(branchId),permissions,passwordSalt:salt,createdAt:old.createdAt||Date.now(),updatedAt:Date.now(),lastLogin:old.lastLogin||null};
+      if(pass) item.passwordHash=await sha256(pass+salt);
+      const saved=setItem('employees',item,`${id?'تعديل':'إضافة'} موظف ${item.name}`);
+      saveEmployeesLocalSnapshot();
+      if(saved) syncEmployeeRoot(saved,false);
+      toast('تم حفظ الموظف ومزامنته');
+    });
+  }
   function toggleEmployee(id){
     const emp=coll('employees').find(x=>String(x.id)===String(id));
     if(!emp) return;
     const next=emp.active===false;
-    emp.active=next;
-    emp.updatedAt=Date.now();
-    setItem('employees',emp,`${next?'تفعيل':'إيقاف'} موظف ${emp.name||emp.username||emp.id}`);
-    localStorage.setItem('oscarEmployees_'+companyKey, JSON.stringify(coll('employees')));
+    emp.active=next; emp.updatedAt=Date.now(); emp.branchId=emp.branchId||activeBranchId()||'main';
+    const saved=setItem('employees',emp,`${next?'تفعيل':'إيقاف'} موظف ${emp.name||emp.username||emp.id}`);
+    saveEmployeesLocalSnapshot(); if(saved) syncEmployeeRoot(saved,false);
     toast(next?'تم تفعيل الموظف':'تم إيقاف الموظف');
     if(!next && session?.role==='employee' && String(session.userId)===String(id)) forceSessionLogout('تم إيقاف حساب الموظف، تم تسجيل الخروج');
   }
-  function deleteEmployee(id){ if(!confirm('تأكيد حذف الموظف؟')) return; deleteItem('employees',id,'حذف موظف'); localStorage.setItem('oscarEmployees_'+companyKey, JSON.stringify(coll('employees'))); toast('تم حذف الموظف'); if(session?.role==='employee' && String(session.userId)===String(id)) forceSessionLogout('تم حذف حساب الموظف، تم تسجيل الخروج'); }
+  function deleteEmployee(id){
+    if(!confirm('تأكيد حذف الموظف؟')) return;
+    const emp=coll('employees').find(x=>String(x.id)===String(id))||{id,branchId:activeBranchId()};
+    deleteItem('employees',id,'حذف موظف');
+    saveEmployeesLocalSnapshot(); syncEmployeeRoot(emp,true);
+    toast('تم حذف الموظف');
+    if(session?.role==='employee' && String(session.userId)===String(id)) forceSessionLogout('تم حذف حساب الموظف، تم تسجيل الخروج');
+  }
 
   function repRootPath(id=''){ return `companies/${safePathPart(companyKey)}/representatives${id?'/'+safePathPart(id):''}`; }
   function repRootQueueKey(){ return 'oscarRepRootQueue_'+companyKey; }

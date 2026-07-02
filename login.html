@@ -2439,7 +2439,7 @@ body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
 
 <script id="v172-cache-first-immediate-script">
 (function(){
-  const CACHE_URLS=["./", "DATABASE_STRUCTURE.md", "README.md", "accounts.html", "admin.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "customers.html", "dashboard.html", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "representative-dashboard.html", "representatives.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
+  const CACHE_URLS=["./", "DATABASE_STRUCTURE.md", "README.md", "accounts.html", "admin.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "customers.html", "dashboard.html", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "vouchers.html", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "representative-dashboard.html", "representatives.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
   function pageName(){return location.pathname.split('/').pop() || 'index.html'}
   function cacheUrls(){
     const set=new Set(CACHE_URLS);
@@ -2460,7 +2460,7 @@ body[data-page="cashier"] .clothing-cart-lines .cart-clothing-size{
   async function saveCurrentPageToCache(){
     try{
       if(!('caches' in window)) return;
-      const cache=await caches.open('cashtop-pages-v183-dashboard-chart-cache-first-fast');
+      const cache=await caches.open('cashtop-pages-v187-branch-isolation-all-items-invoice-date-cache');
       const req=new Request(location.href,{cache:'reload'});
       const res=await fetch(req).catch(()=>null);
       if(res&&res.ok){
@@ -2800,6 +2800,7 @@ async function login(e){
     }
     if(companyOfflineMode){ session.offlineMode=true; session.syncMode='offline'; session.offlineReason=expiredOffline?'expired-after-subscription':'offline-plan'; setOfflineLock(companyKey,true,session.offlineReason); } else { setOfflineLock(companyKey,false,''); }
     localStorage.setItem('oscarSession',JSON.stringify(session));
+    try{ const cp=encodeURIComponent(String(companyKey||'').trim()); if(session.branchId) localStorage.setItem('oscarActiveBranch_'+cp,String(session.branchId)); }catch(e){}
     if(!companyOfflineMode) localStorage.setItem('oscarRunLoginSync','1'); else localStorage.removeItem('oscarRunLoginSync');
     toast('تم تسجيل الدخول');
     setTimeout(()=>location.replace(session.role==='representative'?'representative-dashboard.html':(companyOfflineMode?'dashboard.html':(navigator.onLine?'sync-loading.html':'dashboard.html'))),120);
@@ -2853,10 +2854,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
     localStorage.removeItem('oscarSession');
   }
-  // لا تعبئة تلقائية للحقول عند عدم وجود جلسة صالحة. الدخول التلقائي يعتمد على الجلسة فقط.
-  ['companyKey','username','password'].forEach(id=>{const el=$('#'+id); if(el) el.value='';});
-  if(preset && $('#companyKey')) $('#companyKey').value=preset;
-  setTimeout(()=>{ if(!preset && $('#companyKey')) $('#companyKey').value=''; if($('#username')) $('#username').value=''; if($('#password')) $('#password').value=''; },80);
+  // لا نمسح الحقول هنا حتى لا تضيع بيانات الدخول أو تعبئة المتصفح على اللابتوب.
+  if(preset && $('#companyKey') && !$('#companyKey').value) $('#companyKey').value=preset;
   $('#loginForm')?.addEventListener('submit',login);
   if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(console.warn); setTimeout(()=>prepareInstallPrompt().catch(console.warn),700);
 });
@@ -2940,7 +2939,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 (function(){
   const PAGE_CACHE='cashtop-local-pages-v157-permanent';
   const ASSET_CACHE='cashtop-local-assets-v157-permanent';
-  const extraPages=["./", "DATABASE_STRUCTURE.md", "README.md", "accounts.html", "admin.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "customers.html", "dashboard.html", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "representative-dashboard.html", "representatives.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
+  const extraPages=["./", "DATABASE_STRUCTURE.md", "README.md", "accounts.html", "admin.html", "analytics.html", "app-version.json", "backup.html", "barcode-labels.html", "branches.html", "cashier.html", "categories.html", "coupons.html", "customers.html", "dashboard.html", "digital-menu.html", "employees.html", "expenses.html", "finance.html", "icon-192.png", "icon-512.png", "icon-64.png", "index.html", "inventory.html", "invoice-payment-settings.html", "invoice-view.html", "invoices.html", "vouchers.html", "login.html", "loyalty-points.html", "manifest.json", "manufacturing.html", "menu-settings.html", "mobile-scanner.html", "notifications.html", "oscar-logo.png", "print-settings.html", "product-offers.html", "products.html", "purchase-data.html", "purchase-entry.html", "purchase-reference.html", "purchase-returns.html", "purchases.html", "representative-dashboard.html", "representatives.html", "settings.html", "shortcuts.html", "suppliers.html", "sw.js", "sync-loading.html", "tax-settings.html", "units.html", "warehouse.html", "waste.html", "workers.html"];
   function sameOriginUrl(href){try{const u=new URL(href,location.href); return u.origin===location.origin?u:null}catch(e){return null}}
   function internalUrls(){
     const set=new Set(extraPages.map(x=>new URL(x,location.href).href));

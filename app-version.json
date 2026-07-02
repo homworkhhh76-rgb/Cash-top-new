@@ -1,6 +1,6 @@
 {
-  "version": "v184-quantity-by-price-cache-first",
-  "build": "cashier-quantity-by-price-setting-sync-cache-first",
-  "cacheVersion": "v184",
-  "updatedAt": "2026-06-28"
+  "version": "v188.1-expense-vouchers-warehouses-login",
+  "build": "base188-functional-sync-no-design-change",
+  "cacheVersion": "v188.1",
+  "updatedAt": "2026-07-02T19:35:00Z"
 }
